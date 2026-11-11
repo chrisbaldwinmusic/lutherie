@@ -1,0 +1,33 @@
+* MOSFET Boost — exported from Lutherie
+* One small MOSFET in common source. Gain sets how much of the source resistor is bypassed, from about 4 dB to over 30 dB. The very high input impedance keeps the guitar's treble, and when pushed it clips softly and unevenly, a little like a tube.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 47n
+RR1 VCC_9V N2 1Meg
+RR2 N2 0 1Meg
+MM1 N4 N2 N5 N5 M_2N7000
+CM1gs N2 N5 20p
+CM1gd N2 N4 5p
+RR3 VCC_9V N4 2.7k
+RR4 N5 0 2.2k
+CC3 N5 N6 47u
+* Gain pot 5k B taper at 50%
+RVR1a 0 0 2.5k
+RVR1b 0 N6 2.5k
+CC2 N4 OUT 4.7u
+RR5 OUT 0 100k
+Rload OUT 0 1Meg
+VVS1 VCC_9V 0 DC 9.0
+
+.model M_2N7000 NMOS(Level=1 Vto=2.0 Kp=0.12 Lambda=0.0003 Is=1e-13)
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata mosfet_boost.ngspice.txt v(OUT)
+.endc
+.end

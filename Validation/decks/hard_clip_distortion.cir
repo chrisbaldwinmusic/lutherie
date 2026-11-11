@@ -1,0 +1,45 @@
+* Hard-Clip Distortion — exported from Lutherie
+* An op-amp gain stage (up to about 200×) followed by two germanium diodes to ground, which chop the signal off at ±0.3 V: the bright, raw hard clipping of the first op-amp distortion pedals of the 1970s.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 10n
+RR1 N2 N3 10k
+RR2 N3 VCC_4p5V 1Meg
+XU1 N3 N5 N6 OPAMP_LM741_20_70
+RR3 N5 N6 1Meg
+RR4 N7 N5 4.7k
+CC2 N8 N7 47n
+* Gain pot 500k B taper at 75%
+RVR1a 0 0 375k
+RVR1b 0 N8 125k
+CC3 N6 N9 1u
+RR5 N9 N10 10k
+DD1 N10 0 D_1N34Agermanium
+DD2 0 N10 D_1N34Agermanium
+CC4 N10 0 1n
+* Level pot 100k A taper at 90%
+RVR2a 0 OUT 64k
+RVR2b OUT N10 36k
+Rload OUT 0 1Meg
+VVS1 VCC_4p5V 0 DC 4.5
+
+.model D_1N34Agermanium D(Is=2.6e-06 N=1.6 Rs=7.0 Cjo=5e-13 M=0)
+* Behavioural op-amp: gain, gain-bandwidth, slew rate and output swing
+.subckt OPAMP_LM741_20_70 INP INN OUT
+Bin 0 M I=0.015915494309189534*tanh(0.2*V(INP,INN)/0.015915494309189534)
+R1 M 0 1Meg
+C1 M 0 3.183098861837907e-08
+Bout X 0 V=4.5+2.5*V(M)/2.5/pwr(1+pwr(V(M)/2.5,4),0.25)
+Rout X OUT 75.0
+.ends
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata hard_clip_distortion.ngspice.txt v(OUT)
+.endc
+.end

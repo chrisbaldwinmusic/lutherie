@@ -1,0 +1,34 @@
+* Germanium Fuzz — exported from Lutherie
+* The 1960s round fuzz: two leaky germanium PNP transistors, directly coupled, on a −9 V supply (positive ground). It cleans up when you turn the guitar down, because its input impedance is low enough to load the pickups.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 6k
+CC1 IN N2 2.2u
+QQ1 N3 N2 0 Q_GermaniumPNPAC128type
+RR1 VCC_-9V N3 33k
+QQ2 N5 N3 N6 Q_GermaniumPNPAC128type
+RR2 N7 N5 470
+RR3 VCC_-9V N7 8.2k
+* Fuzz pot 1k B taper at 90%
+RVR1a 0 N8 900
+RVR1b N8 N6 100
+CC2 0 N8 22u
+RR4 N2 N6 100k
+CC3 N7 N9 10n
+* Volume pot 500k A taper at 60%
+RVR2a 0 OUT 81k
+RVR2b OUT N9 419k
+Rload OUT 0 1Meg
+VVS2 VCC_-9V 0 DC -9.0
+
+.model Q_GermaniumPNPAC128type PNP(Is=1.2e-06 Bf=90.0 Br=5.0 Vaf=30.0 Nf=1.1 Cje=5e-11 Cjc=2e-11 Mje=0 Mjc=0)
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata germanium_fuzz.ngspice.txt v(OUT)
+.endc
+.end

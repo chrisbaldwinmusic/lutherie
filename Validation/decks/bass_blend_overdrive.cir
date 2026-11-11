@@ -1,0 +1,51 @@
+* Bass Blend Overdrive — exported from Lutherie
+* Made for bass. A buffer splits the signal in two: the drive path only adds gain above about 150 Hz, so the low notes stay solid while the mids and top break up, and Blend mixes it with the untouched clean signal. Fully clean at Blend 0, all drive at 10.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 100n
+RR2 N2 VCC_4p5V 1Meg
+XU1 N2 N4 N4 OPAMP_TL072_15_75
+CC2 N4 N5 100n
+RR3 N5 VCC_4p5V 1Meg
+XU2 N5 N6 N7 OPAMP_TL072_15_75
+RR5 N6 N7 100k
+RR4 N8 N6 4.7k
+CC3 N9 N8 220n
+* Drive pot 100k B taper at 70%
+RVR1a 0 0 70k
+RVR1b 0 N9 30k
+DD1 N6 N7 D_1N4148
+DD2 N7 N6 D_1N4148
+CC4 N7 N10 1u
+RR6 N10 N11 4.7k
+CC5 N11 0 10n
+CC6 N4 N12 1u
+* Blend pot 50k B taper at 50%
+RVR2a N12 N13 25k
+RVR2b N13 N11 25k
+* Level pot 100k A taper at 80%
+RVR3a 0 OUT 40.8k
+RVR3b OUT N13 59.2k
+Rload OUT 0 1Meg
+VVS1 VCC_4p5V 0 DC 4.5
+
+.model D_1N4148 D(Is=2.52e-09 N=1.752 Rs=0.568 Cjo=4e-12 M=0)
+* Behavioural op-amp: gain, gain-bandwidth, slew rate and output swing
+.subckt OPAMP_TL072_15_75 INP INN OUT
+Bin 0 M I=0.13793428401297597*tanh(0.2*V(INP,INN)/0.13793428401297597)
+R1 M 0 1Meg
+C1 M 0 1.061032953945969e-08
+Bout X 0 V=4.5+3.0*V(M)/3.0/pwr(1+pwr(V(M)/3.0,4),0.25)
+Rout X OUT 75.0
+.ends
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata bass_blend_overdrive.ngspice.txt v(OUT)
+.endc
+.end

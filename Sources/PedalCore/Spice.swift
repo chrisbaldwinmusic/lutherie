@@ -3,7 +3,15 @@ import Foundation
 /// Writes a circuit as a SPICE netlist (LTspice-friendly) using the same device models as the simulator,
 /// so results can be cross-checked in LTspice or ngspice.
 public enum SpiceExport {
-    public static func netlist(_ c: Circuit, testFrequency: Double = 220, testAmplitude: Double = 0.3) -> String {
+    /// The name the netlist gives the output node (nil if the output is grounded or missing).
+    public static func outputNode(_ c: Circuit) -> String? {
+        let net = Netlist.build(c)
+        guard let p = c.parts.first(where: { $0.kind == .output }), let n = net.pinNodes[p.id]?.first, n != 0 else { return nil }
+        return net.name(of: n).replacingOccurrences(of: " ", with: "_")
+    }
+
+    /// `analysis` replaces the closing analysis lines (used by the ngspice cross-check).
+    public static func netlist(_ c: Circuit, testFrequency: Double = 220, testAmplitude: Double = 0.3, analysis: [String]? = nil) -> String {
         let net = Netlist.build(c)
         func node(_ p: Part, _ i: Int) -> String {
             let n = net.pinNodes[p.id]?[i] ?? 0
@@ -31,17 +39,17 @@ public enum SpiceExport {
             case .diode, .led:
                 let m = DeviceLibrary.diode(p.model, led: p.kind == .led)
                 let mn = "D_" + p.model.filter { $0.isLetter || $0.isNumber }
-                models[mn] = ".model \(mn) D(Is=\(m.Is) N=\(m.n) Rs=\(m.rs) Cjo=\(m.cj))"
+                models[mn] = ".model \(mn) D(Is=\(m.Is) N=\(m.n) Rs=\(m.rs) Cjo=\(m.cj) M=0)"
                 lines.append("D\(id) \(node(p, 0)) \(node(p, 1)) \(mn)")
             case .zener:
                 let m = DeviceLibrary.zener(p.model)
                 let mn = "DZ_" + p.model.filter { $0.isLetter || $0.isNumber }
-                models[mn] = ".model \(mn) D(Is=\(m.Is) N=\(m.n) Rs=\(m.rs) Cjo=\(m.cj) Bv=\(m.bv) Ibv=5m Nbv=\(m.nbv))"
+                models[mn] = ".model \(mn) D(Is=\(m.Is) N=\(m.n) Rs=\(m.rs) Cjo=\(m.cj) M=0 Bv=\(m.bv) Ibv=\(m.ibv) Nbv=\(m.nbv))"
                 lines.append("D\(id) \(node(p, 0)) \(node(p, 1)) \(mn)")
             case .npn, .pnp:
                 let m = DeviceLibrary.bjt(p.model, pnp: p.kind == .pnp)
                 let mn = "Q_" + p.model.filter { $0.isLetter || $0.isNumber }
-                models[mn] = ".model \(mn) \(m.pnp ? "PNP" : "NPN")(Is=\(m.Is) Bf=\(m.bf) Br=\(m.br) Vaf=\(m.va) Nf=\(m.nf) Cje=\(m.cbe) Cjc=\(m.cbc))"
+                models[mn] = ".model \(mn) \(m.pnp ? "PNP" : "NPN")(Is=\(m.Is) Bf=\(m.bf) Br=\(m.br) Vaf=\(m.va) Nf=\(m.nf) Cje=\(m.cbe) Cjc=\(m.cbc) Mje=0 Mjc=0)"
                 lines.append("Q\(id) \(node(p, 0)) \(node(p, 1)) \(node(p, 2)) \(mn)")
             case .njfet, .pjfet:
                 let m = DeviceLibrary.jfet(p.model, pch: p.kind == .pjfet)
@@ -112,9 +120,13 @@ public enum SpiceExport {
         lines.append("")
         lines.append(contentsOf: models.keys.sorted().map { models[$0]! })
         lines.append("")
-        lines.append("* Pick one analysis:")
-        lines.append(".tran 0 50m 0 5u")
-        lines.append("*.ac dec 50 20 20k")
+        if let analysis {
+            lines.append(contentsOf: analysis)
+        } else {
+            lines.append("* Pick one analysis:")
+            lines.append(".tran 0 50m 0 5u")
+            lines.append("*.ac dec 50 20 20k")
+        }
         lines.append(".end")
         return lines.joined(separator: "\n")
     }

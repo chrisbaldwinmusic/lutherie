@@ -258,7 +258,7 @@ struct InspectorView: View {
                 return "Ebers–Moll with Early effect: Is \(Eng.format(m.Is, unit: "A")), β \(Int(m.bf)), Early \(Int(m.va)) V, junction capacitances included."
             case .zener:
                 let m = DeviceLibrary.zener(part.model)
-                return "An ordinary diode forwards (about 0.7 V); backwards it breaks down at \(m.bv) V and holds that voltage. The knee is \(m.bv < 5 ? "soft" : "sharp") at this voltage."
+                return "An ordinary diode forwards (about 0.7 V); backwards it breaks down and holds about \(m.bv) V (its rating at \(Int(m.ibv * 1000)) mA; a little less at pedal currents). The knee is \(m.bv < 5 ? "soft" : "sharp") at this voltage."
             case .njfet, .pjfet:
                 let m = DeviceLibrary.jfet(part.model, pch: part.kind == .pjfet)
                 return "Square-law JFET: Vp \(m.vto) V, β \(Eng.format(m.beta, unit: "A/V²")), gate junctions conduct when forward biased."

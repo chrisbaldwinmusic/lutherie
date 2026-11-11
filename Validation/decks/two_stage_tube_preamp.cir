@@ -1,0 +1,58 @@
+* Two-Stage Tube Preamp — exported from Lutherie
+* Two common-cathode 12AX7 stages, a treble/bass/middle passive tone stack driven from the second plate, and a master volume.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+RR1 IN 0 1Meg
+RR2 IN N2 68k
+XV1 N3 N2 N4 TRIODE_12AX7
+RR3 N4 0 1.5k
+CC1 N4 0 22u
+RR4 VCC_250V N3 100k
+VVB1 VCC_250V 0 DC 250.0
+CC2 N3 N6 22n
+* Gain pot 1Meg A taper at 60%
+RVR1a 0 N7 162k
+RVR1b N7 N6 838k
+RR5 N7 N8 68k
+XV2 N9 N8 N10 TRIODE_12AX7
+RR6 N10 0 1.5k
+CC3 N10 0 1u
+RR7 VCC_250V N9 100k
+CC4 N9 N11 250p
+* Treble pot 250k A taper at 60%
+RVR2a N11 N13 40.5k
+RVR2b N13 N12 209k
+RR8 N9 N14 100k
+CC5 N12 N14 100n
+* Bass pot 1Meg A taper at 50%
+RVR3a N15 N12 100k
+RVR3b N12 N12 900k
+CC6 N15 N14 47n
+* Middle pot 25k B taper at 50%
+RVR4a N15 0 12.5k
+RVR4b 0 0 12.5k
+* Master pot 1Meg A taper at 50%
+RVR5a 0 OUT 100k
+RVR5b OUT N13 900k
+Rload OUT 0 1Meg
+
+* Koren triode model
+.subckt TRIODE_12AX7 P G K
+Bp P K I=V(E1)>0 ? 2*pwr(V(E1),1.4)/1060.0 : 0
+Be E1 0 V=V(P,K)/600.0*ln(1+exp(600.0*(1/100.0+V(G,K)/sqrt(300.0+V(P,K)*V(P,K)))))
+Bg G K I=V(G,K)>0 ? pwr(V(G,K),1.5)/1300 : 0
+Cgp G P 1.7e-12
+Cgk G K 1.6e-12
+Cpk P K 4.6e-13
+.ends
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata two_stage_tube_preamp.ngspice.txt v(OUT)
+.endc
+.end

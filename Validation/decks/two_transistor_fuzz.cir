@@ -1,0 +1,33 @@
+* Two-Transistor Fuzz — exported from Lutherie
+* Two directly coupled transistors with feedback bias through R3. Fuzz sets how much emitter degeneration is bypassed.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 2.2u
+QQ1 N3 N2 0 Q_BC109
+RR1 VCC_9V N3 33k
+VVCC1 VCC_9V 0 DC 9.0
+QQ2 N5 N3 N6 Q_BC109
+RR2 VCC_9V N5 8.2k
+* Fuzz pot 1k B taper at 80%
+RVR1a 0 N7 800
+RVR1b N7 N6 200
+CC2 0 N7 22u
+RR3 N2 N6 100k
+CC3 N5 N8 10n
+* Volume pot 500k A taper at 50%
+RVR2a 0 OUT 50k
+RVR2b OUT N8 450k
+Rload OUT 0 1Meg
+
+.model Q_BC109 NPN(Is=1.8e-14 Bf=400.0 Br=35.5 Vaf=80.0 Nf=1.0 Cje=8e-12 Cjc=4e-12 Mje=0 Mjc=0)
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata two_transistor_fuzz.ngspice.txt v(OUT)
+.endc
+.end

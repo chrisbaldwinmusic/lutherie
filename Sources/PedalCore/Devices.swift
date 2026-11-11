@@ -4,8 +4,9 @@ import Foundation
 /// Values follow commonly published SPICE models of each part.
 public struct DiodeModel: Sendable {
     public var Is: Double; public var n: Double; public var rs: Double; public var cj: Double
-    /// Reverse breakdown (zeners): the voltage at 5 mA, and how sharp the knee is (in thermal voltages). 0 = no breakdown.
-    public var bv = 0.0; public var nbv = 2.0
+    /// Reverse breakdown (zeners): the rated voltage, the test current it is rated at, and how sharp the knee is
+    /// (in thermal voltages). bv 0 = no breakdown.
+    public var bv = 0.0; public var ibv = 5e-3; public var nbv = 2.0
 }
 public struct BJTModel: Sendable {
     public var pnp: Bool; public var Is: Double; public var bf: Double; public var br: Double; public var va: Double
@@ -45,13 +46,15 @@ public enum DeviceLibrary {
         "Red LED": DiodeModel(Is: 1e-19, n: 1.8, rs: 5, cj: 30e-12),
         "Green LED": DiodeModel(Is: 1e-21, n: 2.0, rs: 5, cj: 30e-12),
     ]
-    // 1 W zeners. Below about 5 V the knee is soft (true Zener effect); above it, sharp (avalanche).
+    // 1 W zeners, rated at the data-sheet test current (a quarter of a watt: 76 mA for 3.3 V down to 21 mA for 12 V),
+    // so at the few milliamps a pedal passes they sit a little under their rated voltage, as real ones do.
+    // Below about 5 V the knee is soft (true Zener effect); above it, sharp (avalanche). Knee softness is an estimate.
     public static let zeners: [String: DiodeModel] = [
-        "3.3 V (1N4728A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 150e-12, bv: 3.3, nbv: 5),
-        "4.7 V (1N4732A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 120e-12, bv: 4.7, nbv: 3.5),
-        "5.1 V (1N4733A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 110e-12, bv: 5.1, nbv: 2.5),
-        "9.1 V (1N4739A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 70e-12, bv: 9.1, nbv: 1.5),
-        "12 V (1N4742A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 55e-12, bv: 12, nbv: 1.5),
+        "3.3 V (1N4728A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 150e-12, bv: 3.3, ibv: 76e-3, nbv: 5),
+        "4.7 V (1N4732A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 120e-12, bv: 4.7, ibv: 53e-3, nbv: 3.5),
+        "5.1 V (1N4733A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 110e-12, bv: 5.1, ibv: 49e-3, nbv: 2.5),
+        "9.1 V (1N4739A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 70e-12, bv: 9.1, ibv: 28e-3, nbv: 1.5),
+        "12 V (1N4742A)": DiodeModel(Is: 1e-12, n: 1.2, rs: 2, cj: 55e-12, bv: 12, ibv: 21e-3, nbv: 1.5),
     ]
     public static let bjts: [String: BJTModel] = [
         "2N3904": BJTModel(pnp: false, Is: 6.734e-15, bf: 416.4, br: 0.7371, va: 74.03, nf: 1, cbe: 4.5e-12, cbc: 3.6e-12),
@@ -63,17 +66,20 @@ public enum DeviceLibrary {
     ]
     public static let jfets: [String: JFETModel] = [
         "J201": JFETModel(beta: 1.304e-3, vto: -0.5, lambda: 0.0125, cgs: 4e-12, cgd: 4e-12),
-        "2N5457": JFETModel(beta: 1.125e-3, vto: -1.8, lambda: 0.0023, cgs: 3e-12, cgd: 3e-12),
+        "2N5457": JFETModel(beta: 1.125e-3, vto: -1.8, lambda: 0.0023, cgs: 3e-12, cgd: 1.5e-12),
         "MPF102": JFETModel(beta: 1.0e-3, vto: -2.0, lambda: 0.0022, cgs: 3e-12, cgd: 3e-12),
-        // P-channel: typical mid-range values from the data sheets (pinch-off is written negative, as for N-channel)
+        // P-channel: mid-range of the onsemi data-sheet limits (2N5460: cut-off 0.75-6 V, Idss 1-5 mA;
+        // J175: 3-6 V, 7-60 mA). Pinch-off is written negative, as for N-channel.
         "2N5460": JFETModel(beta: 0.75e-3, vto: -2.0, lambda: 0.004, cgs: 5e-12, cgd: 1.5e-12, pch: true),
         "J175": JFETModel(beta: 1.5e-3, vto: -4.5, lambda: 0.01, cgs: 11e-12, cgd: 5.5e-12, pch: true),
     ]
-    // Small-signal MOSFETs: typical thresholds and gains from the published level-1 models and data sheets.
+    // Small-signal MOSFETs, fitted to the makers' data sheets (onsemi 2N7000 and BS170, Diodes BS250P):
+    // threshold at 1 mA, transconductance at 200-250 mA and on-resistance at 10 V all land on the typical
+    // figures where one is given, and inside the limits otherwise.
     public static let mosfets: [String: MOSFETModel] = [
         "2N7000": MOSFETModel(pmos: false, vto: 2.0, kp: 0.12, lambda: 0.0003, cgs: 20e-12, cgd: 5e-12),
-        "BS170": MOSFETModel(pmos: false, vto: 1.82, kp: 0.123, lambda: 0.0003, cgs: 24e-12, cgd: 7e-12),
-        "BS250": MOSFETModel(pmos: true, vto: 3.19, kp: 0.277, lambda: 0.012, cgs: 30e-12, cgd: 10e-12),
+        "BS170": MOSFETModel(pmos: false, vto: 1.9, kp: 0.08, lambda: 0.0003, cgs: 24e-12, cgd: 7e-12),
+        "BS250": MOSFETModel(pmos: true, vto: 2.0, kp: 0.056, lambda: 0.012, cgs: 45e-12, cgd: 15e-12),
     ]
     public static let opamps: [String: OpAmpModel] = [
         "TL072": OpAmpModel(gain: 2e5, gbw: 3e6, headroom: 1.5, rout: 75, slew: 13),

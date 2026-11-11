@@ -1,0 +1,29 @@
+* Germanium Treble Booster — exported from Lutherie
+* One germanium PNP transistor with a tiny input capacitor, so it boosts treble far more than bass. Made to push a dark British valve amp into singing overdrive. Positive ground, −9 V supply.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 4.7n
+RR1 VCC_-9V N2 470k
+RR2 N2 0 68k
+QQ1 N4 N2 N5 Q_GermaniumPNPAC128type
+RR3 N5 0 3.9k
+CC2 N5 0 47u
+* Boost pot 10k A taper at 80%
+RVR1a VCC_-9V N6 4.08k
+RVR1b N6 N4 5.92k
+CC3 N6 OUT 10n
+Rload OUT 0 1Meg
+VVS1 VCC_-9V 0 DC -9.0
+
+.model Q_GermaniumPNPAC128type PNP(Is=1.2e-06 Bf=90.0 Br=5.0 Vaf=30.0 Nf=1.1 Cje=5e-11 Cjc=2e-11 Mje=0 Mjc=0)
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata germanium_treble_booster.ngspice.txt v(OUT)
+.endc
+.end

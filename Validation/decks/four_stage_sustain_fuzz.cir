@@ -1,0 +1,73 @@
+* Four-Stage Sustain Fuzz — exported from Lutherie
+* The big, endless-sustain fuzz of the 1970s: a booster, then two stages that each clip with a pair of diodes in their feedback path, then a tone control that fades between a bass-only and a treble-only path (which scoops the middle), then a recovery stage.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+RR1 IN N2 39k
+CC1 N2 N3 100n
+QQ1 N4 N3 N5 Q_2N5088
+RR2 N3 0 100k
+RR3 VCC_9V N4 12k
+RR4 N5 0 100
+RR5 N3 N4 470k
+CC2 N3 N4 470p
+VVS2 VCC_9V 0 DC 9.0
+CC3 N4 N7 100n
+* Sustain pot 100k B taper at 70%
+RVR1a 0 N8 70k
+RVR1b N8 N7 30k
+RR6 N8 N9 8.2k
+CC4 N9 N10 100n
+QQ2 N11 N10 N12 Q_2N5088
+RR7 N10 0 100k
+RR8 VCC_9V N11 12k
+RR9 N12 0 100
+RR10 N10 N11 470k
+CC5 N10 N11 470p
+CC6 N13 N11 100n
+DD1 N10 N13 D_1N914
+DD2 N13 N10 D_1N914
+CC7 N11 N14 100n
+RR11 N14 N15 8.2k
+CC8 N15 N16 100n
+QQ3 N17 N16 N18 Q_2N5088
+RR12 N16 0 100k
+RR13 VCC_9V N17 12k
+RR14 N18 0 100
+RR15 N16 N17 470k
+CC9 N16 N17 470p
+CC10 N19 N17 100n
+DD3 N16 N19 D_1N914
+DD4 N19 N16 D_1N914
+CC11 N17 N20 100n
+RR16 N20 N21 39k
+CC12 N21 0 10n
+CC13 N20 N22 3.9n
+RR17 N22 0 22k
+* Tone pot 100k B taper at 50%
+RVR2a N21 N23 50k
+RVR2b N23 N22 50k
+CC14 N23 N24 100n
+RR18 VCC_9V N24 430k
+RR19 N24 0 100k
+QQ4 N25 N24 N26 Q_2N5088
+RR20 VCC_9V N25 10k
+RR21 N26 0 2.7k
+CC15 N25 N27 100n
+* Volume pot 100k A taper at 60%
+RVR3a 0 OUT 16.2k
+RVR3b OUT N27 83.8k
+Rload OUT 0 1Meg
+
+.model D_1N914 D(Is=2.52e-09 N=1.752 Rs=0.568 Cjo=4e-12 M=0)
+.model Q_2N5088 NPN(Is=5.911e-15 Bf=1122.0 Br=1.271 Vaf=62.4 Nf=1.0 Cje=4.5e-12 Cjc=3e-12 Mje=0 Mjc=0)
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata four_stage_sustain_fuzz.ngspice.txt v(OUT)
+.endc
+.end

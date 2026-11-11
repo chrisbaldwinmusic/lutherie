@@ -1,0 +1,71 @@
+* High-Gain Cascade Preamp — exported from Lutherie
+* Four 12AX7 stages in a row, as in the high-gain amps of the 1980s and 90s. The third is biased cold so it clips one side of the wave hard; dividers between stages keep each from swamping the next. Tight, saturated and compressed.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+RR1 IN 0 1Meg
+RR2 IN N2 68k
+XV1 N3 N2 N4 TRIODE_12AX7
+RR3 N4 0 1.8k
+CC1 N4 0 1u
+RR4 VCC_320V N3 100k
+CC2 N3 N6 22n
+VVS4 VCC_320V 0 DC 320.0
+* Gain pot 1Meg A taper at 60%
+RVR1a 0 N7 162k
+RVR1b N7 N6 838k
+RR5 N7 N8 470k
+XV2 N9 N8 N10 TRIODE_12AX7
+RR6 N10 0 1.8k
+CC3 N10 0 1u
+RR7 VCC_320V N9 100k
+CC4 N9 N11 22n
+RR8 N11 N12 470k
+RR9 N12 0 470k
+XV3 N13 N12 N14 TRIODE_12AX7
+RR10 N14 0 10k
+RR11 VCC_320V N13 100k
+CC5 N13 N15 22n
+RR12 N15 N16 470k
+RR13 N16 0 220k
+XV4 N17 N16 N18 TRIODE_12AX7
+RR14 N18 0 1.8k
+CC6 N18 0 1u
+RR15 VCC_320V N17 100k
+CC7 N17 N19 470p
+* Treble pot 250k A taper at 60%
+RVR2a N20 N21 40.5k
+RVR2b N21 N19 209k
+RR16 N17 N22 39k
+CC8 N22 N20 22n
+CC9 N22 N23 22n
+* Bass pot 1Meg A taper at 50%
+RVR3a N20 N23 100k
+RVR3b N23 N23 900k
+* Middle pot 25k B taper at 50%
+RVR4a N23 0 12.5k
+RVR4b 0 0 12.5k
+* Master pot 1Meg A taper at 50%
+RVR5a 0 OUT 100k
+RVR5b OUT N21 900k
+Rload OUT 0 1Meg
+
+* Koren triode model
+.subckt TRIODE_12AX7 P G K
+Bp P K I=V(E1)>0 ? 2*pwr(V(E1),1.4)/1060.0 : 0
+Be E1 0 V=V(P,K)/600.0*ln(1+exp(600.0*(1/100.0+V(G,K)/sqrt(300.0+V(P,K)*V(P,K)))))
+Bg G K I=V(G,K)>0 ? pwr(V(G,K),1.5)/1300 : 0
+Cgp G P 1.7e-12
+Cgk G K 1.6e-12
+Cpk P K 4.6e-13
+.ends
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata high_gain_cascade_preamp.ngspice.txt v(OUT)
+.endc
+.end

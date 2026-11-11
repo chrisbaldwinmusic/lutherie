@@ -1,0 +1,29 @@
+* Single-Transistor Boost — exported from Lutherie
+* One silicon transistor in common emitter with a small emitter resistor: about 25 dB of gain, enough to push the next pedal or the amp into overdrive. The simplest pedal there is.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 100n
+RR1 VCC_9V N2 430k
+RR2 N2 0 43k
+QQ1 N4 N2 N5 Q_2N5088
+RR3 VCC_9V N4 10k
+RR4 N5 0 390
+CC2 N4 N6 100n
+* Boost pot 100k A taper at 60%
+RVR1a 0 OUT 16.2k
+RVR1b OUT N6 83.8k
+Rload OUT 0 1Meg
+VVS1 VCC_9V 0 DC 9.0
+
+.model Q_2N5088 NPN(Is=5.911e-15 Bf=1122.0 Br=1.271 Vaf=62.4 Nf=1.0 Cje=4.5e-12 Cjc=3e-12 Mje=0 Mjc=0)
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata single_transistor_boost.ngspice.txt v(OUT)
+.endc
+.end

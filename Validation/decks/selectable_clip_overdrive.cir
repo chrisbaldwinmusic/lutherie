@@ -1,0 +1,53 @@
+* Selectable-Clip Overdrive — exported from Lutherie
+* An op-amp overdrive with a three-way Clip selector in its feedback loop. A: two back-to-back MOSFETs, which clip late and softly (open, amp-like). B: two silicon diodes, which clip early (compressed, more driven). Centre: no clipping parts, a clean boost until the op-amp itself runs out of swing.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 47n
+RR1 N2 N3 10k
+RR2 N3 VCC_4p5V 1Meg
+XU1 N3 N5 N6 OPAMP_TL072_15_75
+RR3 N5 N6 220k
+RR4 N7 N5 4.7k
+CC2 N8 N7 100n
+* Drive pot 100k B taper at 70%
+RVR1a 0 0 70k
+RVR1b 0 N8 30k
+MM1 N5 N5 N9 N9 M_BS170
+CM1gs N5 N9 24p
+CM1gd N5 N5 7p
+MM2 N10 N10 N9 N9 M_BS170
+CM2gs N10 N9 24p
+CM2gd N10 N10 7p
+DD1 N5 N11 D_1N4148
+DD2 N11 N5 D_1N4148
+RSW1 N6 N10 0.05
+CC3 N6 N12 1u
+RR5 N12 N13 1k
+CC4 N13 0 22n
+* Level pot 100k A taper at 70%
+RVR2a 0 OUT 25.8k
+RVR2b OUT N13 74.2k
+Rload OUT 0 1Meg
+VVS1 VCC_4p5V 0 DC 4.5
+
+.model D_1N4148 D(Is=2.52e-09 N=1.752 Rs=0.568 Cjo=4e-12 M=0)
+.model M_BS170 NMOS(Level=1 Vto=1.9 Kp=0.08 Lambda=0.0003 Is=1e-13)
+* Behavioural op-amp: gain, gain-bandwidth, slew rate and output swing
+.subckt OPAMP_TL072_15_75 INP INN OUT
+Bin 0 M I=0.13793428401297597*tanh(0.2*V(INP,INN)/0.13793428401297597)
+R1 M 0 1Meg
+C1 M 0 1.061032953945969e-08
+Bout X 0 V=4.5+3.0*V(M)/3.0/pwr(1+pwr(V(M)/3.0,4),0.25)
+Rout X OUT 75.0
+.ends
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata selectable_clip_overdrive.ngspice.txt v(OUT)
+.endc
+.end

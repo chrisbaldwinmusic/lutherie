@@ -197,7 +197,7 @@ public enum SelfTests {
             s.add(.resistor, "R1", 11, -4, rot: 1, ["r": 47])
             s.add(.output, "OUT", 14, -2)
             s.net("IN", "R0.1"); s.net("R0.2", "M1.g")
-            s.rail("M1.g", pmos ? 4.8 : 3, dy: -3)
+            s.rail("M1.g", pmos ? 5.3 : 3, dy: -3)
             s.net("R1.2", "M1.d", "OUT")
             if pmos { s.gnd("R1.1"); s.rail("M1.s", 9, dy: 2) } else { s.rail("R1.1", 9); s.gnd("M1.s") }
             guard s.audit().isEmpty, let e = try? CircuitEngine(circuit: s.c, sampleRate: 48_000) else { return nil }
@@ -210,7 +210,7 @@ public enum SelfTests {
             return m.pmos ? 47 * id : 9 - 47 * id
         }
         let wantN = expected(DeviceLibrary.mosfet("2N7000", pmos: false), vgs: 3)
-        let wantP = expected(DeviceLibrary.mosfet("BS250", pmos: true), vgs: 4.2)
+        let wantP = expected(DeviceLibrary.mosfet("BS250", pmos: true), vgs: 3.7)
         if let vn = drainVolts(pmos: false), let vp = drainVolts(pmos: true) {
             check(abs(vn - wantN) < 0.01, String(format: "N-MOSFET saturation current: drain at %.3f V, square law gives %.3f V", vn, wantN))
             // the 9 V supply's 10 mΩ sits in this one's source lead, which costs about 20 mV at the drain
@@ -288,8 +288,11 @@ public enum SelfTests {
         var zenerOK = true, report: [String] = []
         for (name, m) in DeviceLibrary.zeners.sorted(by: { $0.value.bv < $1.value.bv }) where m.bv < 8.5 {
             guard let back = zenerVolts(9, name), let fwd = zenerVolts(-9, name) else { zenerOK = false; continue }
-            report.append(String(format: "%.1f V part holds %.2f V, %.2f V forwards", m.bv, back, fwd))
-            if abs(back - m.bv) > 0.12 || fwd > -0.5 || fwd < -0.85 { zenerOK = false }
+            // what the breakdown law gives through 1 kΩ from 9 V: V = rating + knee·ln(I / test current) + series R·I
+            var want = m.bv
+            for _ in 0..<60 { let i = (9 - want) / 1000; want = 0.5 * want + 0.5 * (m.bv + m.nbv * 0.025852 * log(i / m.ibv) + m.rs * i) }
+            report.append(String(format: "%.1f V part holds %.2f V at %.1f mA (law gives %.2f), %.2f V forwards", m.bv, back, 9 - back, want, fwd))
+            if abs(back - want) > 0.02 || back > m.bv || fwd > -0.5 || fwd < -0.85 { zenerOK = false }
         }
         check(zenerOK && report.count == 3, "zeners: " + report.joined(separator: "; "))
 

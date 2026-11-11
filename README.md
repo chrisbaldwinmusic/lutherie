@@ -22,3 +22,6 @@ Recommendation: stay native while the product is Mac-only. Move to JUCE when Win
 
 ## Amp captures
 Lutherie can browse and load Neural Amp Modeler captures from your own TONE3000 account. Powered by [TONE3000](https://www.tone3000.com).
+
+## Checking the modelling
+`SPICE_DIR=out swift run -c release PedalCheck` writes an ngspice deck and Lutherie's own output for every starter circuit; `python3 Validation/compare.py out` runs ngspice on each and reports the difference. The decks are also kept in `Validation/decks`.

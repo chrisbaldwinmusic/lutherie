@@ -1,0 +1,50 @@
+* Slew-Limited Distortion — exported from Lutherie
+* A slow op-amp (0.3 V/µs) asked for up to 2000× gain: it can't keep up with the treble, which rounds the signal before two silicon diodes clip it. Filter turns the treble down as you turn it up. The sound of the late-1970s rodent-named distortion.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 22n
+RR1 N2 N3 1k
+RR2 N3 VCC_4p5V 1Meg
+XU1 N3 N5 N6 OPAMP_LM308_10_80
+* Distortion pot 100k A taper at 60%
+RVR1a N5 N6 16.2k
+RVR1b N6 N6 83.8k
+CC2 N5 N6 100p
+RR3 N7 N5 47
+CC3 N7 0 2.2u
+RR4 N8 N5 560
+CC4 0 N8 4.7u
+CC5 N6 N9 4.7u
+RR5 N9 N10 1k
+DD1 N10 0 D_1N914
+DD2 0 N10 D_1N914
+* Filter pot 100k A taper at 30%
+RVR2a N10 N11 3.42k
+RVR2b N11 N11 96.6k
+CC6 N11 0 3.3n
+* Volume pot 100k A taper at 60%
+RVR3a 0 OUT 16.2k
+RVR3b OUT N11 83.8k
+Rload OUT 0 1Meg
+VVS1 VCC_4p5V 0 DC 4.5
+
+.model D_1N914 D(Is=2.52e-09 N=1.752 Rs=0.568 Cjo=4e-12 M=0)
+* Behavioural op-amp: gain, gain-bandwidth, slew rate and output swing
+.subckt OPAMP_LM308_10_80 INP INN OUT
+Bin 0 M I=0.0477464829275686*tanh(0.3*V(INP,INN)/0.0477464829275686)
+R1 M 0 1Meg
+C1 M 0 1.5915494309189532e-07
+Bout X 0 V=4.5+3.5*V(M)/3.5/pwr(1+pwr(V(M)/3.5,4),0.25)
+Rout X OUT 100.0
+.ends
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata slew_limited_distortion.ngspice.txt v(OUT)
+.endc
+.end

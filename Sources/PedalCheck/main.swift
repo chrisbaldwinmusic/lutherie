@@ -6,6 +6,42 @@ let sr = Double(ProcessInfo.processInfo.environment["SR"] ?? "") ?? 48_000.0
 var testAmp: Float = 0.3
 var failures = 0
 
+// Cross-check against ngspice: `SPICE_DIR=folder PedalCheck` writes, for every starter circuit, an ngspice
+// deck and Lutherie's own output for the same input, then quits. compare.py in that folder runs ngspice
+// on each deck and reports how far apart the two are.
+if let dir = ProcessInfo.processInfo.environment["SPICE_DIR"] {
+    let fm = FileManager.default
+    try? fm.createDirectory(atPath: dir, withIntermediateDirectories: true)
+    let rate = 192_000.0, seconds = 0.3, freq = 220.0, amp = 0.3
+    var index: [String] = []
+    for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") {
+        let slug = circuit.name.lowercased().map { $0.isLetter || $0.isNumber ? $0 : "_" }.reduce("") { $0 + String($1) }
+        guard let out = SpiceExport.outputNode(circuit), let e = try? CircuitEngine(circuit: circuit, sampleRate: rate) else { continue }
+        let input = circuit.parts.first { $0.kind == .input }, output = circuit.parts.first { $0.kind == .output }
+        let step = 1 / rate / 4
+        let deck = SpiceExport.netlist(circuit, testFrequency: freq, testAmplitude: amp * (input?["scale"] ?? 1), analysis: [
+            ".options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap",
+            ".tran \(step) \(seconds) 0 \(step)",
+            ".control", "set wr_singlescale", "set numdgt=12", "run", "wrdata \(slug).ngspice.txt v(\(out))", ".endc",
+        ])
+        try? deck.write(toFile: "\(dir)/\(slug).cir", atomically: true, encoding: .utf8)
+        e.tolerance = 1e-7
+        var text = ""
+        let n = Int(rate * seconds), scale = output?["scale"] ?? 1
+        for i in 0..<n {
+            // the first sample is taken one step after the start, like the simulator's first time point
+            let t = Double(i + 1) / rate
+            let y = e.tick(amp * sin(2 * Double.pi * freq * t))
+            text += String(format: "%.9e %.9e\n", t, y / (scale == 0 ? 1 : scale))
+        }
+        try? text.write(toFile: "\(dir)/\(slug).lutherie.txt", atomically: true, encoding: .utf8)
+        index.append("\(slug)\t\(circuit.name)")
+        print("wrote \(slug)  (non-converged \(e.nonConverged))")
+    }
+    try? index.joined(separator: "\n").write(toFile: "\(dir)/index.txt", atomically: true, encoding: .utf8)
+    exit(0)
+}
+
 for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") {
     print("== \(circuit.name)")
     let net = Netlist.build(circuit)

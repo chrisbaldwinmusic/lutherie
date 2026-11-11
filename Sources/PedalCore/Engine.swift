@@ -15,7 +15,7 @@ struct IndEl { var m: Int; var b: Int; var l: Double; var geq: Double; var vPrev
 struct SupplyEl { var a: Int; var v: Double; var g: Double }
 struct DiodeEl {
     var a: Int; var c: Int; var Is: Double; var nvt: Double; var vcrit: Double; var vOld: Double
-    var bv = 0.0, bvt = 1.0, bcrit = 0.0     // reverse breakdown (zeners); bv 0 = none
+    var bv = 0.0, bvt = 1.0, bcrit = 0.0, ibv = 5e-3     // reverse breakdown (zeners); bv 0 = none
 }
 struct BJTEl {
     var c: Int; var b: Int; var e: Int; var pol: Double
@@ -176,14 +176,13 @@ public final class CircuitEngine {
             }
             let nvt = m.n * vt
             var el = DiodeEl(a: anode, c: c, Is: m.Is, nvt: nvt, vcrit: nvt * log(nvt / (sqrt(2) * m.Is)), vOld: 0)
-            if m.bv > 0 { el.bv = m.bv; el.bvt = m.nbv * vt; el.bcrit = el.bvt * log(el.bvt / (sqrt(2) * zenerTestCurrent)) }
+            if m.bv > 0 { el.bv = m.bv; el.ibv = m.ibv; el.bvt = m.nbv * vt; el.bcrit = el.bvt * log(el.bvt / (sqrt(2) * m.ibv)) }
             diodeList.append(el)
             addCap(a, c, m.cj)
         }
 
         let orderedPots = circuit.pots
         let knobParts = circuit.knobs
-        let zenerTestCurrent = 5e-3
         for p in circuit.parts {
             let nodes = (net.pinNodes[p.id] ?? []).map(idx)
             switch p.kind {
@@ -492,8 +491,8 @@ public final class CircuitEngine {
             var gd = d.Is * de / d.nvt + gmin
             if d.bv > 0 {
                 let (eb, deb) = limexp(-(vd + d.bv) / d.bvt)
-                id -= 5e-3 * eb
-                gd += 5e-3 * deb / d.bvt
+                id -= d.ibv * eb
+                gd += d.ibv * deb / d.bvt
             }
             nlConductance(d.a, d.c, gd)
             let ieq = id - gd * vd

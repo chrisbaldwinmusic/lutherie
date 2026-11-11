@@ -1,0 +1,18 @@
+jfet_clean_boost	JFET Clean Boost
+single_transistor_boost	Single-Transistor Boost
+mosfet_boost	MOSFET Boost
+germanium_treble_booster	Germanium Treble Booster
+diode_overdrive	Diode Overdrive
+cascaded_jfet_overdrive	Cascaded JFET Overdrive
+selectable_clip_overdrive	Selectable-Clip Overdrive
+hard_clip_distortion	Hard-Clip Distortion
+slew_limited_distortion	Slew-Limited Distortion
+two_transistor_fuzz	Two-Transistor Fuzz
+germanium_fuzz	Germanium Fuzz
+four_stage_sustain_fuzz	Four-Stage Sustain Fuzz
+bass_blend_overdrive	Bass Blend Overdrive
+tweed_style_preamp	Tweed-Style Preamp
+two_stage_tube_preamp	Two-Stage Tube Preamp
+british_stack_preamp	British Stack Preamp
+high_gain_cascade_preamp	High-Gain Cascade Preamp
+bass_tube_preamp	Bass Tube Preamp

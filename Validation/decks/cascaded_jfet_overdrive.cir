@@ -1,0 +1,47 @@
+* Cascaded JFET Overdrive — exported from Lutherie
+* Three JFET gain stages in a row, laid out like the preamp of a valve amp. JFETs clip softly and unevenly much as triodes do, so this gives amp-like overdrive at 9 V.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+CC1 IN N2 22n
+RR1 N2 0 1Meg
+JJ1 N3 N2 N4 J_J201
+RR2 VCC_9V N3 33k
+RR3 N4 0 1k
+CC2 N4 0 10u
+CC3 N3 N6 22n
+* Gain pot 500k A taper at 60%
+RVR1a 0 N7 81k
+RVR1b N7 N6 419k
+JJ2 N8 N7 N9 J_J201
+RR4 VCC_9V N8 33k
+RR5 N9 0 1k
+CC4 N8 N10 22n
+RR6 N10 N11 470k
+RR7 N11 0 470k
+JJ3 N12 N11 N13 J_J201
+RR8 VCC_9V N12 33k
+RR9 N13 0 1k
+CC5 N13 0 1u
+CC6 N12 N14 100n
+CC7 N14 N15 10n
+* Tone pot 50k B taper at 50%
+RVR2a N15 0 25k
+RVR2b 0 0 25k
+* Level pot 100k A taper at 60%
+RVR3a 0 OUT 16.2k
+RVR3b OUT N14 83.8k
+Rload OUT 0 1Meg
+VVS2 VCC_9V 0 DC 9.0
+
+.model J_J201 NJF(Beta=0.001304 Vto=-0.5 Lambda=0.0125 Cgs=4e-12 Cgd=4e-12)
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
+.tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata cascaded_jfet_overdrive.ngspice.txt v(OUT)
+.endc
+.end
