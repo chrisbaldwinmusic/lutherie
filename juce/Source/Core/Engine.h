@@ -40,6 +40,11 @@ public:
     int maxIterations = 40;
     bool traceNewton = false;     // debugging: print every Newton iteration
     bool cutBackEnabled = true;   // testing aid: off, a sample that won't converge is taken as it stands
+    /// Testing aid: off, op-amps always use the full nonlinear model (set before the first sample).
+    bool opAmpsAllowed = true;
+    int opModeSwitches = 0;
+    int64_t opLinearSamples = 0;
+    void setOpAmpsLinear (bool on);
     int64_t iterationCount = 0, factorCount = 0;
 
     /// Advances one sample with input u (in input units) and returns the output in output units.
@@ -136,6 +141,11 @@ private:
     double uPrev = 0;   // last sample's input, to interpolate across a cut-back sample
     std::vector<int> permS, permL;
     bool reducedValid = false;
+    int nlFull = 0, nlOpLinear = 0;   // where the linear block ends: with op-amps nonlinear, and with them linear
+    bool opLinear = false;
+    int opCalm = 0;
+    bool opLinearNow() const { return opLinear && ! dcMode; }
+    bool opAmpsWithin (double uMax, double xMax) const;
 
     double* sA = nullptr;
     double* sR = nullptr;

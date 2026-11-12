@@ -21,6 +21,13 @@ constexpr double vtTherm = 0.025852;
 /// when they cut off), where θ slightly above ½ lets it die away. In the audio band the difference is a fraction of
 /// a percent. ngspice's trapezoidal rule rings the same way on these circuits; its Gear method doesn't.
 constexpr double kTheta = 0.55;
+/// Op-amps are treated as linear while the input stage stays below 2 % of its slew limit (tanh u differs from u
+/// by u³/3: under 3 parts per million) and the output within 35 % of its swing either side of the middle (the soft
+/// limit x/(1+x⁴)^¼ differs from x by about x⁵/4: under 0.13 % of the swing open loop, and the feedback loop removes
+/// most of that). They return to it after 1024 samples well inside (half and 70 % of those). Checked against the
+/// full model on every starter circuit (better than −100 dB); at 50 % one circuit was only −86 dB.
+constexpr double kOpEnter = 0.02, kOpEnterX = 0.35;
+constexpr int kOpCalmSamples = 1024;
 
 inline std::pair<double, double> softplusPair (double u)
 {
@@ -301,23 +308,32 @@ CircuitEngine::CircuitEngine (const Circuit& c, double sr)
     if (n <= 0) throw CircuitError ("The circuit has no nodes yet.");
     if (n > 400) throw CircuitError ("The circuit is too large (" + std::to_string (n) + " nodes).");
 
-    // Order the unknowns: linear-only nodes first, nodes touched by a nonlinear device last.
-    std::vector<bool> isNL ((size_t) n, false);
+    // Order the unknowns in three groups: nodes that only touch linear parts, nodes touched by op-amps but by no
+    // other nonlinear device, and nodes of the other nonlinear devices. While every op-amp is in its linear range
+    // the middle group is eliminated along with the first (see setOpAmpsLinear); otherwise it is iterated with the last.
+    std::vector<bool> isNL ((size_t) n, false), isOp ((size_t) n, false);
     auto mark = [&isNL] (int i) { if (i >= 0) isNL[(size_t) i] = true; };
+    auto markOp = [&isOp] (int i) { if (i >= 0) isOp[(size_t) i] = true; };
     for (auto& d : diodes) { mark (d.a); mark (d.c); }
     for (auto& q : bjts) { mark (q.c); mark (q.b); mark (q.e); }
     for (auto& j : jfets) { mark (j.d); mark (j.g); mark (j.s); }
     for (auto& q : mosfets) { mark (q.d); mark (q.g); mark (q.s); }
     for (auto& q : pentodes) { mark (q.p); mark (q.g); mark (q.k); mark (q.s); }
     for (auto& t : triodes) { mark (t.p); mark (t.g); mark (t.k); }
-    for (auto& o : opamps) { mark (o.inP); mark (o.inN); mark (o.m); mark (o.out); }
+    for (auto& o : opamps) { markOp (o.inP); markOp (o.inN); markOp (o.m); markOp (o.out); }
     for (auto& o : otas) { mark (o.p); mark (o.n); mark (o.out); mark (o.abc); }
     for (auto& vc : vactrols) { mark (vc.r1); mark (vc.r2); }
-    const int linCount = (int) std::count (isNL.begin(), isNL.end(), false);
+    int linCount = 0, opCount = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        if (isNL[(size_t) i]) continue;
+        if (isOp[(size_t) i]) ++opCount; else ++linCount;
+    }
     nodeMap.assign ((size_t) n, 0);
     {
-        int li = 0, si = linCount;
-        for (int i = 0; i < n; ++i) nodeMap[(size_t) i] = isNL[(size_t) i] ? si++ : li++;
+        int li = 0, oi = linCount, si = linCount + opCount;
+        for (int i = 0; i < n; ++i)
+            nodeMap[(size_t) i] = isNL[(size_t) i] ? si++ : (isOp[(size_t) i] ? oi++ : li++);
     }
     auto m = [this] (int& i) { if (i >= 0) i = nodeMap[(size_t) i]; };
     for (auto& r : resistors) { m (r.a); m (r.b); }
@@ -338,8 +354,10 @@ CircuitEngine::CircuitEngine (const Circuit& c, double sr)
     for (auto& b : bbds) { m (b.inp); m (b.out); m (b.cv); }
     for (auto& o : lfos) { m (o.cv); m (o.out); }
     m (inputNode); m (outputNode);
-    nl = linCount;
-    ns = n - linCount;
+    nlFull = linCount;
+    nlOpLinear = linCount + opCount;
+    nl = nlFull;
+    ns = n - nl;
 
     maxSupply = vmax;
     for (auto& k : knobParts)
@@ -364,14 +382,18 @@ CircuitEngine::CircuitEngine (const Circuit& c, double sr)
     G0.assign (nn, 0); A.assign (nn, 0);
     rhs0.assign ((size_t) n, 0); rhs.assign ((size_t) n, 0); x.assign ((size_t) n, 0);
     perm.assign ((size_t) n, 0);
-    K.assign ((size_t) std::max (ns * ns, 1), 0); As.assign ((size_t) std::max (ns * ns, 1), 0);
-    rS.assign ((size_t) std::max (ns, 1), 0); bS.assign ((size_t) std::max (ns, 1), 0);
-    Minv.assign ((size_t) std::max (nl * nl, 1), 0); Y.assign ((size_t) std::max (nl * ns, 1), 0);
-    zL.assign ((size_t) std::max (nl, 1), 0); LLw.assign ((size_t) std::max (nl * nl, 1), 0);
-    permS.assign ((size_t) std::max (ns, 1), 0); permL.assign ((size_t) std::max (nl, 1), 0);
-    xPrev.assign ((size_t) std::max (ns, 1), 0);
+    {   // sized for whichever split is larger
+        const int nsMax = n - nlFull, nlMax = nlOpLinear;
+        const int lsMax = std::max (nlFull * (n - nlFull), nlOpLinear * (n - nlOpLinear));
+        K.assign ((size_t) std::max (nsMax * nsMax, 1), 0); As.assign ((size_t) std::max (nsMax * nsMax, 1), 0);
+        rS.assign ((size_t) std::max (nsMax, 1), 0); bS.assign ((size_t) std::max (nsMax, 1), 0);
+        Minv.assign ((size_t) std::max (nlMax * nlMax, 1), 0); Y.assign ((size_t) std::max (lsMax, 1), 0);
+        zL.assign ((size_t) std::max (nlMax, 1), 0); LLw.assign ((size_t) std::max (nlMax * nlMax, 1), 0);
+        permS.assign ((size_t) std::max (nsMax, 1), 0); permL.assign ((size_t) std::max (nlMax, 1), 0);
+        xPrev.assign ((size_t) std::max (nsMax, 1), 0);
+        xPrevSave.assign ((size_t) std::max (nsMax, 1), 0);
+    }
     xSave.assign ((size_t) n, 0);
-    xPrevSave.assign ((size_t) std::max (ns, 1), 0);
     targetFull();
     warnings = warn;
     for (auto& p : netlist.problems) if (p.rfind ("Add", 0) != 0) warnings.push_back (p);
@@ -416,6 +438,13 @@ void CircuitEngine::stampLinear()
     if (inputNode >= 0) addG (G0, inputNode, inputNode, inputG);
     if (outputNode >= 0) addG (G0, outputNode, outputNode, outputG);
     for (auto& o : opamps) addG (G0, o.out, o.out, o.gout);
+    if (opLinearNow())
+        for (auto& o : opamps)
+        {
+            // the op-amp inside its linear range: input stage gm into the internal node, output following it
+            addG (G0, o.m, o.inP, -o.gm); addG (G0, o.m, o.inN, o.gm);
+            addG (G0, o.out, o.m, -o.gout);
+        }
     for (auto& o : lfos) addG (G0, o.out, o.out, o.g);
     for (auto& b : bbds)
     {
@@ -491,6 +520,7 @@ void CircuitEngine::buildRHS (double u)
         for (auto& b : bbds) if (b.out >= 0) rhs0[(size_t) b.out] += b.g * b.held;
     }
     for (auto& o : lfos) if (o.out >= 0) rhs0[(size_t) o.out] += o.g * o.value() * (dcMode ? sourceScale : 1);
+    if (opLinearNow()) for (auto& o : opamps) if (o.out >= 0) rhs0[(size_t) o.out] += o.gout * o.mid;
     for (auto& s : supplies) rhs0[(size_t) s.a] += s.v * s.g * sourceScale;
     if (inputNode >= 0) rhs0[(size_t) inputNode] += u * inputScale * inputG * sourceScale;
 }
@@ -674,6 +704,7 @@ void CircuitEngine::stampNonlinear()
     }
     for (auto& o : opamps)
     {
+        if (opLinearNow()) break;
         const double vd = v (o.inP) - v (o.inN);
         const double th = std::tanh (o.gm * vd / o.iMax);
         const double iin = o.iMax * th;
@@ -1009,6 +1040,29 @@ void CircuitEngine::solveOperatingPoint()
     dcMode = false;
     stampLinear();
     for (int i = 0; i < ns; ++i) xPrev[(size_t) i] = x[(size_t) (nl + i)];
+    if (opAmpsAllowed && ! opamps.empty() && opAmpsWithin (kOpEnter * 0.5, kOpEnterX * 0.7)) setOpAmpsLinear (true);
+}
+
+bool CircuitEngine::opAmpsWithin (double uMax, double xMax) const
+{
+    for (auto& o : opamps)
+    {
+        const double u = o.gm * (v (o.inP) - v (o.inN)) / o.iMax;
+        const double xh = v (o.m) / std::max (o.half, 1e-3);
+        if (std::abs (u) > uMax || std::abs (xh) > xMax) return false;
+    }
+    return true;
+}
+
+void CircuitEngine::setOpAmpsLinear (bool on)
+{
+    if (opamps.empty() || on == opLinear) return;
+    opLinear = on;
+    nl = on ? nlOpLinear : nlFull;
+    ns = n - nl;
+    stampLinear();
+    for (int i = 0; i < ns; ++i) xPrev[(size_t) i] = x[(size_t) (nl + i)];   // the predictor starts afresh
+    ++opModeSwitches;
 }
 
 double CircuitEngine::tick (double u)
@@ -1016,7 +1070,20 @@ double CircuitEngine::tick (double u)
     buildRHS (u);
     std::copy (x.begin(), x.end(), xSave.begin());
     std::copy (xPrev.begin(), xPrev.end(), xPrevSave.begin());
-    if (newton (maxIterations, tolerance)) acceptStep();
+    bool converged = newton (maxIterations, tolerance);
+    if (opLinear && ! (converged && opAmpsWithin (kOpEnter, kOpEnterX)))
+    {
+        // An op-amp has left the range where treating it as linear is exact (or the sample didn't converge):
+        // solve this sample again with the full op-amp model, and stay with it for a while.
+        std::copy (xSave.begin(), xSave.end(), x.begin());
+        setOpAmpsLinear (false);
+        resetLimiters();
+        buildRHS (u);
+        converged = newton (maxIterations, tolerance);
+    }
+    if (! opLinear && ! opamps.empty() && opAmpsAllowed)
+        opCalm = converged && opAmpsWithin (kOpEnter * 0.5, kOpEnterX * 0.7) ? opCalm + 1 : 0;
+    if (converged) acceptStep();
     else if (! cutBackEnabled) { ++nonConverged; acceptStep(); }
     else
     {
@@ -1051,6 +1118,9 @@ double CircuitEngine::tick (double u)
         ++cutbacks;
     }
     uPrev = u;
+    // back to the linear treatment once every op-amp has stayed well inside its linear range for a while
+    if (! opLinear && opCalm >= kOpCalmSamples) { setOpAmpsLinear (true); opCalm = 0; }
+    if (opLinear) ++opLinearSamples;
     return v (outputNode) * outputScale;
 }
 

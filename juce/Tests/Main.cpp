@@ -77,6 +77,7 @@ int main (int argc, char** argv)
             if (std::getenv ("NOPRED")) e.predictor = false;
             if (std::getenv ("NOEARLY")) e.earlyExit = false;
             if (auto* t = std::getenv ("TOL")) e.tolerance = std::atof (t);
+            if (std::getenv ("FULLOPAMPS")) { e.setOpAmpsLinear (false); e.opAmpsAllowed = false; }
             if (auto* it = std::getenv ("ITER")) e.maxIterations = std::atoi (it);
             if (std::getenv ("OP") && c.name == std::getenv ("OP"))
                 for (auto& [name, val] : e.operatingPoint()) std::printf ("  %s = %.4f\n", name.c_str(), val);
@@ -106,9 +107,9 @@ int main (int argc, char** argv)
             if (sharedFailure && db >= -80)
                 std::printf ("note %s: both engines stop converging at sample %d and drift apart after it\n", c.name.c_str(), swiftNC);
             if (! ok) { ++failures; std::printf ("  first differs at sample %d, first non-converged at %d (Swift %d)\n", firstBad, firstNC, swiftNC); }
-            std::printf ("%s %-30s difference %7.1f dB of peak   %5.1fx real time at 96 kHz   non-converged %d  cut back %d  %.2f it/sample %.2f factorisations/sample\n",
+            std::printf ("%s %-30s difference %7.1f dB of peak   %5.1fx real time at 96 kHz   non-converged %d  cut back %d  op-amps linear %3.0f%% (%d switches)\n",
                          ok ? "ok  " : "FAIL", c.name.c_str(), db, 0.25 / secs, e.nonConverged, e.cutbacks,
-                         (double) e.iterationCount / n, (double) e.factorCount / n);
+                         100.0 * (double) e.opLinearSamples / n, e.opModeSwitches);
         }
         catch (const std::exception& ex) { std::printf ("FAIL %s: %s\n", c.name.c_str(), ex.what()); ++failures; }
     }
@@ -146,6 +147,39 @@ int main (int argc, char** argv)
         if (! ok) ++failures;
         std::printf ("%s rig: 4 pedals + amp at 4x, difference %.1f dB of peak, latency %d, %.0f%% of one core\n",
                      ok ? "ok  " : "FAIL", db, rig.latencySamples.load(), secs / 0.25 * 100);
+    }
+    // Op-amps switching between the linear treatment and the full model: a level sweeping from quiet to far too loud
+    // and back, so the op-amps leave and re-enter their linear range, must match the full model throughout.
+    for (const char* name : { "Four-Stage Phaser", "Bucket-Brigade Chorus", "Selectable-Clip Overdrive", "Bass Blend Overdrive" })
+    {
+        const Circuit* c = nullptr;
+        for (auto& cc : circuits) if (cc.name == name) c = &cc;
+        if (! c) continue;
+        const double rate = 96'000;
+        const int n = (int) (rate * 1.0);
+        auto run = [&] (bool allowLinear, int& switches, double& linShare) {
+            CircuitEngine e (*c, rate);
+            if (! allowLinear) { e.setOpAmpsLinear (false); e.opAmpsAllowed = false; }
+            std::vector<double> out ((size_t) n);
+            for (int i = 0; i < n; ++i)
+            {
+                if (i % 32 == 0) e.applyKnobs();
+                const double t = i / rate;
+                const double level = 0.02 + 2.5 * std::pow (std::sin (M_PI * t), 4);   // quiet, very loud, quiet
+                out[(size_t) i] = e.tick (level * std::sin (2 * M_PI * 330 * t));
+            }
+            switches = e.opModeSwitches; linShare = (double) e.opLinearSamples / n;
+            return out;
+        };
+        int sw = 0, sw0 = 0; double share = 0, share0 = 0;
+        const auto a = run (true, sw, share), ref = run (false, sw0, share0);
+        double maxDiff = 0, peak = 1e-12;
+        for (int i = 0; i < n; ++i) { maxDiff = std::max (maxDiff, std::abs (a[(size_t) i] - ref[(size_t) i])); peak = std::max (peak, std::abs (ref[(size_t) i])); }
+        const double db = 20 * std::log10 (std::max (maxDiff, 1e-15) / peak);
+        const bool ok = db < -80;
+        if (! ok) ++failures;
+        std::printf ("%s op-amp switching, %s: worst difference from the full model %.1f dB of peak over a level sweep (%d switches, linear %.0f%% of the time)\n",
+                     ok ? "ok  " : "FAIL", name, db, sw, share * 100);
     }
     // Built-in cabinets: every combination builds and is normalised like a loaded impulse response.
     {
