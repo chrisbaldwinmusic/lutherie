@@ -24,6 +24,7 @@ public enum Presets {
          hardClipSheet.c, slewDistortionSheet.c,
          fuzz, germaniumFuzzSheet.c, sustainFuzzSheet.c,
          bassBlendDriveSheet.c,
+         phaserSheet.c, optoTremoloSheet.c, bbdChorusSheet.c, bbdDelaySheet.c,
          blank("Empty pedal")]
     }
     public static var amps: [Circuit] { [tweedSheet.c, tubePreamp, britishSheet.c, highGainSheet.c, bassPreampSheet.c, britishHeadSheet.c, blank("Empty amp")] }

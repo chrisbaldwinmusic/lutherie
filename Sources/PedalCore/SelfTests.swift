@@ -35,6 +35,7 @@ public enum SelfTests {
         powerParts(check)
         powerAmp(check)
         cabinets(check)
+        modulationParts(check)
         let wiring = Presets.auditLibrary()
         check(wiring.isEmpty, "library schematics match their intended connections" + (wiring.isEmpty ? "" : ":\n       " + wiring.joined(separator: "\n       ")))
         if let dir = ProcessInfo.processInfo.environment["NAM_TEST_DIR"] {
@@ -499,5 +500,145 @@ public enum SelfTests {
         let rms = sqrt(tail.reduce(0) { $0 + $1 * $1 } / Double(tail.count))
         check(idle - loaded > 5 && idle - loaded < 80 && rms > 12 && rms < 40 && e.nonConverged < 48,   // under one sample in a thousand
               String(format: "power amp flat out: %.0f V rms at the speaker, supply sags from %.0f V to %.0f V, %d samples unsettled", rms, idle, loaded, e.nonConverged))
+    }
+
+    /// LFO rate, bucket-brigade delay time, vactrol speed and OTA gain against their defining formulas, and the
+    /// modulation pedals actually modulating.
+    static func modulationParts(_ check: (Bool, String) -> Void) {
+        let sr = 48_000.0
+        // LFO: rate slides from fmin to fmax as Rate CV goes from 0 to vref; 3 V of 9 V is a third of the way.
+        var l = Sheet("LFO test", notes: "")
+        l.add(.input, "IN", 0, 0)
+        l.add(.resistor, "R0", 3, 0, ["r": 1e6])
+        l.add(.lfo, "LFO1", 10, 0, ["fmin": 0.5, "fmax": 20, "vref": 9, "mid": 0, "amp": 1])
+        l.add(.output, "OUT", 14, 0)
+        l.net("IN", "R0.1"); l.gnd("R0.2", dy: 2)
+        l.net("LFO1.cv", "@8,-3", "#CV@6,-3,2"); l.rail("LFO1.cv", 3, dx: -4, dy: 3)
+        l.net("LFO1.o", "OUT")
+        if l.audit().isEmpty, let e = try? CircuitEngine(circuit: l.c, sampleRate: sr) {
+            var crossings = 0, prev = 0.0
+            // time from the first upward zero crossing to the last, over whole cycles
+            var first = -1, last = -1
+            for i in 0..<Int(sr * 12) {
+                let y = e.tick(0)
+                if prev < 0 && y >= 0 { crossings += 1; if first < 0 { first = i } else { last = i } }
+                prev = y
+            }
+            let got = Double(crossings - 1) / (Double(last - first) / sr)
+            let want = 0.5 * pow(40, 1.0 / 3)
+            check(abs(got - want) < 0.01, String(format: "LFO at 3 V of 9 V: %.3f Hz (expect %.3f)", got, want))
+        } else { check(false, "LFO test circuit builds \(l.audit())") }
+
+        // Bucket-brigade: an impulse comes out stages / (2 · clock) later. 1024 stages at 0 V CV (100 kHz): 5.12 ms;
+        // at 4.5 V of 9 V (31.6 kHz): 16.2 ms.
+        for cv in [0.0, 4.5] {
+            var b = Sheet("BBD test", notes: "")
+            b.add(.input, "IN", 0, 0, ["rs": 1])
+            b.add(.bbd, "IC1", 6, 0, ["fmin": 10e3, "fmax": 100e3, "vref": 9], model: "MN3207 (1024 stages)")
+            b.add(.output, "OUT", 10, 0)
+            b.add(.resistor, "R1", 3, 4, rot: 1, ["r": 1e6])
+            b.net("IN", "IC1.1", "~R1.1"); b.net("R1.1", "@3,0"); b.gnd("R1.2"); b.net("IC1.2", "OUT")
+            if cv == 0 { b.gnd("IC1.3", dy: 2) } else { b.rail("IC1.3", cv, dy: 2) }
+            guard b.audit().isEmpty, let e = try? CircuitEngine(circuit: b.c, sampleRate: sr) else { check(false, "BBD test circuit builds \(b.audit())"); continue }
+            var best = 0, peak = 0.0
+            for i in 0..<Int(sr * 0.03) {
+                let y = e.tick(i < 4 ? 0.5 : 0)
+                if abs(y) > peak { peak = abs(y); best = i }
+            }
+            let clock = 100e3 * pow(0.1, cv / 9)
+            // plus the middle of the 4-sample test pulse and the one solver step before the chip's output is seen
+            let want = 512 / clock * sr + 2.5
+            check(abs(Double(best) - want) < 1.5 && peak > 0.2,
+                  String(format: "bucket-brigade 1024 stages at %.0f kHz: echo after %.2f ms (expect %.2f), peak %.2f", clock / 1000, Double(best) / sr * 1000, want / sr * 1000, peak))
+        }
+
+        // Vactrol: 10 mA through the LED gives the rated resistance; the cell falls fast and recovers slowly.
+        var v = Sheet("Vactrol test", notes: "")
+        v.add(.input, "IN", 0, 0, ["rs": 1])
+        v.add(.resistor, "R1", 4, -3, rot: 1, ["r": 680])
+        v.add(.vactrol, "OC1", 8, 0, model: "VTL5C3")
+        v.add(.resistor, "R2", 12, -4, rot: 1, ["r": 1e3])
+        v.add(.output, "OUT", 15, -1)
+        v.net("IN", "@4,0", "|R1.2"); v.net("R1.1", "@6,-5", "|OC1.1")
+        v.gnd("OC1.2", dy: 2)
+        v.net("R2.2", "@12,-1", "OC1.3", "OUT"); v.rail("R2.1", 1)
+        v.gnd("OC1.4", dy: 2)
+        if v.audit().filter({ !$0.contains("Not connected") }).isEmpty, let e = try? CircuitEngine(circuit: v.c, sampleRate: sr) {
+            // the input drives the LED: 8.5 V through 680 Ω is about 10 mA
+            func cell(_ out: Double) -> Double { out / (1 - out) * 1e3 }
+            var y = 0.0
+            for _ in 0..<Int(sr * 0.3) { y = e.tick(8.5) }
+            let lit = cell(y)
+            var t10 = 0
+            for i in 0..<Int(sr * 0.5) { y = e.tick(0); if t10 == 0 && cell(y) > 10 * lit { t10 = i } }
+            var t10on = 0
+            for i in 0..<Int(sr * 0.2) { y = e.tick(8.5); if t10on == 0 && cell(y) < 2 * lit { t10on = i } }
+            check(abs(lit - 1500) < 300 && t10 > t10on * 3,
+                  String(format: "vactrol VTL5C3: %.0f Ω lit at about 10 mA, back to 2× that %.1f ms after switching on, ten times darker %.1f ms after switching off",
+                         lit, Double(t10on) / sr * 1000, Double(t10) / sr * 1000))
+        } else { check(false, "vactrol test circuit builds \(v.audit())") }
+
+        // OTA: small-signal transconductance Iabc / (2 Vt) into 10 kΩ. 9 V through 82 kΩ sets about 95 µA.
+        var o = Sheet("OTA test", notes: "")
+        o.add(.input, "IN", 0, 0, ["rs": 1])
+        o.add(.ota, "U1", 6, 1, model: "LM13700")
+        o.add(.resistor, "R1", 11, 4, rot: 1, ["r": 10e3])
+        o.add(.resistor, "R2", 6, 7, rot: 1, ["r": 82e3])
+        o.add(.output, "OUT", 14, 1)
+        o.net("IN", "@3,0", "|U1.-")
+        o.gnd("U1.+", dx: -1, dy: 2)
+        o.net("U1.o", "@11,1", "|R1.1", "OUT"); o.gnd("R1.2")
+        o.net("U1.abc", "R2.1"); o.rail("R2.2", 9, dy: 2)
+        let op = o.audit()
+        if op.isEmpty, let e = try? CircuitEngine(circuit: o.c, sampleRate: sr) {
+            let vabc = e.operatingPoint().first { $0.0 == "N" + "\(e.netlist.pinNodes[o.c.parts.first { $0.name == "U1" }!.id]![3])" }?.1
+            _ = vabc
+            let m = DeviceLibrary.ota("LM13700")
+            // bias current: solve 9 V = 82k · I + 2 Vt · ln(I / Is)
+            var iabc = 1e-4
+            for _ in 0..<60 { iabc = (9 - m.nAbc * 0.025852 * log(iabc / m.isAbc)) / 82e3 }
+            let want = iabc / (2 * 0.025852) * 10e3
+            let r = e.frequencyResponse([1000])
+            let got = pow(10, r[0] / 20)
+            check(abs(got / want - 1) < 0.02, String(format: "OTA at %.0f µA bias: gain %.2f into 10 kΩ (Iabc / 2Vt gives %.2f)", iabc * 1e6, got, want))
+        } else { check(false, "OTA test circuit builds \(op)") }
+
+        // The pedals themselves: the phaser's and the tremolo's output must swing with the LFO, the chorus
+        // and the delay must delay.
+        func envelope(_ c: Circuit, seconds: Double) -> (Double, Double)? {
+            guard let e = try? CircuitEngine(circuit: c, sampleRate: sr) else { return nil }
+            let n = Int(sr * seconds), win = Int(sr * 0.02)
+            var lo = Double.infinity, hi = 0.0, acc = 0.0
+            for i in 0..<n {
+                let y = e.tick(0.2 * sin(2 * Double.pi * 700 * Double(i) / sr))
+                acc += y * y
+                if (i + 1) % win == 0 {
+                    let rms = sqrt(acc / Double(win)); acc = 0
+                    if i > n / 4 { lo = min(lo, rms); hi = max(hi, rms) }
+                }
+            }
+            return (lo, hi)
+        }
+        for (c, need) in [(Presets.phaserSheet.c, 6.0), (Presets.optoTremoloSheet.c, 6.0)] {
+            if let (lo, hi) = envelope(c, seconds: 3) {
+                let swing = 20 * log10(hi / max(lo, 1e-9))
+                check(swing > need, String(format: "%@: a 700 Hz tone swings %.1f dB with the LFO", c.name, swing))
+            } else { check(false, "\(c.name) builds") }
+        }
+        if let e = try? CircuitEngine(circuit: Presets.bbdDelaySheet.c, sampleRate: sr) {
+            // Time at half: B pot gives 4.5 V, a 26.6 kHz clock and 77 ms through 4096 stages
+            var first = 0
+            let n = Int(sr * 0.4)
+            var peaks: [(Int, Double)] = []
+            var y0 = 0.0
+            for i in 0..<n {
+                let y = e.tick(i < 24 ? 0.5 : 0)
+                if i > Int(sr * 0.01) && abs(y) > 0.01 && first == 0 { first = i }
+                y0 = max(y0, abs(y))
+                if i % 480 == 0 { peaks.append((i, y0)); y0 = 0 }
+            }
+            let want = 2048 / (100e3 * pow(0.07, 0.5))
+            check(abs(Double(first) / sr - want) < 0.004, String(format: "BBD delay at half Time: first echo at %.1f ms (clock alone gives %.1f ms)", Double(first) / sr * 1000, want * 1000))
+        } else { check(false, "BBD delay builds") }
     }
 }

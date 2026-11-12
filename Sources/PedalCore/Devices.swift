@@ -41,6 +41,23 @@ public struct PentodeModel: Sendable {
     public var cgk: Double; public var cgp: Double; public var cpk: Double
 }
 
+/// Operational transconductance amplifier (CA3080, LM13700): output current = Iabc · tanh(Vdiff / 2Vt).
+/// The bias input sits two junctions above the negative supply (taken as ground); `isAbc` and `nAbc` describe
+/// that pair of junctions, so the bias current follows the voltage on the pin as it does on the chip.
+public struct OTAModel: Sendable {
+    public var isAbc: Double; public var nAbc: Double; public var iMax: Double
+}
+/// LED and light-dependent resistor in one sealed package (vactrol). The cell's conductance follows the light,
+/// which rises with `tauOn` and dies away with `tauOff`; resistance at 10 mA is `r10`, and falls as current^-gamma.
+public struct VactrolModel: Sendable {
+    public var r10: Double; public var gamma: Double; public var rDark: Double; public var tauOn: Double; public var tauOff: Double
+}
+/// Bucket-brigade delay chip: `stages` capacitors, two per clock cycle, so the delay is stages / (2 · clock).
+/// `inefficiency` is the share of charge each stage leaves behind (what dulls the treble).
+public struct BBDModel: Sendable {
+    public var stages: Int; public var inefficiency: Double
+}
+
 public enum DeviceLibrary {
     public static let diodes: [String: DiodeModel] = [
         "1N4148": DiodeModel(Is: 2.52e-9, n: 1.752, rs: 0.568, cj: 4e-12),
@@ -111,6 +128,30 @@ public enum DeviceLibrary {
         "KT88": PentodeModel(mu: 8.8, ex: 1.35, kg1: 730, kg2: 4200, kp: 32, kvb: 16, cgk: 14e-12, cgp: 0.85e-12, cpk: 12e-12),
         "EL34": PentodeModel(mu: 11, ex: 1.35, kg1: 650, kg2: 4200, kp: 60, kvb: 24, cgk: 15e-12, cgp: 1.1e-12, cpk: 8e-12),
     ]
+    // OTAs: both chips are the same differential pair; the bias pin is two diode drops (about 1.2 V at 1 mA)
+    // above V-. Bias current limits from the data sheets (CA3080: 2 mA, LM13700: 2 mA).
+    public static let otas: [String: OTAModel] = [
+        "LM13700": OTAModel(isAbc: 7.6e-14, nAbc: 2, iMax: 2e-3),
+        "CA3080": OTAModel(isAbc: 7.6e-14, nAbc: 2, iMax: 2e-3),
+    ]
+    // Vactrols. On-resistance at 10 mA from the makers' sheets where known (VTL5C3 1.5 kΩ, VTL5C1 600 Ω); the slope
+    // and the light's rise and fall times are estimates, chosen to match the published curves by eye: not checked.
+    public static let vactrols: [String: VactrolModel] = [
+        "VTL5C3": VactrolModel(r10: 1.5e3, gamma: 0.75, rDark: 10e6, tauOn: 2.5e-3, tauOff: 35e-3),
+        "VTL5C1": VactrolModel(r10: 600, gamma: 0.9, rDark: 50e6, tauOn: 2.5e-3, tauOff: 80e-3),
+        "NSL-32": VactrolModel(r10: 400, gamma: 0.85, rDark: 500e3, tauOn: 5e-3, tauOff: 10e-3),
+    ]
+    // Panasonic bucket-brigade chips (stage counts from the data sheets; charge loss is an estimate).
+    public static let bbds: [String: BBDModel] = [
+        "MN3207 (1024 stages)": BBDModel(stages: 1024, inefficiency: 1e-4),
+        "MN3007 (1024 stages)": BBDModel(stages: 1024, inefficiency: 0.8e-4),
+        "MN3008 (2048 stages)": BBDModel(stages: 2048, inefficiency: 0.8e-4),
+        "MN3005 (4096 stages)": BBDModel(stages: 4096, inefficiency: 0.8e-4),
+    ]
+    public static func ota(_ name: String) -> OTAModel { otas[name] ?? otas["LM13700"]! }
+    public static func vactrol(_ name: String) -> VactrolModel { vactrols[name] ?? vactrols["VTL5C3"]! }
+    public static func bbd(_ name: String) -> BBDModel { bbds[name] ?? bbds["MN3207 (1024 stages)"]! }
+
     public static func pentode(_ name: String) -> PentodeModel { pentodes[name] ?? pentodes["6L6GC"]! }
 
     public static func diode(_ name: String, led: Bool) -> DiodeModel {

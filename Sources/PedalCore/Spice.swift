@@ -148,6 +148,52 @@ public enum SpiceExport {
                     """
                 }
                 lines.append("X\(id) \(node(p, 0)) \(node(p, 1)) \(node(p, 2)) \(sn)")
+            case .ota:
+                let m = DeviceLibrary.ota(p.model)
+                let sn = "OTA_" + p.model.filter { $0.isLetter || $0.isNumber }
+                if subckts.insert(sn).inserted {
+                    models[sn] = """
+                    * OTA: the bias current is what flows in the bias pin's two junctions (to V-, here ground)
+                    .subckt \(sn) INP INN OUT ABC
+                    Dabc ABC 0 D_\(sn)
+                    .model D_\(sn) D(Is=\(m.isAbc) N=\(m.nAbc))
+                    Bout 0 OUT I=min(\(m.isAbc)*(exp(V(ABC)/\(m.nAbc * 0.025852))-1),\(m.iMax))*tanh(V(INP,INN)/0.051704)
+                    .ends
+                    """
+                }
+                lines.append("X\(id) \(node(p, 0)) \(node(p, 1)) \(node(p, 2)) \(node(p, 3)) \(sn)")
+            case .vactrol:
+                let m = DeviceLibrary.vactrol(p.model)
+                let led = DeviceLibrary.diode("Red LED", led: true)
+                lines.append("* \(p.name): vactrol \(p.model); node \(id)_L is the light level (amps of LED current)")
+                models["D_RedLED"] = ".model D_RedLED D(Is=\(led.Is) N=\(led.n) Rs=\(led.rs) Cjo=\(led.cj) M=0)"
+                lines.append("D\(id) \(node(p, 0)) \(id)_k D_RedLED")
+                lines.append("V\(id)s \(id)_k \(node(p, 1)) 0")
+                lines.append("C\(id)L \(id)_L 0 1")
+                lines.append("B\(id)L 0 \(id)_L I=(max(I(V\(id)s),0)-V(\(id)_L))/(max(I(V\(id)s),0)>V(\(id)_L) ? \(m.tauOn) : \(m.tauOff))")
+                lines.append("B\(id)R \(node(p, 2)) \(node(p, 3)) I=V(\(node(p, 2)),\(node(p, 3)))*(\(1 / m.rDark)+\(1 / m.r10)*exp(\(m.gamma)*ln(max(V(\(id)_L)*100,1e-15))))")
+            case .bbd:
+                // SPICE has no bucket-brigade part: the deck passes the signal straight through, so a delay circuit's
+                // deck only checks the circuitry around the chip.
+                lines.append("* \(p.name): \(p.model) bucket-brigade delay, exported as a plain buffer (no delay)")
+                lines.append("E\(id) \(id)_e 0 \(node(p, 0)) 0 1")
+                lines.append("R\(id)o \(id)_e \(node(p, 1)) 100")
+                lines.append("R\(id)cv \(node(p, 2)) 0 1G")
+            case .lfo:
+                // the phase is the voltage on a 1 F capacitor charged at the rate in hertz
+                let fmax = max(p["fmax"], 0.001), fmin = min(max(p["fmin"], 0.001), fmax), vref = max(p["vref"], 0.1)
+                let wave: String
+                switch Int(p["wave"].rounded()) {
+                case 1: wave = "sin(6.283185307*V(\(id)_ph))"
+                case 2: wave = "tanh(20*sin(6.283185307*V(\(id)_ph)))/tanh(20)"
+                default: wave = "asin(sin(6.283185307*V(\(id)_ph)))/1.570796327"
+                }
+                lines.append("* \(p.name): LFO")
+                lines.append("C\(id)ph \(id)_ph 0 1")
+                lines.append("B\(id)ph 0 \(id)_ph I=\(fmin)*exp(ln(\(fmax / fmin))*min(max(V(\(node(p, 0)))/\(vref),0),1))")
+                lines.append("B\(id) \(id)_o 0 V=\(p["mid"])+\(p["amp"])*\(wave)")
+                lines.append("R\(id)o \(id)_o \(node(p, 1)) 100")
+                lines.append("R\(id)cv \(node(p, 0)) 0 1G")
             case .supply:
                 let n = node(p, 0)
                 if supplyNodes.insert(n).inserted {

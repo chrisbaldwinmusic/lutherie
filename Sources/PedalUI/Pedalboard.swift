@@ -32,6 +32,10 @@ struct PedalFinish {
         case "Germanium Fuzz": return PedalFinish(top: 0xb4683b, bottom: 0x7a3f22, ink: 0xf6eedb, texture: .hammered)
         case "Four-Stage Sustain Fuzz": return PedalFinish(top: 0x66724a, bottom: 0x414b2d, ink: 0xf1ead4, creamKnobs: true, texture: .hammered)
         case "Bass Blend Overdrive": return PedalFinish(top: 0x2c406a, bottom: 0x1a2744, ink: 0xe9dfc6, led: 0x3d9cff)
+        case "Four-Stage Phaser": return PedalFinish(top: 0xe8772e, bottom: 0xb5531a, ink: 0x1d140c)
+        case "Opto Tremolo": return PedalFinish(top: 0x3f6b5a, bottom: 0x274538, ink: 0xf1e8d2, creamKnobs: true, texture: .hammered, led: 0xffb347)
+        case "Bucket-Brigade Chorus": return PedalFinish(top: 0x6fa6c9, bottom: 0x4a7fa3, ink: 0x0f1a24, led: 0x3d9cff)
+        case "Bucket-Brigade Delay": return PedalFinish(top: 0x4b6b3a, bottom: 0x2f4724, ink: 0xf2ead2, creamKnobs: true, led: 0xff3b30)
         default:
             // a circuit of the player's own: a steady colour from its name
             let palette: [(UInt32, UInt32, UInt32, Bool)] = [(0x7b2f3b, 0x4f1c26, 0xf1e8d2, true), (0x3b5f4a, 0x24402f, 0xf1e8d2, true),

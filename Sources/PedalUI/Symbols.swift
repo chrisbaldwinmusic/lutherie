@@ -169,6 +169,30 @@ enum Symbol {
             s.strokes += [[p(-1.5, -1.8), p(-1.5, 1.8), p(1.6, 0), p(-1.5, -1.8)],
                           [p(-2, 1), p(-1.5, 1)], [p(-2, -1), p(-1.5, -1)], [p(1.6, 0), p(2, 0)]]
             s.texts += [("+", p(-1.05, 1)), ("−", p(-1.05, -1))]
+        case .ota:
+            s.strokes += [[p(-1.5, -1.8), p(-1.5, 1.8), p(1.6, 0), p(-1.5, -1.8)],
+                          [p(-2, 1), p(-1.5, 1)], [p(-2, -1), p(-1.5, -1)], [p(1.6, 0), p(2, 0)], [p(0, 2), p(0, 0.93)]]
+            s.circles.append((p(0.85, 0), 0.22))
+            s.texts += [("+", p(-1.05, 1)), ("−", p(-1.05, -1))]
+        case .vactrol:
+            s.strokes += [[p(-1.5, -1.6), p(1.5, -1.6), p(1.5, 1.6), p(-1.5, 1.6), p(-1.5, -1.6)],
+                          [p(-2, -1), p(-0.8, -1), p(-0.8, -0.4)], [p(-0.8, 0.25), p(-0.8, 1), p(-2, 1)],
+                          [p(-1.2, 0.25), p(-0.4, 0.25)], [p(-0.2, -0.25), p(0.35, -0.25)], [p(-0.2, 0.25), p(0.35, 0.25)],
+                          [p(2, -1), p(0.9, -1), p(0.9, -0.7)], [p(0.9, 0.7), p(0.9, 1), p(2, 1)]]
+            s.filled += [[p(-1.2, -0.4), p(-0.4, -0.4), p(-0.8, 0.25)],
+                         [p(0.45, -0.25), p(0.25, -0.38), p(0.25, -0.12)], [p(0.45, 0.25), p(0.25, 0.12), p(0.25, 0.38)]]
+            var zig = [p(0.9, -0.7)]
+            for i in 0..<5 { zig.append(p(i % 2 == 0 ? 0.65 : 1.15, -0.55 + CGFloat(i) * 0.275)) }
+            zig.append(p(0.9, 0.7))
+            s.strokes.append(zig)
+        case .bbd:
+            s.strokes += [[p(-1.5, -1.3), p(1.5, -1.3), p(1.5, 1.3), p(-1.5, 1.3), p(-1.5, -1.3)],
+                          [p(-2, 0), p(-1.5, 0)], [p(1.5, 0), p(2, 0)], [p(0, 2), p(0, 1.3)]]
+            s.texts += [("BBD", p(0, -0.2))]
+        case .lfo:
+            s.circles.append((p(0, 0), 1.2))
+            s.strokes += [[p(-2, 0), p(-1.2, 0)], [p(1.2, 0), p(2, 0)],
+                          [p(-0.75, 0.3), p(-0.38, -0.4), p(0.38, 0.4), p(0.75, -0.3)]]
         case .ground:
             s.strokes += [[p(0, 0), p(0, 0.6)], [p(-0.7, 0.6), p(0.7, 0.6)], [p(-0.45, 0.85), p(0.45, 0.85)], [p(-0.2, 1.1), p(0.2, 1.1)]]
         case .supply:
@@ -194,6 +218,8 @@ enum Symbol {
         case .pot: return CGRect(x: -2, y: -2, width: 4, height: 2.8)
         case .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .opamp, .transformer: return CGRect(x: -2, y: -2, width: 4, height: 4)
         case .pentode: return CGRect(x: -2, y: -2, width: 5, height: 4)
+        case .ota, .vactrol, .bbd: return CGRect(x: -2, y: -2, width: 4, height: 4)
+        case .lfo: return CGRect(x: -2, y: -1.3, width: 4, height: 2.6)
         case .label: return CGRect(x: 0, y: -0.6, width: 2.8, height: 1.2)
         case .input: return CGRect(x: -1.5, y: -0.6, width: 1.6, height: 1.2)
         case .output: return CGRect(x: -0.1, y: -0.6, width: 1.6, height: 1.2)
@@ -209,7 +235,9 @@ enum Symbol {
         case .capacitor: return (part.name, Eng.format(part["c"], unit: "F"))
         case .inductor: return (part.name, Eng.format(part["l"], unit: "H"))
         case .pot: return (part.text.isEmpty ? part.name : part.text, Eng.format(part["r"], unit: "Ω") + " " + part.model + (part.gang > 0 ? " · gang \(part.gang)" : ""))
-        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode, .opamp: return (part.name, part.model)
+        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode, .opamp, .ota, .vactrol: return (part.name, part.model)
+        case .bbd: return (part.name, String(part.model.prefix { $0 != " " }))
+        case .lfo: return (part.name, Eng.format(part["fmin"], unit: "Hz") + "–" + Eng.format(part["fmax"], unit: "Hz"))
         case .transformer: return (part.name, Eng.format(part["zpp"], unit: "Ω") + " : " + Eng.format(part["zs"], unit: "Ω"))
         case .spst, .spdt: return (part.text.isEmpty ? part.name : part.text, part.switchStateName)
         case .supply: return (part.text.isEmpty ? Eng.format(part["v"], unit: "V") : part.text, "")

@@ -12,6 +12,7 @@ public struct GridPoint: Hashable, Codable, Sendable {
 public enum PartKind: String, Codable, CaseIterable, Sendable {
     case resistor, capacitor, inductor, pot, diode, led, zener
     case npn, pnp, njfet, pjfet, nmos, pmos, opamp, triode, pentode, transformer
+    case ota, vactrol, bbd, lfo
     case spst, spdt
     case ground, supply, input, output, label
 
@@ -36,6 +37,10 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .triode: return "Triode (tube)"
         case .pentode: return "Power tube"
         case .transformer: return "Output transformer"
+        case .ota: return "OTA"
+        case .vactrol: return "Vactrol (LED + LDR)"
+        case .bbd: return "Bucket-brigade delay"
+        case .lfo: return "LFO"
         case .ground: return "Ground"
         case .supply: return "Supply"
         case .input: return "Guitar in"
@@ -59,6 +64,10 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .opamp: return "U"
         case .triode, .pentode: return "V"
         case .transformer: return "T"
+        case .ota: return "U"
+        case .vactrol: return "OC"
+        case .bbd: return "IC"
+        case .lfo: return "LFO"
         case .ground: return "GND"
         case .supply: return "VCC"
         case .input: return "IN"
@@ -84,6 +93,14 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
             return [GridPoint(1, -2), GridPoint(-2, 0), GridPoint(1, 2), GridPoint(3, 0)]
         case .transformer:
             return [GridPoint(-2, -2), GridPoint(-2, 0), GridPoint(-2, 2), GridPoint(2, -2), GridPoint(2, 2)]
+        case .ota:
+            return [GridPoint(-2, 1), GridPoint(-2, -1), GridPoint(2, 0), GridPoint(0, 2)]
+        case .vactrol:
+            return [GridPoint(-2, -1), GridPoint(-2, 1), GridPoint(2, -1), GridPoint(2, 1)]
+        case .bbd:
+            return [GridPoint(-2, 0), GridPoint(2, 0), GridPoint(0, 2)]
+        case .lfo:
+            return [GridPoint(-2, 0), GridPoint(2, 0)]
         case .ground, .supply, .input, .output, .label:
             return [GridPoint(0, 0)]
         }
@@ -102,6 +119,10 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .pentode: return ["Plate", "Grid", "Cathode", "Screen"]
         case .transformer: return ["Primary 1", "Centre tap", "Primary 2", "Secondary 1", "Secondary 2"]
         case .opamp: return ["+ In", "− In", "Out"]
+        case .ota: return ["+ In", "− In", "Out", "Bias (Iabc)"]
+        case .vactrol: return ["LED anode", "LED cathode", "Cell 1", "Cell 2"]
+        case .bbd: return ["In", "Out", "Clock CV"]
+        case .lfo: return ["Rate CV", "Out"]
         default: return ["Pin"]
         }
     }
@@ -118,6 +139,10 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .spdt: return ["state": 0]
         case .input: return ["rs": 1_000, "scale": 1]
         case .output: return ["rl": 1_000_000, "scale": 1]
+        // the clock runs at fmax with 0 V on Clock CV and slides (exponentially) down to fmin at vref
+        case .bbd: return ["fmin": 10_000, "fmax": 100_000, "vref": 9]
+        // rate slides (exponentially) from fmin at 0 V on Rate CV to fmax at vref; the output swings mid ± amp
+        case .lfo: return ["fmin": 0.1, "fmax": 10, "vref": 9, "mid": 4.5, "amp": 2, "wave": 0]
         default: return [:]
         }
     }
@@ -137,6 +162,9 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .triode: return "12AX7"
         case .pentode: return "6L6GC"
         case .pot: return "B"
+        case .ota: return "LM13700"
+        case .vactrol: return "VTL5C3"
+        case .bbd: return "MN3207 (1024 stages)"
         default: return ""
         }
     }
@@ -156,6 +184,9 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .triode: return DeviceLibrary.triodes.keys.sorted()
         case .pentode: return DeviceLibrary.pentodes.keys.sorted()
         case .pot: return ["A", "B", "C"]
+        case .ota: return DeviceLibrary.otas.keys.sorted()
+        case .vactrol: return DeviceLibrary.vactrols.keys.sorted()
+        case .bbd: return DeviceLibrary.bbds.keys.sorted { DeviceLibrary.bbds[$0]!.stages < DeviceLibrary.bbds[$1]!.stages }
         default: return []
         }
     }

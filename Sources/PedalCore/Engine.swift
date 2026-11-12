@@ -57,6 +57,40 @@ struct OpAmpEl {
     var gm: Double; var iMax: Double; var mid: Double; var half: Double; var gout: Double; var vClamp: Double
 }
 
+/// OTA: output current Iabc(v_abc) · tanh(v_diff / 2Vt). `di` is the diode (bias pin to ground) that carries Iabc.
+struct OTAEl { var p: Int; var n: Int; var out: Int; var abc: Int; var di: Int; var iMax: Double }
+/// Vactrol: the LED is diode `di`; the cell between r1 and r2 has conductance g, set from the light level each sample.
+struct VactrolEl {
+    var di: Int; var r1: Int; var r2: Int
+    var gDark: Double; var g10: Double; var gamma: Double; var kOn: Double; var kOff: Double
+    var light: Double; var g: Double
+}
+/// Bucket-brigade chip. Each clock cycle one sample enters the chain and the one that went in `half` cycles ago
+/// reaches the output, where it is held until the next cycle. The output drives its node through `g`.
+struct BBDEl {
+    var inp: Int; var out: Int; var cv: Int; var half: Int
+    var fmin: Double; var fmax: Double; var vref: Double; var g: Double; var smear: Double
+    var ring: UnsafeMutablePointer<Double>; var mask: Int; var w: Int
+    var phase: Double; var held: Double; var vinPrev: Double; var bias: Double; var biasCoef: Double; var seed: UInt32
+}
+
+/// Low-frequency oscillator: drives `out` through g with mid + amp · wave(phase); the rate follows Rate CV.
+struct LFOEl {
+    var cv: Int; var out: Int; var g: Double
+    var fmin: Double; var fmax: Double; var vref: Double; var mid: Double; var amp: Double; var wave: Int
+    var phase: Double
+    /// Triangle, sine or square (the square's edges rounded over about 1 % of a cycle, like an op-amp's slew).
+    @inline(__always) var value: Double {
+        switch wave {
+        case 1: return mid + amp * sin(2 * Double.pi * phase)
+        case 2: return mid + amp * tanh(20 * sin(2 * Double.pi * phase)) / tanh(20)
+        default:
+            let t = phase < 0.25 ? 4 * phase : (phase < 0.75 ? 2 - 4 * phase : 4 * phase - 4)
+            return mid + amp * t
+        }
+    }
+}
+
 @inline(__always) func softplus(_ u: Double) -> Double { u > 30 ? u : (u < -30 ? exp(u) : log1p(exp(u))) }
 @inline(__always) func sigmoid(_ u: Double) -> Double { 1 / (1 + exp(-u)) }
 /// softplus and its derivative (the logistic function) from one exponential
@@ -109,6 +143,10 @@ public final class CircuitEngine {
     var xfmrs: UnsafeMutableBufferPointer<XfmrEl>
     var triodes: UnsafeMutableBufferPointer<TriodeEl>
     var opamps: UnsafeMutableBufferPointer<OpAmpEl>
+    var otas: UnsafeMutableBufferPointer<OTAEl>
+    var vactrols: UnsafeMutableBufferPointer<VactrolEl>
+    var bbds: UnsafeMutableBufferPointer<BBDEl>
+    var lfos: UnsafeMutableBufferPointer<LFOEl>
 
     var inputNode = -1
     var inputG = 1e-3
@@ -188,6 +226,7 @@ public final class CircuitEngine {
         var diodeList: [DiodeEl] = [], bjtList: [BJTEl] = [], jfetList: [JFETEl] = []
         var triodeList: [TriodeEl] = [], opList: [OpAmpEl] = [], mosList: [MOSEl] = []
         var pentList: [PentodeEl] = [], xfList: [XfmrEl] = []
+        var otaList: [OTAEl] = [], vacList: [VactrolEl] = [], bbdList: [BBDEl] = [], lfoList: [LFOEl] = []
         var warn: [String] = []
         let vt = 0.025852
         var resList: [ResistorEl] = [], supList: [SupplyEl] = []
@@ -312,6 +351,34 @@ public final class CircuitEngine {
                 opList.append(OpAmpEl(inP: nodes[0], inN: nodes[1], m: inner, out: nodes[2], gm: gm,
                                       iMax: m.slew * 1e6 * c1, mid: (hi + lo) / 2, half: half,
                                       gout: 1 / max(m.rout, 0.1), vClamp: 2.5 * half))
+            case .ota:
+                let m = DeviceLibrary.ota(p.model)
+                let di = diodeList.count
+                addDiode(nodes[3], -1, DiodeModel(Is: m.isAbc, n: m.nAbc, rs: 0, cj: 0))
+                otaList.append(OTAEl(p: nodes[0], n: nodes[1], out: nodes[2], abc: nodes[3], di: di, iMax: m.iMax))
+            case .vactrol:
+                let m = DeviceLibrary.vactrol(p.model)
+                let di = diodeList.count
+                addDiode(nodes[0], nodes[1], DeviceLibrary.diode("Red LED", led: true))
+                let dtc = 1 / sampleRate
+                vacList.append(VactrolEl(di: di, r1: nodes[2], r2: nodes[3], gDark: 1 / m.rDark, g10: 1 / m.r10, gamma: m.gamma,
+                                         kOn: 1 - exp(-dtc / m.tauOn), kOff: 1 - exp(-dtc / m.tauOff), light: 0, g: 1 / m.rDark))
+            case .bbd:
+                let m = DeviceLibrary.bbd(p.model)
+                let half = max(m.stages / 2, 1)
+                var size = 16
+                while size < half + 8 { size <<= 1 }
+                let ring = UnsafeMutablePointer<Double>.allocate(capacity: size)
+                ring.initialize(repeating: 0, count: size)
+                let fmax = max(p["fmax"], 100), fmin = min(max(p["fmin"], 10), fmax)
+                bbdList.append(BBDEl(inp: nodes[0], out: nodes[1], cv: nodes[2], half: half, fmin: fmin, fmax: fmax,
+                                     vref: max(p["vref"], 0.1), g: 1 / 100, smear: Double(m.stages) * m.inefficiency / 8,
+                                     ring: ring, mask: size - 1, w: 0, phase: 0, held: 0, vinPrev: 0, bias: 0,
+                                     biasCoef: 1 - exp(-2 * Double.pi * 0.5 / sampleRate), seed: 0x2545f491))
+            case .lfo:
+                let fmax = max(p["fmax"], 0.001), fmin = min(max(p["fmin"], 0.001), fmax)
+                lfoList.append(LFOEl(cv: nodes[0], out: nodes[1], g: 1 / 100, fmin: fmin, fmax: fmax, vref: max(p["vref"], 0.1),
+                                     mid: p["mid"], amp: p["amp"], wave: Int(p["wave"].rounded()), phase: 0))
             case .supply:
                 // "rs" is the supply's own resistance: tens of ohms with a reservoir capacitor makes a rail that sags
                 if nodes[0] >= 0 { supList.append(SupplyEl(a: nodes[0], v: p["v"], g: 1 / max(p["rs"], 1e-3))) }
@@ -348,6 +415,8 @@ public final class CircuitEngine {
         for q in pentList { mark(q.p); mark(q.g); mark(q.k); mark(q.s) }
         for t in triodeList { mark(t.p); mark(t.g); mark(t.k) }
         for o in opList { mark(o.inP); mark(o.inN); mark(o.m); mark(o.out) }
+        for o in otaList { mark(o.p); mark(o.n); mark(o.out); mark(o.abc) }
+        for v in vacList { mark(v.r1); mark(v.r2) }
         let linCount = isNL.filter { !$0 }.count
         var map = [Int](repeating: 0, count: total)
         var li = 0, si = linCount
@@ -372,6 +441,12 @@ public final class CircuitEngine {
             opList[i].inP = m(opList[i].inP); opList[i].inN = m(opList[i].inN)
             opList[i].m = m(opList[i].m); opList[i].out = m(opList[i].out)
         }
+        for i in otaList.indices {
+            otaList[i].p = m(otaList[i].p); otaList[i].n = m(otaList[i].n); otaList[i].out = m(otaList[i].out); otaList[i].abc = m(otaList[i].abc)
+        }
+        for i in vacList.indices { vacList[i].r1 = m(vacList[i].r1); vacList[i].r2 = m(vacList[i].r2) }
+        for i in lfoList.indices { lfoList[i].cv = m(lfoList[i].cv); lfoList[i].out = m(lfoList[i].out) }
+        for i in bbdList.indices { bbdList[i].inp = m(bbdList[i].inp); bbdList[i].out = m(bbdList[i].out); bbdList[i].cv = m(bbdList[i].cv) }
         inNode = m(inNode); outNode = m(outNode)
         nl = linCount
         ns = total - linCount
@@ -400,7 +475,8 @@ public final class CircuitEngine {
         diodes = buffer(diodeList); bjts = buffer(bjtList); jfets = buffer(jfetList)
         triodes = buffer(triodeList); opamps = buffer(opList); mosfets = buffer(mosList)
         pentodes = buffer(pentList); xfmrs = buffer(xfList)
-        linear = pentList.isEmpty && mosList.isEmpty && diodeList.isEmpty && bjtList.isEmpty && jfetList.isEmpty && triodeList.isEmpty && opList.isEmpty
+        otas = buffer(otaList); vactrols = buffer(vacList); bbds = buffer(bbdList); lfos = buffer(lfoList)
+        linear = otaList.isEmpty && vacList.isEmpty && pentList.isEmpty && mosList.isEmpty && diodeList.isEmpty && bjtList.isEmpty && jfetList.isEmpty && triodeList.isEmpty && opList.isEmpty
 
         G0 = .allocate(capacity: n * n); A = .allocate(capacity: n * n)
         rhs0 = .allocate(capacity: n); rhs = .allocate(capacity: n); x = .allocate(capacity: n)
@@ -425,9 +501,12 @@ public final class CircuitEngine {
                   UnsafeMutableRawPointer(bjts.baseAddress), UnsafeMutableRawPointer(jfets.baseAddress),
                   UnsafeMutableRawPointer(triodes.baseAddress), UnsafeMutableRawPointer(opamps.baseAddress),
                   UnsafeMutableRawPointer(mosfets.baseAddress), UnsafeMutableRawPointer(pentodes.baseAddress),
-                  UnsafeMutableRawPointer(xfmrs.baseAddress)] {
+                  UnsafeMutableRawPointer(xfmrs.baseAddress), UnsafeMutableRawPointer(otas.baseAddress),
+                  UnsafeMutableRawPointer(vactrols.baseAddress), UnsafeMutableRawPointer(lfos.baseAddress)] {
             b?.deallocate()
         }
+        for b in bbds { b.ring.deallocate() }
+        UnsafeMutableRawPointer(bbds.baseAddress)?.deallocate()
         G0.deallocate(); A.deallocate(); rhs0.deallocate(); rhs.deallocate(); x.deallocate(); perm.deallocate()
         K.deallocate(); As.deallocate(); rS.deallocate(); bS.deallocate(); Minv.deallocate(); Y.deallocate()
         LUs.deallocate(); xPrev.deallocate(); zL.deallocate(); LLw.deallocate(); permS.deallocate(); permL.deallocate()
@@ -486,6 +565,13 @@ public final class CircuitEngine {
         if inputNode >= 0 { addG(G0, inputNode, inputNode, inputG) }
         if outputNode >= 0 { addG(G0, outputNode, outputNode, outputG) }
         for o in opamps { addG(G0, o.out, o.out, o.gout) }
+        // A bucket-brigade chip drives its output through 100 Ω: from the sample it is holding while running, and as a
+        // plain follower of its input when finding the bias point (no time passes, so nothing is delayed).
+        for o in lfos { addG(G0, o.out, o.out, o.g) }
+        for b in bbds {
+            addG(G0, b.out, b.out, b.g)
+            if dcMode { addG(G0, b.out, b.inp, -b.g) }
+        }
         luValid = false
         if !dcMode && !linear { reduce() } else { reducedValid = false }
     }
@@ -551,6 +637,8 @@ public final class CircuitEngine {
                 }
             }
         }
+        if !dcMode { for b in bbds where b.out >= 0 { rhs0[b.out] += b.g * b.held } }
+        for o in lfos where o.out >= 0 { rhs0[o.out] += o.g * o.value * (dcMode ? sourceScale : 1) }
         for s in supplies { rhs0[s.a] += s.v * s.g * sourceScale }
         if inputNode >= 0 { rhs0[inputNode] += u * inputScale * inputG * sourceScale }
     }
@@ -774,6 +862,24 @@ public final class CircuitEngine {
             nlG(o.out, o.m, -o.gout * fp)
             inject(o.out, o.gout * (f - fp * vm))
         }
+        // OTAs: the bias current is the one already flowing in the bias-pin junctions (stamped above as a diode,
+        // whose step-limited voltage is reused here so both see the same operating point)
+        for i in otas.indices {
+            let o = otas[i]
+            let d = diodes[o.di]
+            let vb = d.vOld
+            let (e, de) = limexp(vb / d.nvt)
+            var iabc = d.Is * (e - 1), gabc = d.Is * de / d.nvt
+            if iabc > o.iMax { gabc *= o.iMax / iabc; iabc = o.iMax }   // past its rating the chip's bias current stops rising
+            if iabc < 0 { iabc = 0; gabc = 0 }
+            let vd = v(o.p) - v(o.n)
+            let th = tanh(vd * (0.5 / 0.025852))
+            let iout = iabc * th
+            let gd = iabc * (1 - th * th) * (0.5 / 0.025852)
+            stamp3(o.out, i0: -iout, g1: -gd, c1p: o.p, c1n: o.n, v1: vd, g2: -gabc * th, c2p: o.abc, c2n: -1, v2: vb)
+        }
+        // Vactrol cells: a conductance set by the light, which only changes between samples
+        for i in vactrols.indices { let c = vactrols[i]; nlConductance(c.r1, c.r2, c.g) }
     }
 
     /// Current i0 leaving node t into a device, linear in two controlling voltages.
@@ -1035,6 +1141,66 @@ public final class CircuitEngine {
             t.vPrev = (v0, v1, v2)
             xfmrs[i] = t
         }
+        for i in vactrols.indices { stepVactrol(i) }
+        for i in bbds.indices { stepBBD(i) }
+        for i in lfos.indices {
+            let o = lfos[i]
+            let u = min(max(v(o.cv) / o.vref, 0), 1)
+            var ph = o.phase + o.fmin * pow(o.fmax / o.fmin, u) * dt
+            if ph >= 1 { ph -= 1 }
+            lfos[i].phase = ph
+        }
+    }
+
+    /// Current through diode i at the present solution.
+    @inline(__always) func diodeCurrent(_ i: Int) -> Double {
+        let d = diodes[i]
+        let vd = v(d.a) - v(d.c)
+        return d.Is * (exp(min(vd / d.nvt, 80)) - 1)
+    }
+
+    /// The LED's light follows its current, quickly on the way up and slowly on the way down; the cell follows the light.
+    @inline(__always) func stepVactrol(_ i: Int) {
+        var c = vactrols[i]
+        let target = max(diodeCurrent(c.di), 0)
+        c.light += (target - c.light) * (target > c.light ? c.kOn : c.kOff)
+        c.g = c.gDark + c.g10 * pow(c.light * 100, c.gamma)
+        vactrols[i] = c
+    }
+
+    /// Clocks a bucket-brigade chip through one solver step. The clock follows the voltage on Clock CV.
+    @inline(__always) func stepBBD(_ i: Int) {
+        var b = bbds[i]
+        let vin = v(b.inp)
+        let u = min(max(v(b.cv) / b.vref, 0), 1)
+        let clock = b.fmax * pow(b.fmin / b.fmax, u)
+        let step = clock * dt
+        b.phase += step
+        // the chips run from a bias near half the supply; signals swinging more than about 2 V either side clip
+        b.bias += (vin - b.bias) * b.biasCoef
+        while b.phase >= 1 {
+            b.phase -= 1
+            // input sampled at the instant of the clock edge, between the last solution and this one
+            // (b.phase is now how far past the edge the end of this step is, in clock cycles)
+            let frac = step > 0 ? 1 - b.phase / step : 1
+            let s = b.vinPrev + (vin - b.vinPrev) * min(max(frac, 0), 1)
+            let dev = s - b.bias
+            var q = b.bias + 2 * tanh(dev * 0.5)
+            // a little hiss from the chain itself (about 80 dB below a volt)
+            b.seed ^= b.seed << 13; b.seed ^= b.seed >> 17; b.seed ^= b.seed << 5
+            q += 1e-4 * (Double(b.seed) * (2 / 4294967296.0) - 1)
+            b.ring[b.w] = q
+            b.w = (b.w + 1) & b.mask
+            // the two output taps of the chip are summed, which averages neighbouring buckets; charge left behind on
+            // the way smears each sample slightly into the next
+            let r = b.ring, m = b.mask, at = b.w - 1 - b.half
+            let y0 = r[at & m], y1 = r[(at - 1) & m], ym = r[(at + 1) & m], y2 = r[(at - 2) & m]
+            let a = (1 - 2 * b.smear) * y0 + b.smear * (ym + y1)
+            let c = (1 - 2 * b.smear) * y1 + b.smear * (y0 + y2)
+            b.held = 0.5 * (a + c)
+        }
+        b.vinPrev = vin
+        bbds[i] = b
     }
 
     /// Finds the DC bias point (capacitors open, inductors shorted), ramping the supplies up for robustness.
@@ -1070,6 +1236,17 @@ public final class CircuitEngine {
             let t = xfmrs[i]
             xfmrs[i].iPrev = (1e3 * (v(t.a.0) - v(t.b.0)), 1e3 * (v(t.a.1) - v(t.b.1)), 1e3 * (v(t.a.2) - v(t.b.2)))
             xfmrs[i].vPrev = (0, 0, 0)
+        }
+        // vactrols start lit by their bias current; delay chips start full of their bias voltage
+        for i in vactrols.indices {
+            let l = max(diodeCurrent(vactrols[i].di), 0)
+            vactrols[i].light = l
+            vactrols[i].g = vactrols[i].gDark + vactrols[i].g10 * pow(l * 100, vactrols[i].gamma)
+        }
+        for i in bbds.indices {
+            let vin = v(bbds[i].inp)
+            bbds[i].ring.update(repeating: vin, count: bbds[i].mask + 1)
+            bbds[i].held = vin; bbds[i].vinPrev = vin; bbds[i].bias = vin; bbds[i].phase = 0
         }
         dcMode = false
         stampLinear()

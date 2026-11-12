@@ -9,6 +9,7 @@ enum Palette {
         ("Semiconductors", [.diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .opamp]),
         ("Switches", [.spst, .spdt]),
         ("Tubes", [.triode, .pentode]),
+        ("Modulation", [.lfo, .vactrol, .ota, .bbd]),
         ("Connections", [.ground, .supply, .input, .output, .label]),
     ]
     static let shortcuts: [String: PartKind] = ["1": .resistor, "2": .capacitor, "3": .pot, "4": .diode, "5": .npn,
@@ -182,9 +183,32 @@ struct InspectorView: View {
                 .font(.system(size: 10)).foregroundColor(Theme.dim).fixedSize(horizontal: false, vertical: true)
             Text("A = audio (log), B = linear, C = reverse log. Wiper is the pin on the arrow; turning up moves it toward End 3.")
                 .font(.system(size: 10)).foregroundColor(Theme.dim)
-        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode:
+        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode, .ota, .vactrol:
             modelPicker(part, label: "Model")
             deviceNotes(part)
+        case .bbd:
+            modelPicker(part, label: "Chip")
+            ValueField(label: "Fastest clock", unit: "Hz", value: part["fmax"]) { v in model.updatePart(part.id) { $0["fmax"] = max(v, 100) } }
+            ValueField(label: "Slowest clock", unit: "Hz", value: part["fmin"]) { v in model.updatePart(part.id) { $0["fmin"] = max(v, 10) } }
+            ValueField(label: "CV for slowest", unit: "V", value: part["vref"]) { v in model.updatePart(part.id) { $0["vref"] = max(v, 0.1) } }
+            Text("The clock runs fastest (shortest delay) with 0 V on Clock CV and slows exponentially to the slowest at the CV given. Delay = stages ÷ (2 × clock). Clock CV draws no current.")
+                .font(.system(size: 10)).foregroundColor(Theme.dim).fixedSize(horizontal: false, vertical: true)
+            deviceNotes(part)
+        case .lfo:
+            ValueField(label: "Slowest", unit: "Hz", value: part["fmin"]) { v in model.updatePart(part.id) { $0["fmin"] = max(v, 0.001) } }
+            ValueField(label: "Fastest", unit: "Hz", value: part["fmax"]) { v in model.updatePart(part.id) { $0["fmax"] = max(v, 0.001) } }
+            ValueField(label: "CV for fastest", unit: "V", value: part["vref"]) { v in model.updatePart(part.id) { $0["vref"] = max(v, 0.1) } }
+            ValueField(label: "Centre", unit: "V", value: part["mid"]) { v in model.updatePart(part.id) { $0["mid"] = v } }
+            ValueField(label: "Swing (±)", unit: "V", value: part["amp"]) { v in model.updatePart(part.id) { $0["amp"] = max(v, 0) } }
+            HStack {
+                Text("Wave").foregroundColor(Theme.dim).frame(width: 92, alignment: .leading)
+                Picker("", selection: Binding(get: { Int(part["wave"].rounded()) }, set: { v in model.updatePart(part.id) { $0["wave"] = Double(v) } })) {
+                    Text("Triangle").tag(0); Text("Sine").tag(1); Text("Square").tag(2)
+                }
+                .labelsHidden().pickerStyle(.segmented)
+            }
+            Text("A voltage source that swings Centre ± Swing. Its rate follows Rate CV, from the slowest at 0 V to the fastest at the CV given (draws no current): wire a pot across the supply into it for a Rate knob.")
+                .font(.system(size: 10)).foregroundColor(Theme.dim).fixedSize(horizontal: false, vertical: true)
         case .spst, .spdt:
             HStack {
                 Text("Label").foregroundColor(Theme.dim).frame(width: 92, alignment: .leading)
@@ -282,6 +306,15 @@ struct InspectorView: View {
             case .triode:
                 let m = DeviceLibrary.triode(part.model)
                 return "Koren triode: µ \(Int(m.mu)), grid current above 0 V, Miller capacitance (Cgp \(Eng.format(m.cgp, unit: "F")))."
+            case .ota:
+                let m = DeviceLibrary.ota(part.model)
+                return "Output current = bias current × tanh(input difference ÷ 52 mV): a gain you set with a current. The bias pin sits two junctions (about 1.2 V) above ground, which is taken as the chip's negative supply; at most \(Eng.format(m.iMax, unit: "A"))."
+            case .vactrol:
+                let m = DeviceLibrary.vactrol(part.model)
+                return "A red LED and a light-dependent resistor in one package: \(Eng.format(m.r10, unit: "Ω")) at 10 mA, about \(Eng.format(m.rDark, unit: "Ω")) in the dark. The cell follows the light in about \(Eng.format(m.tauOn, unit: "s")) and lets go over about \(Eng.format(m.tauOff, unit: "s")). Slope and timing are estimates."
+            case .bbd:
+                let m = DeviceLibrary.bbd(part.model)
+                return "\(m.stages) stages of capacitors handing the signal along at the clock rate: sampled, held, a little hiss, and the treble dulled by charge left behind. Signals more than about 2 V from its bias clip."
             case .opamp:
                 let m = DeviceLibrary.opamp(part.model)
                 return "Gain \(Eng.format(m.gain)), GBW \(Eng.format(m.gbw, unit: "Hz")), slew \(m.slew) V/µs, swings to \(m.headroom) V from each rail."

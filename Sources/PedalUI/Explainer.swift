@@ -245,6 +245,18 @@ enum Explainer {
                     "A triode with a bypassed cathode gives about 30–35 dB of gain (12AX7). It clips softly and unevenly: grid current flattens the positive peaks and cutoff flattens the negative ones, which makes rich even harmonics.")
         case .inductor:
             return ("\(label): inductor", "It passes bass and resists treble: the opposite of a capacitor. With a capacitor it makes a resonant peak, as in a wah or a mid-boost.")
+        case .lfo:
+            return ("\(label): low-frequency oscillator",
+                    "A slow wave, a few times a second, that moves something else: a JFET's resistance in a phaser, an LED's brightness in a tremolo, a delay chip's clock in a chorus. Its rate is set by the voltage on its Rate CV pin.")
+        case .vactrol:
+            return ("\(label): vactrol (\(p.model))",
+                    "An LED shining on a light-dependent resistor, sealed together. Current through the LED lowers the cell's resistance; the cell is quick to follow the light and slow to let go, which rounds off the wave that drives it. That softness is the sound of optical tremolos and compressors.")
+        case .ota:
+            return ("\(label): transconductance amplifier (\(p.model))",
+                    "Its gain is set by the current into its bias pin, so a voltage can turn it up and down: in tremolos, filters that sweep, and phasers. Above a few tens of millivolts of input it saturates smoothly (tanh).")
+        case .bbd:
+            return ("\(label): bucket-brigade delay (\(p.model))",
+                    "A line of capacitors passes each sample along, one step per clock tick, so the clock rate sets the delay. Slow the clock and the delay grows, the sound darkens and grains; wobble it and the pitch wobbles: chorus, flanging and analog echo all come from this one chip.")
         case .supply:
             return ("\(label): power", "A DC voltage. Op-amps and transistors need it to work, and it decides the headroom: more volts = louder before the stage clips.")
         case .ground:

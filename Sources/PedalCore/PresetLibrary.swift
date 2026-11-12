@@ -36,6 +36,10 @@ struct Sheet {
         case .pentode: return ["p": 0, "g": 1, "k": 2, "s": 3][pin]
         case .transformer: return ["p1": 0, "ct": 1, "p2": 2, "s1": 3, "s2": 4][pin]
         case .opamp: return ["+": 0, "-": 1, "o": 2][pin]
+        case .ota: return ["+": 0, "-": 1, "o": 2, "abc": 3][pin]
+        case .vactrol: return ["1": 0, "2": 1, "3": 2, "4": 3][pin]
+        case .bbd: return ["1": 0, "2": 1, "3": 2][pin]
+        case .lfo: return ["cv": 0, "o": 1][pin]
         default: return pin.isEmpty ? 0 : nil
         }
     }
@@ -808,7 +812,8 @@ extension Presets {
 
     static var sheets: [Sheet] {
         [hardClipSheet, slewDistortionSheet, germaniumFuzzSheet, sustainFuzzSheet, transistorBoostSheet, trebleBoosterSheet,
-         jfetOverdriveSheet, mosfetBoostSheet, selectableClipSheet, bassBlendDriveSheet, bassPreampSheet, britishHeadSheet, tweedSheet, britishSheet, highGainSheet]
+         jfetOverdriveSheet, mosfetBoostSheet, selectableClipSheet, bassBlendDriveSheet, bassPreampSheet, britishHeadSheet, tweedSheet, britishSheet, highGainSheet,
+         phaserSheet, optoTremoloSheet, bbdChorusSheet, bbdDelaySheet]
     }
 
     /// Checks every library schematic against the connections it was drawn from. Empty when all are right.
