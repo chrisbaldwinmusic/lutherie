@@ -1,36 +1,38 @@
 import PedalCore
 import SwiftUI
 
-/// The Channel Audio house look, shared with Atelier: a dark faceplate, cream lettering, a gold accent
-/// and one colour per section. The hex values are Atelier's.
+/// The Channel Audio house look, shared with Atelier (dark faceplate, cream lettering, spaced capitals, the same
+/// knobs and panels), in Lutherie's own colour: a deep oxblood red where Atelier uses gold, on a slightly warmer
+/// faceplate. Gold is kept for small highlights.
 public enum Theme {
     static func hex(_ v: UInt32, _ alpha: Double = 1) -> Color {
         Color(red: Double((v >> 16) & 0xff) / 255, green: Double((v >> 8) & 0xff) / 255, blue: Double(v & 0xff) / 255, opacity: alpha)
     }
-    public static let bg = hex(0x17181b)          // faceplate
-    public static let panel = hex(0x232529)
-    public static let panelEdge = hex(0x0c0d0e)
-    public static let panelHi = hex(0x34373d)
-    public static let panel2 = hex(0x131416)      // buttons and menus
-    public static let well = hex(0x0d0e0f)
-    public static let wellEdge = hex(0x3a3d43)
-    public static let ledOff = hex(0x2c2e33)
-    public static let line = hex(0x3a3d43, 0.55)
+    public static let bg = hex(0x191516)          // faceplate, warmed
+    public static let panel = hex(0x262022)
+    public static let panelEdge = hex(0x0d0a0b)
+    public static let panelHi = hex(0x3a3033)
+    public static let panel2 = hex(0x151112)      // buttons and menus
+    public static let well = hex(0x0e0b0c)
+    public static let wellEdge = hex(0x43383b)
+    public static let ledOff = hex(0x30282a)
+    public static let line = hex(0x43383b, 0.55)
     public static let text = hex(0xe9dfc6)        // cream
     public static let dim = hex(0xa39d8d)
     public static let gold = hex(0xc9a25a)
-    public static let red = hex(0xc0503f)
+    public static let red = hex(0xb8403a)         // Lutherie's red
+    public static let crimson = hex(0x8f2630)     // deeper, for the amp
     public static let blue = hex(0x4f86b8)
     public static let green = hex(0x62a070)
     public static let orange = hex(0xd9853b)
     public static let purple = hex(0x8672b8)
     public static let ivory = hex(0xcfc7b2)
     public static let teal = hex(0x4fa3a0)
-    public static let accent = gold
+    public static let accent = red
     public static let wire = hex(0x6fa3d0)
     public static let part = hex(0xe9dfc6)
-    public static let selected = hex(0xd9853b)
-    public static let pin = hex(0xc0503f)
+    public static let selected = hex(0xc9a25a)
+    public static let pin = hex(0xd9853b)
     public static let good = hex(0x62a070)
 
     /// Bold, letter-spaced capitals, as on Atelier's panels.
@@ -41,7 +43,7 @@ public enum Theme {
 struct PanelBackground: View {
     var body: some View {
         RoundedRectangle(cornerRadius: 6)
-            .fill(LinearGradient(colors: [Theme.hex(0x292b30), Theme.hex(0x1b1c20)], startPoint: .top, endPoint: .bottom))
+            .fill(LinearGradient(colors: [Theme.hex(0x2c2527), Theme.hex(0x1d1819)], startPoint: .top, endPoint: .bottom))
             .overlay(RoundedRectangle(cornerRadius: 6).stroke(Theme.panelEdge, lineWidth: 1.2))
             .overlay(alignment: .top) { Rectangle().fill(Theme.panelHi.opacity(0.6)).frame(height: 1).padding(.horizontal, 7).padding(.top, 1.5) }
     }
@@ -143,6 +145,26 @@ enum Symbol {
                           [p(-2, 0), p(-0.1, 0)],
                           [p(0.1, 0.8), p(1.0, 0.8), p(1.0, 2)], [p(0.1, 0.8), p(0.1, 1.05)]]
             s.dashed.append([p(-0.1, 0), p(1.1, 0)])
+        case .pentode:
+            s.circles.append((p(0.5, 0), 1.6))
+            s.strokes += [[p(0.1, -0.95), p(1.1, -0.95)], [p(1, -0.95), p(1, -2)],
+                          [p(-2, 0), p(-0.6, 0), p(-0.1, 0.25)],
+                          [p(1.1, -0.35), p(2.5, -0.35), p(3, 0)],
+                          [p(0.1, 0.9), p(1.0, 0.9), p(1.0, 2)], [p(0.1, 0.9), p(0.1, 1.15)]]
+            s.dashed += [[p(-0.1, 0.25), p(1.1, 0.25)], [p(-0.1, -0.35), p(1.1, -0.35)]]
+        case .transformer:
+            for (x, bulge) in [(-0.7, -1.0), (0.7, 1.0)] {
+                var coil: [CGPoint] = [p(x < 0 ? -2 : 2, -2), p(x, -2)]
+                for k in 0..<4 {
+                    let cy = -1.5 + CGFloat(k)
+                    for a in stride(from: -90.0, through: 90.0, by: 20) {
+                        coil.append(p(x + CGFloat(bulge) * 0.42 * CGFloat(cos(a * .pi / 180)), cy + 0.5 * CGFloat(sin(a * .pi / 180))))
+                    }
+                }
+                coil += [p(x, 2), p(x < 0 ? -2 : 2, 2)]
+                s.strokes.append(coil)
+            }
+            s.strokes += [[p(-2, 0), p(-0.7, 0)], [p(-0.12, -1.9), p(-0.12, 1.9)], [p(0.12, -1.9), p(0.12, 1.9)]]
         case .opamp:
             s.strokes += [[p(-1.5, -1.8), p(-1.5, 1.8), p(1.6, 0), p(-1.5, -1.8)],
                           [p(-2, 1), p(-1.5, 1)], [p(-2, -1), p(-1.5, -1)], [p(1.6, 0), p(2, 0)]]
@@ -170,7 +192,8 @@ enum Symbol {
         case .spst: return CGRect(x: -2, y: -1.0, width: 4, height: 1.6)
         case .spdt: return CGRect(x: -2, y: -1.5, width: 4, height: 3)
         case .pot: return CGRect(x: -2, y: -2, width: 4, height: 2.8)
-        case .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .opamp: return CGRect(x: -2, y: -2, width: 4, height: 4)
+        case .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .opamp, .transformer: return CGRect(x: -2, y: -2, width: 4, height: 4)
+        case .pentode: return CGRect(x: -2, y: -2, width: 5, height: 4)
         case .label: return CGRect(x: 0, y: -0.6, width: 2.8, height: 1.2)
         case .input: return CGRect(x: -1.5, y: -0.6, width: 1.6, height: 1.2)
         case .output: return CGRect(x: -0.1, y: -0.6, width: 1.6, height: 1.2)
@@ -186,7 +209,8 @@ enum Symbol {
         case .capacitor: return (part.name, Eng.format(part["c"], unit: "F"))
         case .inductor: return (part.name, Eng.format(part["l"], unit: "H"))
         case .pot: return (part.text.isEmpty ? part.name : part.text, Eng.format(part["r"], unit: "Ω") + " " + part.model + (part.gang > 0 ? " · gang \(part.gang)" : ""))
-        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .opamp: return (part.name, part.model)
+        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode, .opamp: return (part.name, part.model)
+        case .transformer: return (part.name, Eng.format(part["zpp"], unit: "Ω") + " : " + Eng.format(part["zs"], unit: "Ω"))
         case .spst, .spdt: return (part.text.isEmpty ? part.name : part.text, part.switchStateName)
         case .supply: return (part.text.isEmpty ? Eng.format(part["v"], unit: "V") : part.text, "")
         case .input: return ("Guitar in", "")
@@ -253,8 +277,10 @@ func drawPart(_ part: Part, in ctx: inout GraphicsContext, origin: CGPoint, scal
     case .spdt:
         anchor = horizontal ? CGPoint(x: center.x, y: center.y - 2.1 * scale) : CGPoint(x: center.x + 1.9 * scale, y: center.y)
         align = horizontal ? .bottom : .leading
-    case .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .opamp:
-        anchor = CGPoint(x: center.x + 2.0 * scale, y: center.y - 0.6 * scale); align = .leading
+    case .transformer:
+        anchor = CGPoint(x: center.x, y: center.y - 2.4 * scale); align = .bottom
+    case .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode, .opamp:
+        anchor = CGPoint(x: center.x + (part.kind == .pentode ? 2.3 : 2.0) * scale, y: center.y - (part.kind == .pentode ? 1.3 : 0.6) * scale); align = .leading
         if part.kind != .opamp && !horizontal {
             // turned on its side: the leads run left and right, so the caption goes on the side away from the gate
             let below = tx(CGPoint(x: -2, y: 0)).y < center.y

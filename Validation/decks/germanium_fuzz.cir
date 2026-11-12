@@ -19,7 +19,8 @@ CC3 N7 N9 10n
 RVR2a 0 OUT 81k
 RVR2b OUT N9 419k
 Rload OUT 0 1Meg
-VVS2 VCC_-9V 0 DC -9.0
+VVS2 VCC_-9V_src 0 DC -9.0
+RVS2s VCC_-9V_src VCC_-9V 0.01
 
 .model Q_GermaniumPNPAC128type PNP(Is=1.2e-06 Bf=90.0 Br=5.0 Vaf=30.0 Nf=1.1 Cje=5e-11 Cjc=2e-11 Mje=0 Mjc=0)
 

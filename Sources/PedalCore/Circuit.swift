@@ -11,7 +11,7 @@ public struct GridPoint: Hashable, Codable, Sendable {
 
 public enum PartKind: String, Codable, CaseIterable, Sendable {
     case resistor, capacitor, inductor, pot, diode, led, zener
-    case npn, pnp, njfet, pjfet, nmos, pmos, opamp, triode
+    case npn, pnp, njfet, pjfet, nmos, pmos, opamp, triode, pentode, transformer
     case spst, spdt
     case ground, supply, input, output, label
 
@@ -34,6 +34,8 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .spdt: return "Selector switch"
         case .opamp: return "Op-amp"
         case .triode: return "Triode (tube)"
+        case .pentode: return "Power tube"
+        case .transformer: return "Output transformer"
         case .ground: return "Ground"
         case .supply: return "Supply"
         case .input: return "Guitar in"
@@ -55,7 +57,8 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .nmos, .pmos: return "M"
         case .spst, .spdt: return "SW"
         case .opamp: return "U"
-        case .triode: return "V"
+        case .triode, .pentode: return "V"
+        case .transformer: return "T"
         case .ground: return "GND"
         case .supply: return "VCC"
         case .input: return "IN"
@@ -77,6 +80,10 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
             return [GridPoint(1, -2), GridPoint(-2, 0), GridPoint(1, 2)]
         case .opamp:
             return [GridPoint(-2, 1), GridPoint(-2, -1), GridPoint(2, 0)]
+        case .pentode:
+            return [GridPoint(1, -2), GridPoint(-2, 0), GridPoint(1, 2), GridPoint(3, 0)]
+        case .transformer:
+            return [GridPoint(-2, -2), GridPoint(-2, 0), GridPoint(-2, 2), GridPoint(2, -2), GridPoint(2, 2)]
         case .ground, .supply, .input, .output, .label:
             return [GridPoint(0, 0)]
         }
@@ -92,6 +99,8 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .spst: return ["1", "2"]
         case .spdt: return ["Common", "A", "B"]
         case .triode: return ["Plate", "Grid", "Cathode"]
+        case .pentode: return ["Plate", "Grid", "Cathode", "Screen"]
+        case .transformer: return ["Primary 1", "Centre tap", "Primary 2", "Secondary 1", "Secondary 2"]
         case .opamp: return ["+ In", "− In", "Out"]
         default: return ["Pin"]
         }
@@ -103,7 +112,8 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .capacitor: return ["c": 100e-9]
         case .inductor: return ["l": 0.5, "rs": 50]
         case .pot: return ["r": 100_000, "position": 0.5]
-        case .supply: return ["v": 9]
+        case .supply: return ["v": 9, "rs": 0.01]
+        case .transformer: return ["zpp": 6600, "zs": 8, "lp": 40, "k": 0.9985, "rp": 150, "rsec": 0.5]
         case .spst: return ["state": 1]
         case .spdt: return ["state": 0]
         case .input: return ["rs": 1_000, "scale": 1]
@@ -125,6 +135,7 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .pmos: return "BS250"
         case .opamp: return "TL072"
         case .triode: return "12AX7"
+        case .pentode: return "6L6GC"
         case .pot: return "B"
         default: return ""
         }
@@ -143,6 +154,7 @@ public enum PartKind: String, Codable, CaseIterable, Sendable {
         case .pmos: return DeviceLibrary.mosfets.filter { $0.value.pmos }.keys.sorted()
         case .opamp: return DeviceLibrary.opamps.keys.sorted()
         case .triode: return DeviceLibrary.triodes.keys.sorted()
+        case .pentode: return DeviceLibrary.pentodes.keys.sorted()
         case .pot: return ["A", "B", "C"]
         default: return []
         }
@@ -234,6 +246,10 @@ public struct Circuit: Codable, Hashable, Sendable {
     public var pots: [Part] {
         parts.filter { $0.kind == .pot }.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
     }
+
+    /// True when the circuit has its own output stage (power tubes or an output transformer), so nothing
+    /// needs adding after it to stand in for one.
+    public var hasPowerStage: Bool { parts.contains { $0.kind == .pentode || $0.kind == .transformer } }
 
     /// One pot per knob, in knob order: every pot that isn't ganged, and the first pot of each gang.
     public var knobs: [Part] {

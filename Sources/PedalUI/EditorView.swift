@@ -36,7 +36,7 @@ public struct EditorView<Extra: View>: View {
         HStack(spacing: 10) {
             VStack(alignment: .leading, spacing: 1) {
                 Text("LUTHERIE").font(.system(size: 17, weight: .bold)).tracking(5.5).foregroundColor(Theme.text)
-                Text("AMP & PEDAL WORKSHOP").font(.system(size: 7.5, weight: .bold)).tracking(2.6).foregroundColor(Theme.gold)
+                Text("AMP & PEDAL WORKSHOP").font(.system(size: 7.5, weight: .bold)).tracking(2.6).foregroundColor(Theme.red)
             }
             .padding(.trailing, 6)
             Picker("", selection: $model.board) {
@@ -61,7 +61,7 @@ public struct EditorView<Extra: View>: View {
                 Label("Learn", systemImage: "graduationcap")
                     .padding(.horizontal, 8).padding(.vertical, 3)
                     .background(model.learnMode ? Theme.accent : Theme.panel2, in: Capsule())
-                    .foregroundColor(model.learnMode ? .black : Theme.text)
+                    .foregroundColor(Theme.text)
             }
             .help("Learn mode: explains what each change does to the signal")
             Divider().frame(height: 18)
@@ -87,7 +87,7 @@ public struct EditorView<Extra: View>: View {
         .buttonStyle(.borderless)
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .background(LinearGradient(colors: [Theme.hex(0x222327), Theme.hex(0x17181b)], startPoint: .top, endPoint: .bottom))
+        .background(LinearGradient(colors: [Theme.hex(0x241e20), Theme.hex(0x191516)], startPoint: .top, endPoint: .bottom))
         .overlay(alignment: .bottom) {
             if let m = model.message {
                 Text(m).font(.system(size: 11)).padding(.horizontal, 10).padding(.vertical, 4)
@@ -113,7 +113,7 @@ struct RackView: View {
             analysis.background(PanelBackground())
         }
         .padding(6)
-        .background(LinearGradient(colors: [Theme.hex(0x1b1c1f), Theme.hex(0x111214)], startPoint: .top, endPoint: .bottom))
+        .background(LinearGradient(colors: [Theme.hex(0x1d1819), Theme.hex(0x120f10)], startPoint: .top, endPoint: .bottom))
     }
 
     func dbFormat(_ v: Float) -> String { String(format: "%+.1f dB", v) }
@@ -141,7 +141,7 @@ struct RackView: View {
     var pedalSection: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                sectionTitle("PEDAL · " + model.pedal.name.uppercased(), Theme.orange)
+                sectionTitle("PEDAL · " + model.pedal.name.uppercased(), Theme.red)
                 Spacer()
                 Footswitch(on: model.param(.pedalOn) > 0.5) { model.setParam(.pedalOn, model.param(.pedalOn) > 0.5 ? 0 : 1) }
             }
@@ -155,7 +155,7 @@ struct RackView: View {
     var ampSection: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                sectionTitle("AMP", Theme.red)
+                sectionTitle("AMP", Theme.crimson)
                 Spacer()
                 Picker("", selection: Binding(get: { Int(model.param(.ampMode).rounded()) }, set: { model.setParam(.ampMode, Float($0)) })) {
                     Text("Off").tag(0); Text("Tube circuit").tag(1); Text("Profile").tag(2)
@@ -164,7 +164,7 @@ struct RackView: View {
             }
             let mode = Int(model.param(.ampMode).rounded())
             if mode == 1 {
-                knobGrid(.amp, extra: true)
+                knobGrid(.amp, extra: !model.amp.hasPowerStage)
             } else if mode == 2 {
                 HStack {
                     Image(systemName: "waveform.path.ecg").foregroundColor(Theme.accent)
@@ -196,7 +196,7 @@ struct RackView: View {
                     Text("Neural Amp Modeler captures of real amps. Free ones are shared at tone3000.com.")
                         .font(.system(size: 10)).foregroundColor(Theme.dim)
                 }
-                Knob(label: "Presence", value: model.param(.presence), range: RigParam.presence.range, format: dbFormat, size: 30, accent: Theme.red) { model.setParam(.presence, $0) }
+                Knob(label: "Presence", value: model.param(.presence), range: RigParam.presence.range, format: dbFormat, size: 30, accent: Theme.crimson) { model.setParam(.presence, $0) }
             } else {
                 Text("Amp off: the pedal goes straight to the cabinet.").font(.system(size: 11)).foregroundColor(Theme.dim)
             }
@@ -265,8 +265,8 @@ struct RackView: View {
             let a = model.analysis[model.board]
             if tab == 0 {
                 ResponsePlot(freqs: model.analysis[.pedal]?.freqs ?? [],
-                             curves: [(model.analysis[.pedal]?.response ?? [], Theme.orange, "Pedal (small signal)"),
-                                      (model.analysis[.amp]?.response ?? [], Theme.red, "Amp circuit")])
+                             curves: [(model.analysis[.pedal]?.response ?? [], Theme.red, "Pedal (small signal)"),
+                                      (model.analysis[.amp]?.response ?? [], Theme.gold, "Amp circuit")])
             } else {
                 ScopePlot(input: a?.scopeIn ?? [], output: a?.scopeOut ?? [])
                 Text("\(model.board.title) circuit, simulated in volts at the output jack.").font(.system(size: 10)).foregroundColor(Theme.dim)
@@ -287,7 +287,7 @@ struct RackView: View {
             } else {
                 LazyVGrid(columns: Array(repeating: GridItem(.fixed(size + 22), spacing: 2), count: min(7, max(total, 1))), spacing: 4) {
                     ForEach(knobs, id: \.0) { k in
-                        Knob(label: k.1, value: model.param(k.0), range: 0...1, size: size, accent: b == .pedal ? Theme.orange : Theme.red) { model.setParam(k.0, $0) }
+                        Knob(label: k.1, value: model.param(k.0), range: 0...1, size: size, accent: b == .pedal ? Theme.red : Theme.crimson) { model.setParam(k.0, $0) }
                     }
                     if extra {
                         Knob(label: "Power", value: model.param(.powerDrive), range: 0...1, size: size, accent: Theme.gold) { model.setParam(.powerDrive, $0) }
@@ -312,10 +312,10 @@ struct Footswitch: View {
     var body: some View {
         Button(action: toggle) {
             Text(on ? "ON" : "BYPASS").font(Theme.label(10)).tracking(0.7)
-                .foregroundColor(on ? Theme.hex(0x141414) : Theme.dim)
+                .foregroundColor(on ? Theme.text : Theme.dim)
                 .padding(.horizontal, 10).padding(.vertical, 4)
-                .background(on ? Theme.orange : Theme.panel2, in: RoundedRectangle(cornerRadius: 3))
-                .overlay(RoundedRectangle(cornerRadius: 3).stroke(on ? Theme.orange.opacity(0.6) : Theme.wellEdge, lineWidth: 1))
+                .background(on ? Theme.red : Theme.panel2, in: RoundedRectangle(cornerRadius: 3))
+                .overlay(RoundedRectangle(cornerRadius: 3).stroke(on ? Theme.red.opacity(0.6) : Theme.wellEdge, lineWidth: 1))
         }
         .buttonStyle(.plain)
         .help("Footswitch: true bypass")

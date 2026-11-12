@@ -34,6 +34,13 @@ public struct TriodeModel: Sendable {
     public var cgp: Double; public var cgk: Double; public var cpk: Double
 }
 
+/// Power pentode or beam tetrode (Koren's model): plate current follows the screen voltage and saturates
+/// with plate voltage through an arctangent "knee".
+public struct PentodeModel: Sendable {
+    public var mu: Double; public var ex: Double; public var kg1: Double; public var kg2: Double; public var kp: Double; public var kvb: Double
+    public var cgk: Double; public var cgp: Double; public var cpk: Double
+}
+
 public enum DeviceLibrary {
     public static let diodes: [String: DiodeModel] = [
         "1N4148": DiodeModel(Is: 2.52e-9, n: 1.752, rs: 0.568, cj: 4e-12),
@@ -95,6 +102,16 @@ public enum DeviceLibrary {
         "12AU7": TriodeModel(mu: 21.5, ex: 1.3, kg1: 1180, kp: 84, kvb: 300, cgp: 1.5e-12, cgk: 1.6e-12, cpk: 0.5e-12),
         "ECC83 (EU 12AX7)": TriodeModel(mu: 100, ex: 1.4, kg1: 1060, kp: 600, kvb: 300, cgp: 1.7e-12, cgk: 1.6e-12, cpk: 0.46e-12),
     ]
+
+    // 6L6GC, 6550 and KT88 are Norman Koren's published fits (Table 1 of "Improved vacuum tube models for
+    // SPICE simulations"). The EL34 set is the widely circulated fit in the same form; not checked against a source.
+    public static let pentodes: [String: PentodeModel] = [
+        "6L6GC": PentodeModel(mu: 8.7, ex: 1.35, kg1: 1460, kg2: 4500, kp: 48, kvb: 12, cgk: 14e-12, cgp: 0.85e-12, cpk: 12e-12),
+        "6550": PentodeModel(mu: 7.9, ex: 1.35, kg1: 890, kg2: 4800, kp: 60, kvb: 24, cgk: 14e-12, cgp: 0.85e-12, cpk: 12e-12),
+        "KT88": PentodeModel(mu: 8.8, ex: 1.35, kg1: 730, kg2: 4200, kp: 32, kvb: 16, cgk: 14e-12, cgp: 0.85e-12, cpk: 12e-12),
+        "EL34": PentodeModel(mu: 11, ex: 1.35, kg1: 650, kg2: 4200, kp: 60, kvb: 24, cgk: 15e-12, cgp: 1.1e-12, cpk: 8e-12),
+    ]
+    public static func pentode(_ name: String) -> PentodeModel { pentodes[name] ?? pentodes["6L6GC"]! }
 
     public static func diode(_ name: String, led: Bool) -> DiodeModel {
         (led ? leds[name] : diodes[name]) ?? (led ? leds["Red LED"]! : diodes["1N4148"]!)

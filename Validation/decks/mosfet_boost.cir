@@ -18,7 +18,8 @@ RVR1b 0 N6 2.5k
 CC2 N4 OUT 4.7u
 RR5 OUT 0 100k
 Rload OUT 0 1Meg
-VVS1 VCC_9V 0 DC 9.0
+VVS1 VCC_9V_src 0 DC 9.0
+RVS1s VCC_9V_src VCC_9V 0.01
 
 .model M_2N7000 NMOS(Level=1 Vto=2.0 Kp=0.12 Lambda=0.0003 Is=1e-13)
 

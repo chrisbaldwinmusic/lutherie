@@ -1,0 +1,120 @@
+* British 50 W Head — exported from Lutherie
+* A whole amplifier. The British preamp feeds a long-tailed-pair phase inverter and two EL34 power tubes working in push-pull through an output transformer into a speaker-like load. Negative feedback from the speaker tightens it up, and Presence takes treble out of that feedback. Turn Master up and the power tubes clip, the supply sags and the speaker's resonance pushes back: the feel of a cranked stack. Follow the DRIVE, PI A, PI B and SPKR labels between the two halves of the drawing.
+
+Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
+Rsig SIGSRC IN 1k
+RR1 IN 0 1Meg
+RR2 IN N2 68k
+XV1 N3 N2 N4 TRIODE_12AX7
+RR3 N4 0 2.7k
+CC1 N4 0 680n
+RR4 VCC_300V N3 100k
+CC2 N3 N6 22n
+VVS4 VCC_300V_src 0 DC 300.0
+RVS4s VCC_300V_src VCC_300V 0.01
+* Gain pot 1Meg A taper at 60%
+RVR1a 0 N7 162k
+RVR1b N7 N6 838k
+RR5 N7 N8 470k
+XV2 N9 N8 N10 TRIODE_12AX7
+RR6 N10 0 820
+RR7 VCC_300V N9 100k
+XV3 VCC_300V N9 N11 TRIODE_12AX7
+RR8 N11 0 100k
+CC3 N11 N12 470p
+* Treble pot 250k A taper at 60%
+RVR2a N13 N14 40.5k
+RVR2b N14 N12 209k
+RR9 N11 N15 33k
+CC4 N15 N13 22n
+CC5 N15 N16 22n
+* Bass pot 1Meg A taper at 50%
+RVR3a N13 N16 100k
+RVR3b N16 N16 900k
+* Middle pot 25k B taper at 50%
+RVR4a N16 0 12.5k
+RVR4b 0 0 12.5k
+* Master pot 1Meg A taper at 50%
+RVR5a 0 DRIVE 100k
+RVR5b DRIVE N14 900k
+CC30 DRIVE N18 22n
+XV7 N19 N18 N20 TRIODE_12AX7
+XV8 N21 N22 N20 TRIODE_12AX7
+RR30 N18 N23 1Meg
+RR31 N22 N23 1Meg
+RR32 N20 N23 470
+RR33 N23 N24 10k
+RR34 N24 0 4.7k
+CC31 N22 N24 100n
+RR35 VCC_350V N19 82k
+RR36 VCC_350V N21 100k
+CC32 PI_A N19 22n
+CC33 N21 PI_B 22n
+CC34 N28 N24 100n
+* Presence pot 5k B taper at 50%
+RVR9a 0 0 2.5k
+RVR9b 0 N28 2.5k
+RR37 N24 SPKR 100k
+VVS17 VCC_350V_src 0 DC 350.0
+RVS17s VCC_350V_src VCC_350V 0.01
+XV9 N30 N31 0 N32 PENTODE_EL34
+XV10 N33 N34 0 N35 PENTODE_EL34
+RR40 PI_A N31 5.6k
+RR41 PI_B N34 5.6k
+RR42 PI_A VCC_-40V 220k
+RR43 VCC_-40V PI_B 220k
+RR44 N32 VCC_440V 1k
+RR45 VCC_440V N35 1k
+* T1: output transformer, 3.4k plate to plate into 8 ohms
+RT1p1 N30 T1_p1 75.0
+RT1p2 T1_p2 N33 75.0
+RT1s SPKR T1_s1 0.5
+LT1a T1_p1 VCC_440V 10.0
+LT1b VCC_440V T1_p2 10.0
+LT1c T1_s1 0 0.09411764705882351
+KT1ab LT1a LT1b 0.9985
+KT1ac LT1a LT1c 0.9985
+KT1bc LT1b LT1c 0.9985
+CC40 VCC_440V 0 47u
+VVS23 VCC_-40V_src 0 DC -40.0
+RVS23s VCC_-40V_src VCC_-40V 0.01
+VVS25 VCC_440V_src 0 DC 440.0
+RVS25s VCC_440V_src VCC_440V 60.0
+RR50 SPKR N38 6.4
+RL50s N38 L50_w 10m
+LL50 L50_w N39 500u
+RL51s N39 L51_w 10m
+LL51 L51_w 0 25m
+CC50 N39 0 160u
+RR51 N39 0 30
+Rload SPKR 0 1Meg
+
+* Koren pentode / beam tetrode model
+.subckt PENTODE_EL34 P G K S
+Be E1 0 V=max(V(S,K),1)/60.0*ln(1+exp(60.0*(1/11.0+V(G,K)/max(V(S,K),1))))
+Bp P K I=V(E1)>0 ? 2*pwr(V(E1),1.35)/650.0*atan(max(V(P,K),0)/24.0) : 0
+Bs S K I=(V(G,K)+max(V(S,K),1)/11.0)>0 ? pwr(V(G,K)+max(V(S,K),1)/11.0,1.35)/4200.0 : 0
+Bg G K I=V(G,K)>0 ? pwr(V(G,K),1.5)/1300 : 0
+Cgk G K 1.5e-11
+Cgp G P 1.1e-12
+Cpk P K 8e-12
+.ends
+* Koren triode model
+.subckt TRIODE_12AX7 P G K
+Bp P K I=V(E1)>0 ? 2*pwr(V(E1),1.4)/1060.0 : 0
+Be E1 0 V=V(P,K)/600.0*ln(1+exp(600.0*(1/100.0+V(G,K)/sqrt(300.0+V(P,K)*V(P,K)))))
+Bg G K I=V(G,K)>0 ? pwr(V(G,K),1.5)/1300 : 0
+Cgp G P 1.7e-12
+Cgk G K 1.6e-12
+Cpk P K 4.6e-13
+.ends
+
+.options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=gear maxord=2
+.tran 3.255208333333333e-07 0.3 0 3.255208333333333e-07
+.control
+set wr_singlescale
+set numdgt=12
+run
+wrdata british_50_w_head.ngspice.txt v(SPKR)
+.endc
+.end

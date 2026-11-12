@@ -5,10 +5,10 @@ import SwiftUI
 
 enum Palette {
     static let groups: [(String, [PartKind])] = [
-        ("Passive", [.resistor, .capacitor, .inductor, .pot]),
+        ("Passive", [.resistor, .capacitor, .inductor, .pot, .transformer]),
         ("Semiconductors", [.diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .opamp]),
         ("Switches", [.spst, .spdt]),
-        ("Tubes", [.triode]),
+        ("Tubes", [.triode, .pentode]),
         ("Connections", [.ground, .supply, .input, .output, .label]),
     ]
     static let shortcuts: [String: PartKind] = ["1": .resistor, "2": .capacitor, "3": .pot, "4": .diode, "5": .npn,
@@ -42,7 +42,7 @@ struct PaletteView: View {
         Button(action: action) {
             Image(systemName: icon).frame(maxWidth: .infinity, minHeight: 26)
                 .background(on ? Theme.accent.opacity(0.85) : Theme.panel2, in: RoundedRectangle(cornerRadius: 6))
-                .foregroundColor(on ? .black : Theme.text)
+                .foregroundColor(Theme.text)
         }
         .buttonStyle(.plain).help(help)
     }
@@ -57,11 +57,11 @@ struct PaletteView: View {
                     var c = ctx
                     let b = Symbol.bounds(kind)
                     let origin = CGPoint(x: size.width / 2 - b.midX * s, y: size.height / 2 - b.midY * s)
-                    drawPartShapeOnly(part, in: &c, origin: origin, scale: s, color: on ? .black : Theme.part)
+                    drawPartShapeOnly(part, in: &c, origin: origin, scale: s, color: Theme.part)
                 }
                 .frame(height: 30)
                 Text(kind.displayName).font(.system(size: 9)).lineLimit(1).minimumScaleFactor(0.7)
-                    .foregroundColor(on ? .black : Theme.dim)
+                    .foregroundColor(on ? Theme.text : Theme.dim)
             }
             .padding(4)
             .frame(maxWidth: .infinity)
@@ -182,7 +182,7 @@ struct InspectorView: View {
                 .font(.system(size: 10)).foregroundColor(Theme.dim).fixedSize(horizontal: false, vertical: true)
             Text("A = audio (log), B = linear, C = reverse log. Wiper is the pin on the arrow; turning up moves it toward End 3.")
                 .font(.system(size: 10)).foregroundColor(Theme.dim)
-        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode:
+        case .diode, .led, .zener, .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode:
             modelPicker(part, label: "Model")
             deviceNotes(part)
         case .spst, .spdt:
@@ -205,6 +205,15 @@ struct InspectorView: View {
             Text(part.kind == .spst ? "On joins the two pins; off leaves them apart."
                                     : "Joins Common to A or to B. Off is the centre position, joined to neither.")
                 .font(.system(size: 10)).foregroundColor(Theme.dim)
+        case .transformer:
+            ValueField(label: "Primary load", unit: "Ω", value: part["zpp"]) { v in model.updatePart(part.id) { $0["zpp"] = max(v, 1) } }
+            ValueField(label: "Speaker", unit: "Ω", value: part["zs"]) { v in model.updatePart(part.id) { $0["zs"] = max(v, 0.1) } }
+            ValueField(label: "Primary L", unit: "H", value: part["lp"]) { v in model.updatePart(part.id) { $0["lp"] = max(v, 0.01) } }
+            ValueField(label: "Primary R", unit: "Ω", value: part["rp"]) { v in model.updatePart(part.id) { $0["rp"] = max(v, 0.001) } }
+            ValueField(label: "Secondary R", unit: "Ω", value: part["rsec"]) { v in model.updatePart(part.id) { $0["rsec"] = max(v, 0.001) } }
+            ValueField(label: "Coupling", unit: "", value: part["k"]) { v in model.updatePart(part.id) { $0["k"] = min(max(v, 0), 0.99999) } }
+            Text("Primary load is plate to plate, for the speaker impedance given. Less primary inductance loses bass; looser coupling loses treble. The centre tap goes to the supply.")
+                .font(.system(size: 10)).foregroundColor(Theme.dim).fixedSize(horizontal: false, vertical: true)
         case .opamp:
             modelPicker(part, label: "Model")
             ValueField(label: "Negative rail", unit: "V", value: part.props["vneg"] ?? 0) { v in model.updatePart(part.id) { $0.props["vneg"] = v } }
@@ -214,6 +223,8 @@ struct InspectorView: View {
             ValueField(label: "Voltage", unit: "V", value: part["v"]) { v in
                 model.updatePart(part.id) { $0["v"] = v; $0.text = Eng.format(v) + "V" }
             }
+            ValueField(label: "Source R", unit: "Ω", value: part["rs"]) { v in model.updatePart(part.id) { $0["rs"] = max(v, 0.001) } }
+            Text("Source R is the supply's own resistance. Tens of ohms with a reservoir capacitor makes a rail that sags when the amp is pushed.").font(.system(size: 10)).foregroundColor(Theme.dim).fixedSize(horizontal: false, vertical: true)
             Text("Supplies with the same voltage are the same net.").font(.system(size: 10)).foregroundColor(Theme.dim)
         case .input:
             ValueField(label: "Source R", unit: "Ω", value: part["rs"]) { v in model.updatePart(part.id) { $0["rs"] = max(v, 1) } }
@@ -265,6 +276,9 @@ struct InspectorView: View {
             case .nmos, .pmos:
                 let m = DeviceLibrary.mosfet(part.model, pmos: part.kind == .pmos)
                 return "Square-law MOSFET with a smooth turn-on: threshold \(m.vto) V, Kp \(Eng.format(m.kp, unit: "A/V²")), body diode between source and drain, gate capacitances included."
+            case .pentode:
+                let m = DeviceLibrary.pentode(part.model)
+                return "Koren power-tube model: µ \(m.mu), the screen sets the current and the plate has a knee at low voltage; grid current above 0 V."
             case .triode:
                 let m = DeviceLibrary.triode(part.model)
                 return "Koren triode: µ \(Int(m.mu)), grid current above 0 V, Miller capacitance (Cgp \(Eng.format(m.cgp, unit: "F")))."
@@ -339,7 +353,7 @@ struct Knob: View {
                                                                        startPoint: CGPoint(x: c.x, y: skirt.minY), endPoint: CGPoint(x: c.x, y: skirt.maxY)))
                 ctx.stroke(Path(ellipseIn: skirt), with: .color(.black.opacity(0.8)), lineWidth: 1)
                 let cap = skirt.insetBy(dx: radius * 0.24, dy: radius * 0.24)
-                ctx.fill(Path(ellipseIn: cap), with: .linearGradient(Gradient(colors: [accent.opacity(1), accent.opacity(0.35)]),
+                ctx.fill(Path(ellipseIn: cap), with: .linearGradient(Gradient(colors: [accent.opacity(1), accent.opacity(0.45)]),
                                                                      startPoint: CGPoint(x: c.x, y: cap.minY), endPoint: CGPoint(x: c.x, y: cap.maxY)))
                 ctx.stroke(Path(ellipseIn: cap.insetBy(dx: 0.5, dy: 0.5)), with: .color(.white.opacity(0.18)), lineWidth: 1)
                 let a = angle(fraction)

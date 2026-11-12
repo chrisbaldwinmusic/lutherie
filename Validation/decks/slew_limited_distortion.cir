@@ -27,7 +27,8 @@ CC6 N11 0 3.3n
 RVR3a 0 OUT 16.2k
 RVR3b OUT N11 83.8k
 Rload OUT 0 1Meg
-VVS1 VCC_4p5V 0 DC 4.5
+VVS1 VCC_4p5V_src 0 DC 4.5
+RVS1s VCC_4p5V_src VCC_4p5V 0.01
 
 .model D_1N914 D(Is=2.52e-09 N=1.752 Rs=0.568 Cjo=4e-12 M=0)
 * Behavioural op-amp: gain, gain-bandwidth, slew rate and output swing
@@ -35,7 +36,10 @@ VVS1 VCC_4p5V 0 DC 4.5
 Bin 0 M I=0.0477464829275686*tanh(0.3*V(INP,INN)/0.0477464829275686)
 R1 M 0 1Meg
 C1 M 0 1.5915494309189532e-07
-Bout X 0 V=4.5+3.5*V(M)/3.5/pwr(1+pwr(V(M)/3.5,4),0.25)
+* keeps the internal node inside the swing, so the amplifier recovers from clipping at once
+Bcl M 0 I=(ln(1+exp(min(5.714285714285714*(V(M)-8.75),60)))-ln(1+exp(min(5.714285714285714*(-V(M)-8.75),60))))/5.714285714285714
+* soft saturation x/(1+x^4)^(1/4), written without pwr() because simulators disagree on its sign
+Bout X 0 V=4.5+V(M)/sqrt(sqrt(1+(V(M)/3.5)*(V(M)/3.5)*(V(M)/3.5)*(V(M)/3.5)))
 Rout X OUT 100.0
 .ends
 

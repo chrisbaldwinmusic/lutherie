@@ -33,6 +33,8 @@ struct Sheet {
         case .spst: return ["1": 0, "2": 1][pin]
         case .spdt: return ["c": 0, "a": 1, "b": 2][pin]
         case .triode: return ["p": 0, "g": 1, "k": 2][pin]
+        case .pentode: return ["p": 0, "g": 1, "k": 2, "s": 3][pin]
+        case .transformer: return ["p1": 0, "ct": 1, "p2": 2, "s1": 3, "s2": 4][pin]
         case .opamp: return ["+": 0, "-": 1, "o": 2][pin]
         default: return pin.isEmpty ? 0 : nil
         }
@@ -65,6 +67,28 @@ struct Sheet {
                 continue
             }
             if raw.hasPrefix("~") { group.append(key(String(raw.dropFirst()))); continue }
+            // "⏚@x,y" ground symbol, "#NAME@x,y" net label (add ",2" to point it left), "V450:60@x,y" supply (volts:source ohms)
+            if let at = raw.lastIndex(of: "@"), let lead = raw.first, lead == "⏚" || lead == "#" || lead == "V",
+               !(lead == "V" && c.parts.contains { $0.name == raw }) , raw[raw.index(after: at)...].contains(",") {
+                let nums = raw[raw.index(after: at)...].split(separator: ",").compactMap { Int($0) }
+                let pt = GridPoint(nums[0], nums[1])
+                let body = String(raw[raw.index(after: raw.startIndex)..<at])
+                symbols += 1
+                switch lead {
+                case "⏚":
+                    add(.ground, "GND\(symbols)", pt.x, pt.y); group.append("⏚")
+                case "#":
+                    add(.label, "NET\(symbols)", pt.x, pt.y, rot: nums.count > 2 ? nums[2] : 0, text: body); group.append("L:" + body.lowercased())
+                default:
+                    let bits = body.split(separator: ":").compactMap { Double($0) }
+                    add(.supply, "VS\(symbols)", pt.x, pt.y, ["v": bits[0], "rs": bits.count > 1 ? bits[1] : 0.01],
+                        text: (bits[0] > 100 ? "B+ " : "") + "\(Eng.format(bits[0]))V")
+                    group.append(String(format: "V:%.6g", bits[0]))
+                }
+                if let a = prev { c.connect(a, pt) }
+                prev = pt
+                continue
+            }
             let vertical = raw.hasPrefix("|")
             let ref = vertical ? String(raw.dropFirst()) : raw
             let pt = point(ref)
@@ -534,7 +558,7 @@ extension Presets {
     /// Treble/bass/middle stack with its top-left corner at (sx, sy), then a master volume and the output.
     static func toneStack(_ s: inout Sheet, from: String, sx: Int, sy: Int, slope: Double, treble: Double, firstPot: Int,
                           firstCap: Int, slopeR: String, outScale: Double,
-                          bassCap: Double = 22e-9, midCap: Double = 22e-9) {
+                          bassCap: Double = 22e-9, midCap: Double = 22e-9, drive: Bool = false) {
         let ct = "C\(firstCap)", cb = "C\(firstCap + 1)", cm = "C\(firstCap + 2)"
         let vt = "VR\(firstPot)", vb = "VR\(firstPot + 1)", vm = "VR\(firstPot + 2)", vmaster = "VR\(firstPot + 3)"
         s.add(.capacitor, ct, sx + 4, sy - 8, ["c": treble])
@@ -545,7 +569,7 @@ extension Presets {
         s.add(.pot, vb, sx + 8, sy - 2, rot: 1, ["r": 1e6, "position": 0.5], model: "A", text: "Bass")
         s.add(.pot, vm, sx + 8, sy + 2, rot: 1, ["r": 25e3, "position": 0.5], model: "B", text: "Middle")
         s.add(.pot, vmaster, sx + 14, sy - 4, rot: 1, flip: true, ["r": 1e6, "position": 0.5], model: "A", text: "Master")
-        s.add(.output, "OUT", sx + 18, sy - 4, ["rl": 1e6, "scale": outScale])
+        if !drive { s.add(.output, "OUT", sx + 18, sy - 4, ["rl": 1e6, "scale": outScale]) }
         s.net(from, "\(slopeR).1")
         s.net("~\(slopeR).1", "@\(sx),\(sy)", "@\(sx),\(sy - 8)", "\(ct).1")
         s.net("\(ct).2", "\(vt).3")
@@ -555,7 +579,8 @@ extension Presets {
         s.net("\(vb).w", "|\(vb).3")
         s.net("\(vm).w", "|\(vm).3"); s.gnd("\(vm).3")
         s.net("\(vt).w", "\(vmaster).3"); s.gnd("\(vmaster).1")
-        s.net("\(vmaster).w", "OUT")
+        // with a power amp below, the master feeds it through a net label instead of the output jack
+        if drive { s.net("\(vmaster).w", "#DRIVE@\(sx + 19),\(sy - 4)") } else { s.net("\(vmaster).w", "OUT") }
     }
 
     /// Input jack, grid-leak and grid-stopper resistors, and the first triode stage, common to the amps.
@@ -649,6 +674,98 @@ extension Presets {
         return s
     }
 
+    /// A long-tailed-pair phase inverter and a push-pull pair of power tubes into an output transformer and a
+    /// speaker-like load, with negative feedback and a Presence control. Takes its signal from the DRIVE label.
+    static func powerAmp(_ s: inout Sheet, ox: Int, oy: Int, tube: String, bPlus: Double, sagOhms: Double, bias: Double,
+                         primary: Double, feedback: Double, outScale: Double) {
+        func at(_ x: Int, _ y: Int) -> String { "@\(ox + x),\(oy + y)" }
+        // phase inverter
+        s.add(.capacitor, "C30", ox + 4, oy, ["c": 22e-9])
+        s.add(.triode, "V7", ox + 10, oy, model: "12AX7")
+        s.add(.triode, "V8", ox + 18, oy, flip: true, model: "12AX7")
+        s.add(.resistor, "R30", ox + 8, oy + 2, rot: 1, ["r": 1e6])
+        s.add(.resistor, "R31", ox + 20, oy + 2, rot: 1, ["r": 1e6])
+        s.add(.resistor, "R32", ox + 14, oy + 4, rot: 1, ["r": 470])
+        s.add(.resistor, "R33", ox + 14, oy + 8, rot: 1, ["r": 10e3])
+        s.add(.resistor, "R34", ox + 14, oy + 12, rot: 1, ["r": 4.7e3])
+        s.add(.capacitor, "C31", ox + 23, oy + 2, rot: 1, ["c": 100e-9])
+        s.add(.resistor, "R35", ox + 11, oy - 7, rot: 1, ["r": 82e3])
+        s.add(.resistor, "R36", ox + 17, oy - 7, rot: 1, ["r": 100e3])
+        s.add(.capacitor, "C32", ox + 7, oy - 4, ["c": 22e-9])
+        s.add(.capacitor, "C33", ox + 21, oy - 4, ["c": 22e-9])
+        s.add(.capacitor, "C34", ox + 11, oy + 10, ["c": 100e-9])
+        s.add(.pot, "VR9", ox + 9, oy + 12, rot: 1, flip: true, ["r": 5e3, "position": 0.5], model: "B", text: "Presence")
+        s.add(.resistor, "R37", ox + 18, oy + 12, ["r": feedback])
+        s.net("#DRIVE\(at(2, 0)),2", "C30.1"); s.net("C30.2", "V7.g", "R30.1")
+        s.net("V7.k", "V8.k"); s.net("~V7.k", "R32.1")
+        s.net("R32.2", "R33.1"); s.net("R30.2", "|R32.2"); s.net("R31.2", "|R32.2")
+        s.net("V8.g", "R31.1", "C31.1")
+        s.net("C31.2", "|R33.2"); s.net("R33.2", "R34.1"); s.net("~R34.2", "⏚\(at(14, 14))")
+        s.net("C34.2", "R33.2"); s.net("C34.1", "VR9.3"); s.net("VR9.w", "|VR9.1"); s.net("~VR9.1", "⏚\(at(9, 14))")
+        s.net("R33.2", at(16, 10), "R37.1"); s.net("R37.2", "#SPKR\(at(20, 12))")
+        s.net("V7.p", "R35.2"); s.net("V8.p", "R36.2")
+        s.net("R35.1", "V350\(at(11, -10))"); s.net("R36.1", "V350\(at(17, -10))")
+        s.net("~V7.p", "C32.2", at(11, -4)); s.net("~V8.p", "C33.1", at(17, -4))
+        s.net("C32.1", "#PI A\(at(5, -4)),2"); s.net("C33.2", "#PI B\(at(23, -4))")
+        // power tubes
+        let px = ox + 34
+        func pt(_ x: Int, _ y: Int) -> String { "@\(px + x),\(oy + y)" }
+        s.add(.pentode, "V9", px + 8, oy - 6, model: tube)
+        s.add(.pentode, "V10", px + 8, oy + 6, rot: 2, flip: true, model: tube)
+        s.add(.resistor, "R40", px + 3, oy - 6, ["r": 5.6e3])
+        s.add(.resistor, "R41", px + 3, oy + 6, ["r": 5.6e3])
+        s.add(.resistor, "R42", px + 1, oy - 4, rot: 1, ["r": 220e3])
+        s.add(.resistor, "R43", px + 1, oy + 4, rot: 1, ["r": 220e3])
+        s.add(.resistor, "R44", px + 11, oy - 4, rot: 1, ["r": 1e3])
+        s.add(.resistor, "R45", px + 11, oy + 4, rot: 1, ["r": 1e3])
+        s.add(.transformer, "T1", px + 18, oy, ["zpp": primary, "zs": 8])
+        s.add(.capacitor, "C40", px + 14, oy + 3, rot: 1, ["c": 47e-6])
+        s.net("#PI A\(pt(1, -6)),2", "R40.1"); s.net("R40.2", "V9.g"); s.net("~R40.1", "R42.1")
+        s.net("#PI B\(pt(1, 6)),2", "R41.1"); s.net("R41.2", "V10.g"); s.net("~R41.1", "R43.2")
+        s.net("R42.2", "R43.1"); s.net("~R42.2", pt(1, 0), "V\(bias)\(pt(-2, 0))")
+        s.net("V9.k", "V10.k"); s.net("~V9.k", pt(9, 0), "⏚\(pt(7, 0))")
+        s.net("V9.s", "R44.1"); s.net("V10.s", "R45.2"); s.net("R44.2", "R45.1")
+        s.net("~R44.2", pt(11, 0), "T1.ct")
+        s.net("~T1.ct", pt(14, 0), "V\(bPlus):\(sagOhms)\(pt(14, -3))")
+        s.net("~T1.ct", "C40.1", pt(14, 0)); s.net("~C40.2", "⏚\(pt(14, 5))")
+        s.net("V9.p", "T1.p1"); s.net("V10.p", "T1.p2")
+        // speaker: voice-coil resistance and inductance in series with the cone's resonance
+        s.add(.resistor, "R50", px + 24, oy - 2, ["r": 6.4])
+        s.add(.inductor, "L50", px + 29, oy - 2, ["l": 0.5e-3, "rs": 0.01])
+        s.add(.inductor, "L51", px + 31, oy, rot: 1, ["l": 25e-3, "rs": 0.01])
+        s.add(.capacitor, "C50", px + 34, oy, rot: 1, ["c": 160e-6])
+        s.add(.resistor, "R51", px + 37, oy, rot: 1, ["r": 30])
+        s.add(.output, "OUT", px + 24, oy - 5, ["rl": 1e6, "scale": outScale])
+        s.net("T1.s1", "R50.1"); s.net("R50.2", "L50.1")
+        s.net("L50.2", "L51.1", "C50.1", "R51.1")
+        s.net("T1.s2", "L51.2", "C50.2", "R51.2"); s.net("~R51.2", "⏚\(pt(37, 2))")
+        s.net("~T1.s1", pt(21, -2), pt(21, -5), "OUT"); s.net("~T1.s1", pt(21, -5), "#SPKR\(pt(21, -8))")
+    }
+
+    /// The British preamp with its power amp: phase inverter, two EL34s, output transformer and speaker load.
+    static var britishHeadSheet: Sheet {
+        var s = Sheet("British 50 W Head",
+                      notes: "A whole amplifier. The British preamp feeds a long-tailed-pair phase inverter and two EL34 power tubes working in push-pull through an output transformer into a speaker-like load. Negative feedback from the speaker tightens it up, and Presence takes treble out of that feedback. Turn Master up and the power tubes clip, the supply sags and the speaker's resonance pushes back: the feel of a cranked stack. Follow the DRIVE, PI A, PI B and SPKR labels between the two halves of the drawing.")
+        firstStage(&s, bPlus: 300, rk: 2.7e3, ck: 680e-9)
+        s.add(.pot, "VR1", 19, 0, rot: 1, flip: true, ["r": 1e6, "position": 0.6], model: "A", text: "Gain")
+        s.add(.resistor, "R5", 24, 0, ["r": 470e3])
+        s.add(.triode, "V2", 29, 0, model: "12AX7")
+        s.add(.resistor, "R6", 30, 4, rot: 1, ["r": 820])
+        s.add(.resistor, "R7", 30, -4, rot: 1, ["r": 100e3])
+        s.add(.triode, "V3", 36, -2, model: "12AX7")
+        s.add(.resistor, "R8", 37, 2, rot: 1, ["r": 100e3])
+        s.net("C2.2", "VR1.3"); s.gnd("VR1.1")
+        s.net("VR1.w", "R5.1"); s.net("R5.2", "V2.g")
+        s.net("V2.k", "R6.1"); s.gnd("R6.2")
+        s.net("R7.2", "V2.p"); s.rail("R7.1", 300, text: "B+ 300V")
+        s.net("V2.p", "V3.g")
+        s.rail("V3.p", 300, dy: -2, text: "B+ 300V")
+        s.net("V3.k", "R8.1"); s.gnd("R8.2")
+        toneStack(&s, from: "V3.k", sx: 39, sy: 0, slope: 33e3, treble: 470e-12, firstPot: 2, firstCap: 3, slopeR: "R9", outScale: 0.03, drive: true)
+        powerAmp(&s, ox: 0, oy: 28, tube: "EL34", bPlus: 440, sagOhms: 60, bias: -40, primary: 3400, feedback: 100e3, outScale: 0.006)
+        return s
+    }
+
     /// 1980s–90s high gain: four cascaded stages with a cold-biased clipper.
     static var highGainSheet: Sheet {
         var s = Sheet("High-Gain Cascade Preamp",
@@ -691,7 +808,7 @@ extension Presets {
 
     static var sheets: [Sheet] {
         [hardClipSheet, slewDistortionSheet, germaniumFuzzSheet, sustainFuzzSheet, transistorBoostSheet, trebleBoosterSheet,
-         jfetOverdriveSheet, mosfetBoostSheet, selectableClipSheet, bassBlendDriveSheet, bassPreampSheet, tweedSheet, britishSheet, highGainSheet]
+         jfetOverdriveSheet, mosfetBoostSheet, selectableClipSheet, bassBlendDriveSheet, bassPreampSheet, britishHeadSheet, tweedSheet, britishSheet, highGainSheet]
     }
 
     /// Checks every library schematic against the connections it was drawn from. Empty when all are right.

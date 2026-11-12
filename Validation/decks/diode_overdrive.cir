@@ -5,7 +5,8 @@ Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
 Rsig SIGSRC IN 1k
 CC1 IN N2 47n
 RR1 N2 VCC_4p5V 1Meg
-VVREF1 VCC_4p5V 0 DC 4.5
+VVREF1 VCC_4p5V_src 0 DC 4.5
+RVREF1s VCC_4p5V_src VCC_4p5V 0.01
 XU1 N2 N4 N5 OPAMP_JRC4558_14_76
 DD1 N4 N5 D_1N4148
 DD2 N5 N4 D_1N4148
@@ -33,7 +34,10 @@ Rload OUT 0 1Meg
 Bin 0 M I=0.005305164769729844*tanh(0.1*V(INP,INN)/0.005305164769729844)
 R1 M 0 1Meg
 C1 M 0 5.305164769729845e-09
-Bout X 0 V=4.5+3.0999999999999996*V(M)/3.0999999999999996/pwr(1+pwr(V(M)/3.0999999999999996,4),0.25)
+* keeps the internal node inside the swing, so the amplifier recovers from clipping at once
+Bcl M 0 I=(ln(1+exp(min(6.451612903225807*(V(M)-7.749999999999999),60)))-ln(1+exp(min(6.451612903225807*(-V(M)-7.749999999999999),60))))/6.451612903225807
+* soft saturation x/(1+x^4)^(1/4), written without pwr() because simulators disagree on its sign
+Bout X 0 V=4.5+V(M)/sqrt(sqrt(1+(V(M)/3.0999999999999996)*(V(M)/3.0999999999999996)*(V(M)/3.0999999999999996)*(V(M)/3.0999999999999996)))
 Rout X OUT 75.0
 .ends
 

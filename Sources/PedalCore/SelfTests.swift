@@ -31,6 +31,8 @@ public enum SelfTests {
         signalChain(check)
         mosfetsAndSwitches(check)
         zenersJfetsGangs(check)
+        powerParts(check)
+        powerAmp(check)
         cabinets(check)
         let wiring = Presets.auditLibrary()
         check(wiring.isEmpty, "library schematics match their intended connections" + (wiring.isEmpty ? "" : ":\n       " + wiring.joined(separator: "\n       ")))
@@ -334,5 +336,76 @@ public enum SelfTests {
             check(e.knobCount == 1 && e.potLabels == ["Both"] && abs(pk - 0.0625) < 0.004,
                   String(format: "ganged pots: %d knob for 2 pots, quarter turn passes %.4f (expect 0.0625)", e.knobCount, pk))
         } else { check(false, "gang test circuit builds \(gp)") }
+    }
+
+    /// Pentode current against Koren's formula; transformer ratio, reflected load and time-domain behaviour.
+    static func powerParts(_ check: (Bool, String) -> Void) {
+        // 6L6GC: screen at 300 V, plate fed from 300 V through 100 Ω, grid at -20 V.
+        var s = Sheet("Pentode test", notes: "")
+        s.add(.input, "IN", -6, 0)
+        s.add(.resistor, "R0", -3, 0, ["r": 1e6])
+        s.add(.pentode, "V1", 2, 0, model: "6L6GC")
+        s.add(.resistor, "R1", 3, -4, rot: 1, ["r": 100])
+        s.add(.output, "OUT", 8, -2)
+        s.net("IN", "R0.1"); s.net("R0.2", "V1.g"); s.rail("V1.g", -20, dy: 3)
+        s.net("R1.2", "V1.p", "OUT"); s.rail("R1.1", 300)
+        s.rail("V1.s", 300, dy: -3); s.gnd("V1.k")
+        let m = DeviceLibrary.pentode("6L6GC")
+        let e1 = 300 / m.kp * log(1 + exp(m.kp * (1 / m.mu - 20.0 / 300)))
+        var vp = 300.0
+        for _ in 0..<40 { vp = 300 - 100 * 2 * pow(e1, m.ex) / m.kg1 * atan(vp / m.kvb) }
+        let problems = s.audit()
+        if problems.isEmpty, let e = try? CircuitEngine(circuit: s.c, sampleRate: 48_000),
+           let got = e.operatingPoint().first(where: { $0.0 == "OUT" })?.1 {
+            check(abs(got - vp) < 0.05, String(format: "power tube plate current: %.1f mA, Koren's formula gives %.1f mA", (300 - got) * 10, (300 - vp) * 10))
+        } else { check(false, "pentode test circuit builds \(problems)") }
+
+        // Transformer: 6.6 kΩ plate to plate into 8 Ω, driven from 6.6 kΩ: the speaker sees the source voltage
+        // divided by twice the turns ratio (less the winding resistances).
+        var t = Sheet("Transformer test", notes: "")
+        t.add(.input, "IN", -6, -2, ["rs": 6600])
+        t.add(.transformer, "T1", 0, 0)
+        t.add(.resistor, "R1", 5, 0, rot: 1, ["r": 8])
+        t.add(.output, "OUT", 8, -2, ["rl": 1e9])
+        t.net("IN", "T1.p1"); t.gnd("T1.p2"); t.net("T1.ct", "@-4,0")
+        t.net("T1.s1", "R1.1", "OUT"); t.net("T1.s2", "R1.2"); t.gnd("T1.s2")
+        let tp = t.audit().filter { !$0.contains("Not connected") }
+        if tp.isEmpty, let e = try? CircuitEngine(circuit: t.c, sampleRate: 96_000) {
+            let n = sqrt(6600.0 / 8)
+            let want = 20 * log10(8 * n * n / (6600 + 150 + n * n * 8.5) / n)
+            let r = e.frequencyResponse([1000, 20, 20_000])
+            var inp = [Float](repeating: 0, count: 19_200), o = inp
+            for i in 0..<inp.count { inp[i] = Float(sin(2 * Double.pi * 1000 * Double(i) / 96_000)) }
+            e.process(inp, &o, inp.count)
+            let pk = 20 * log10(Double(o[9600...].map { abs($0) }.max() ?? 0))
+            check(abs(r[0] - want) < 0.1 && abs(pk - want) < 0.15 && r[1] > r[0] - 3 && r[2] > r[0] - 3,
+                  String(format: "output transformer: %.2f dB at 1 kHz (ideal %.2f), %.2f dB when run sample by sample, %.1f dB at 20 Hz, %.1f dB at 20 kHz",
+                         r[0], want, pk, r[1] - r[0], r[2] - r[0]))
+        } else { check(false, "transformer test circuit builds \(tp)") }
+    }
+
+    /// The complete amp: feedback has the right sign, the supply sags under load, and it makes sensible power.
+    static func powerAmp(_ check: (Bool, String) -> Void) {
+        func gain(feedback: Double) -> Double? {
+            var c = Presets.britishHeadSheet.c
+            for i in c.parts.indices where c.parts[i].name == "R37" { c.parts[i]["r"] = feedback }
+            return (try? CircuitEngine(circuit: c, sampleRate: 48_000))?.frequencyResponse([1000]).first
+        }
+        if let with = gain(feedback: 100e3), let without = gain(feedback: 1e12) {
+            check(with < without - 2, String(format: "power amp feedback is negative: %.1f dB with it, %.1f dB without", with, without))
+        } else { check(false, "head builds") }
+        guard let e = try? CircuitEngine(circuit: Presets.britishHeadSheet.c, sampleRate: 96_000) else { return }
+        func volts(_ name: String) -> Double { e.operatingPoint().first { $0.0 == name }?.1 ?? 0 }
+        let idle = volts("VCC_440V")
+        for i in 0..<e.knobCount where e.potLabels[i] == "Master" || e.potLabels[i] == "Gain" { e.setKnob(i, 1) }
+        var inp = [Float](repeating: 0, count: 48_000), o = inp
+        for i in 0..<inp.count { inp[i] = 0.3 * Float(sin(2 * Double.pi * 220 * Double(i) / 96_000)) }
+        e.process(inp, &o, inp.count)
+        let loaded = volts("VCC_440V")
+        let scale = Presets.britishHeadSheet.c.parts.first { $0.kind == .output }?["scale"] ?? 1
+        let tail = o[24_000...].map { Double($0) / scale }
+        let rms = sqrt(tail.reduce(0) { $0 + $1 * $1 } / Double(tail.count))
+        check(idle - loaded > 5 && idle - loaded < 80 && rms > 12 && rms < 40 && e.nonConverged < 48,   // under one sample in a thousand
+              String(format: "power amp flat out: %.0f V rms at the speaker, supply sags from %.0f V to %.0f V, %d samples unsettled", rms, idle, loaded, e.nonConverged))
     }
 }

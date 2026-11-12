@@ -5,18 +5,21 @@ Vsig SIGSRC 0 SIN(0 0.3 220.0) AC 1
 Rsig SIGSRC IN 1k
 CC1 IN N2 100n
 JJ1 N3 N2 N4 J_J201
+CJ1gs N2 N4 4p
+CJ1gd N2 N3 4p
 RR1 N2 0 1Meg
 RR2 N4 0 680
 CC2 N4 0 10u
 RR3 VCC_9V N3 6.8k
-VVCC1 VCC_9V 0 DC 9.0
+VVCC1 VCC_9V_src 0 DC 9.0
+RVCC1s VCC_9V_src VCC_9V 0.01
 CC3 N3 N6 1u
 * Level pot 100k A taper at 70%
 RVR1a 0 OUT 25.8k
 RVR1b OUT N6 74.2k
 Rload OUT 0 1Meg
 
-.model J_J201 NJF(Beta=0.001304 Vto=-0.5 Lambda=0.0125 Cgs=4e-12 Cgd=4e-12)
+.model J_J201 NJF(Beta=0.001304 Vto=-0.5 Lambda=0.0125)
 
 .options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap
 .tran 1.3020833333333333e-06 0.3 0 1.3020833333333333e-06

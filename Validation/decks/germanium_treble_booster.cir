@@ -14,7 +14,8 @@ RVR1a VCC_-9V N6 4.08k
 RVR1b N6 N4 5.92k
 CC3 N6 OUT 10n
 Rload OUT 0 1Meg
-VVS1 VCC_-9V 0 DC -9.0
+VVS1 VCC_-9V_src 0 DC -9.0
+RVS1s VCC_-9V_src VCC_-9V 0.01
 
 .model Q_GermaniumPNPAC128type PNP(Is=1.2e-06 Bf=90.0 Br=5.0 Vaf=30.0 Nf=1.1 Cje=5e-11 Cjc=2e-11 Mje=0 Mjc=0)
 

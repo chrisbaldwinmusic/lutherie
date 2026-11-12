@@ -1,3 +1,4 @@
+import Accelerate
 import Foundation
 
 /// Errors raised while turning a drawing into something the solver can run.
@@ -29,6 +30,27 @@ struct TriodeEl {
     var p: Int; var g: Int; var k: Int
     var mu: Double; var ex: Double; var kg1: Double; var kp: Double; var kvb: Double
     var vgkOld: Double; var vpkOld: Double
+}
+struct PentodeEl {
+    var p: Int; var g: Int; var k: Int; var s: Int
+    var mu: Double; var ex: Double; var kg1: Double; var kg2: Double; var kp: Double; var kvb: Double
+    var vgOld: Double; var vpOld: Double; var vsOld: Double
+}
+/// Three magnetically coupled windings (an output transformer). `gamma` is the inverse of the inductance matrix,
+/// row by row; each winding runs from a to b.
+struct XfmrEl {
+    var a: (Int, Int, Int); var b: (Int, Int, Int)
+    var gamma: (Double, Double, Double, Double, Double, Double, Double, Double, Double)
+    var iPrev: (Double, Double, Double) = (0, 0, 0); var vPrev: (Double, Double, Double) = (0, 0, 0)
+    @inline(__always) func na(_ i: Int) -> Int { i == 0 ? a.0 : (i == 1 ? a.1 : a.2) }
+    @inline(__always) func nb(_ i: Int) -> Int { i == 0 ? b.0 : (i == 1 ? b.1 : b.2) }
+    @inline(__always) func gm(_ i: Int, _ j: Int) -> Double {
+        switch i * 3 + j {
+        case 0: return gamma.0; case 1: return gamma.1; case 2: return gamma.2
+        case 3: return gamma.3; case 4: return gamma.4; case 5: return gamma.5
+        case 6: return gamma.6; case 7: return gamma.7; default: return gamma.8
+        }
+    }
 }
 struct OpAmpEl {
     var inP: Int; var inN: Int; var m: Int; var out: Int
@@ -83,6 +105,8 @@ public final class CircuitEngine {
     var bjts: UnsafeMutableBufferPointer<BJTEl>
     var jfets: UnsafeMutableBufferPointer<JFETEl>
     var mosfets: UnsafeMutableBufferPointer<MOSEl>
+    var pentodes: UnsafeMutableBufferPointer<PentodeEl>
+    var xfmrs: UnsafeMutableBufferPointer<XfmrEl>
     var triodes: UnsafeMutableBufferPointer<TriodeEl>
     var opamps: UnsafeMutableBufferPointer<OpAmpEl>
 
@@ -117,6 +141,11 @@ public final class CircuitEngine {
     let zL: UnsafeMutablePointer<Double>     // nl
     let LLw: UnsafeMutablePointer<Double>    // nl×nl  scratch for the factorisation
     let permS: UnsafeMutablePointer<Int>
+    let LUs: UnsafeMutablePointer<Double>    // ns×ns  scratch for timing tests
+    /// Stop iterating once the next Newton step is predicted to be below the tolerance.
+    public var earlyExit = true
+    /// Factorisations so far (for performance checks).
+    public private(set) var factorCount = 0
     let permL: UnsafeMutablePointer<Int>
     var reducedValid = false
     let xPrev: UnsafeMutablePointer<Double>  // ns     nonlinear-node voltages of the previous sample
@@ -158,6 +187,7 @@ public final class CircuitEngine {
         var potList: [PotEl] = [], capList: [CapEl] = [], indList: [IndEl] = []
         var diodeList: [DiodeEl] = [], bjtList: [BJTEl] = [], jfetList: [JFETEl] = []
         var triodeList: [TriodeEl] = [], opList: [OpAmpEl] = [], mosList: [MOSEl] = []
+        var pentList: [PentodeEl] = [], xfList: [XfmrEl] = []
         var warn: [String] = []
         let vt = 0.025852
         var resList: [ResistorEl] = [], supList: [SupplyEl] = []
@@ -242,6 +272,31 @@ public final class CircuitEngine {
                 addCap(nodes[1], nodes[0], m.cgp)
                 addCap(nodes[1], nodes[2], m.cgk)
                 addCap(nodes[0], nodes[2], m.cpk)
+            case .pentode:
+                let m = DeviceLibrary.pentode(p.model)
+                pentList.append(PentodeEl(p: nodes[0], g: nodes[1], k: nodes[2], s: nodes[3], mu: m.mu, ex: m.ex, kg1: m.kg1, kg2: m.kg2,
+                                          kp: m.kp, kvb: m.kvb, vgOld: -20, vpOld: 300, vsOld: 300))
+                addCap(nodes[1], nodes[2], m.cgk)
+                addCap(nodes[1], nodes[0], m.cgp)
+                addCap(nodes[0], nodes[2], m.cpk)
+            case .transformer:
+                // two primary halves and a secondary on one core, each winding running "downwards" on the drawing
+                let ratio = sqrt(max(p["zpp"], 1) / max(p["zs"], 0.1))          // whole primary : secondary turns
+                let lh = max(p["lp"], 0.01) / 4, ls = max(p["lp"], 0.01) / (ratio * ratio)
+                let k = min(max(p["k"], 0), 0.99999)
+                let l = [lh, lh, ls]
+                var L = [Double](repeating: 0, count: 9)
+                for i in 0..<3 { for j in 0..<3 { L[i * 3 + j] = i == j ? l[i] : k * sqrt(l[i] * l[j]) } }
+                let det = L[0] * (L[4] * L[8] - L[5] * L[7]) - L[1] * (L[3] * L[8] - L[5] * L[6]) + L[2] * (L[3] * L[7] - L[4] * L[6])
+                let g = [(L[4] * L[8] - L[5] * L[7]) / det, (L[2] * L[7] - L[1] * L[8]) / det, (L[1] * L[5] - L[2] * L[4]) / det,
+                         (L[5] * L[6] - L[3] * L[8]) / det, (L[0] * L[8] - L[2] * L[6]) / det, (L[2] * L[3] - L[0] * L[5]) / det,
+                         (L[3] * L[7] - L[4] * L[6]) / det, (L[1] * L[6] - L[0] * L[7]) / det, (L[0] * L[4] - L[1] * L[3]) / det]
+                let p1 = newInternal(), p2 = newInternal(), s1 = newInternal()
+                resList.append(ResistorEl(a: nodes[0], b: p1, g: 2 / max(p["rp"], 1e-3)))
+                resList.append(ResistorEl(a: p2, b: nodes[2], g: 2 / max(p["rp"], 1e-3)))
+                resList.append(ResistorEl(a: nodes[3], b: s1, g: 1 / max(p["rsec"], 1e-3)))
+                xfList.append(XfmrEl(a: (p1, nodes[1], s1), b: (nodes[1], p2, nodes[4]),
+                                     gamma: (g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7], g[8])))
             case .opamp:
                 let m = DeviceLibrary.opamp(p.model)
                 let vneg = p.props["vneg"] ?? 0, vpos = p.props["vpos"] ?? vmax
@@ -258,7 +313,8 @@ public final class CircuitEngine {
                                       iMax: m.slew * 1e6 * c1, mid: (hi + lo) / 2, half: half,
                                       gout: 1 / max(m.rout, 0.1), vClamp: 2.5 * half))
             case .supply:
-                if nodes[0] >= 0 { supList.append(SupplyEl(a: nodes[0], v: p["v"], g: 100)) }
+                // "rs" is the supply's own resistance: tens of ohms with a reservoir capacitor makes a rail that sags
+                if nodes[0] >= 0 { supList.append(SupplyEl(a: nodes[0], v: p["v"], g: 1 / max(p["rs"], 1e-3))) }
             case .input:
                 inNode = nodes[0]
                 inG = 1 / max(p["rs"], 1)
@@ -289,6 +345,7 @@ public final class CircuitEngine {
         for q in bjtList { mark(q.c); mark(q.b); mark(q.e) }
         for j in jfetList { mark(j.d); mark(j.g); mark(j.s) }
         for q in mosList { mark(q.d); mark(q.g); mark(q.s) }
+        for q in pentList { mark(q.p); mark(q.g); mark(q.k); mark(q.s) }
         for t in triodeList { mark(t.p); mark(t.g); mark(t.k) }
         for o in opList { mark(o.inP); mark(o.inN); mark(o.m); mark(o.out) }
         let linCount = isNL.filter { !$0 }.count
@@ -304,6 +361,11 @@ public final class CircuitEngine {
         for i in diodeList.indices { diodeList[i].a = m(diodeList[i].a); diodeList[i].c = m(diodeList[i].c) }
         for i in bjtList.indices { bjtList[i].c = m(bjtList[i].c); bjtList[i].b = m(bjtList[i].b); bjtList[i].e = m(bjtList[i].e) }
         for i in jfetList.indices { jfetList[i].d = m(jfetList[i].d); jfetList[i].g = m(jfetList[i].g); jfetList[i].s = m(jfetList[i].s) }
+        for i in pentList.indices { pentList[i].p = m(pentList[i].p); pentList[i].g = m(pentList[i].g); pentList[i].k = m(pentList[i].k); pentList[i].s = m(pentList[i].s) }
+        for i in xfList.indices {
+            let t = xfList[i]
+            xfList[i].a = (m(t.a.0), m(t.a.1), m(t.a.2)); xfList[i].b = (m(t.b.0), m(t.b.1), m(t.b.2))
+        }
         for i in mosList.indices { mosList[i].d = m(mosList[i].d); mosList[i].g = m(mosList[i].g); mosList[i].s = m(mosList[i].s) }
         for i in triodeList.indices { triodeList[i].p = m(triodeList[i].p); triodeList[i].g = m(triodeList[i].g); triodeList[i].k = m(triodeList[i].k) }
         for i in opList.indices {
@@ -337,7 +399,8 @@ public final class CircuitEngine {
         pots = buffer(sortedPots); caps = buffer(capList); inds = buffer(indList)
         diodes = buffer(diodeList); bjts = buffer(bjtList); jfets = buffer(jfetList)
         triodes = buffer(triodeList); opamps = buffer(opList); mosfets = buffer(mosList)
-        linear = mosList.isEmpty && diodeList.isEmpty && bjtList.isEmpty && jfetList.isEmpty && triodeList.isEmpty && opList.isEmpty
+        pentodes = buffer(pentList); xfmrs = buffer(xfList)
+        linear = pentList.isEmpty && mosList.isEmpty && diodeList.isEmpty && bjtList.isEmpty && jfetList.isEmpty && triodeList.isEmpty && opList.isEmpty
 
         G0 = .allocate(capacity: n * n); A = .allocate(capacity: n * n)
         rhs0 = .allocate(capacity: n); rhs = .allocate(capacity: n); x = .allocate(capacity: n)
@@ -348,6 +411,7 @@ public final class CircuitEngine {
         Minv = .allocate(capacity: max(nl * nl, 1)); Y = .allocate(capacity: max(nl * ns, 1))
         zL = .allocate(capacity: max(nl, 1)); LLw = .allocate(capacity: max(nl * nl, 1))
         permS = .allocate(capacity: max(ns, 1)); permL = .allocate(capacity: max(nl, 1))
+        LUs = .allocate(capacity: max(ns * ns, 1))
         sA = A; sR = rhs; sStride = n; sOff = 0
         xPrev = .allocate(capacity: max(ns, 1)); xPrev.initialize(repeating: 0, count: max(ns, 1))
         warnings = warn + net.problems.filter { !$0.hasPrefix("Add") }
@@ -360,12 +424,13 @@ public final class CircuitEngine {
                   UnsafeMutableRawPointer(inds.baseAddress), UnsafeMutableRawPointer(diodes.baseAddress),
                   UnsafeMutableRawPointer(bjts.baseAddress), UnsafeMutableRawPointer(jfets.baseAddress),
                   UnsafeMutableRawPointer(triodes.baseAddress), UnsafeMutableRawPointer(opamps.baseAddress),
-                  UnsafeMutableRawPointer(mosfets.baseAddress)] {
+                  UnsafeMutableRawPointer(mosfets.baseAddress), UnsafeMutableRawPointer(pentodes.baseAddress),
+                  UnsafeMutableRawPointer(xfmrs.baseAddress)] {
             b?.deallocate()
         }
         G0.deallocate(); A.deallocate(); rhs0.deallocate(); rhs.deallocate(); x.deallocate(); perm.deallocate()
         K.deallocate(); As.deallocate(); rS.deallocate(); bS.deallocate(); Minv.deallocate(); Y.deallocate()
-        xPrev.deallocate(); zL.deallocate(); LLw.deallocate(); permS.deallocate(); permL.deallocate()
+        LUs.deallocate(); xPrev.deallocate(); zL.deallocate(); LLw.deallocate(); permS.deallocate(); permL.deallocate()
     }
 
     // MARK: Stamping helpers
@@ -406,6 +471,16 @@ public final class CircuitEngine {
         for i in inds.indices {
             inds[i].geq = dcMode ? 1e3 : dt / (2 * inds[i].l)
             conductance(G0, inds[i].m, inds[i].b, inds[i].geq)
+        }
+        for t in xfmrs {
+            for i in 0..<3 {
+                for j in 0..<3 {
+                    let g = dcMode ? (i == j ? 1e3 : 0) : 0.5 * dt * t.gm(i, j)
+                    if g == 0 { continue }
+                    addG(G0, t.na(i), t.na(j), g); addG(G0, t.nb(i), t.nb(j), g)
+                    addG(G0, t.na(i), t.nb(j), -g); addG(G0, t.nb(i), t.na(j), -g)
+                }
+            }
         }
         for s in supplies { addG(G0, s.a, s.a, s.g) }
         if inputNode >= 0 { addG(G0, inputNode, inputNode, inputG) }
@@ -466,6 +541,14 @@ public final class CircuitEngine {
                 let ieq = l.iPrev + l.geq * l.vPrev
                 if l.m >= 0 { rhs0[l.m] -= ieq }
                 if l.b >= 0 { rhs0[l.b] += ieq }
+            }
+            for t in xfmrs {
+                for i in 0..<3 {
+                    let pi = i == 0 ? t.iPrev.0 : (i == 1 ? t.iPrev.1 : t.iPrev.2)
+                    let ieq = pi + 0.5 * dt * (t.gm(i, 0) * t.vPrev.0 + t.gm(i, 1) * t.vPrev.1 + t.gm(i, 2) * t.vPrev.2)
+                    if t.na(i) >= 0 { rhs0[t.na(i)] -= ieq }
+                    if t.nb(i) >= 0 { rhs0[t.nb(i)] += ieq }
+                }
             }
         }
         for s in supplies { rhs0[s.a] += s.v * s.g * sourceScale }
@@ -610,6 +693,56 @@ public final class CircuitEngine {
             let ieq = ig - gg * vgk
             inject(t.g, -ieq); inject(t.k, ieq)
         }
+        // Power pentodes and beam tetrodes (Koren): the screen sets the current, the plate "knee" is an arctangent
+        for i in pentodes.indices {
+            var t = pentodes[i]
+            var vg = v(t.g) - v(t.k), vp = v(t.p) - v(t.k), vs = v(t.s) - v(t.k)
+            let pstep = max(10, 0.2 * abs(t.vpOld)), sstep = max(10, 0.2 * abs(t.vsOld))
+            vp = t.vpOld + min(max(vp - t.vpOld, -pstep), pstep)
+            vs = t.vsOld + min(max(vs - t.vsOld, -sstep), sstep)
+            let vse = max(vs, 1)
+            let cutoff = -vse * (1 / t.mu + 10 / t.kp)
+            if vg > cutoff {
+                let from = max(t.vgOld, cutoff)
+                vg = from + min(max(vg - from, -1), 1)
+            }
+            t.vgOld = vg; t.vpOld = vp; t.vsOld = vs
+            pentodes[i] = t
+            let (sp, sg) = softplusPair(t.kp * (1 / t.mu + vg / vse))
+            let e1 = vse / t.kp * sp
+            var ip = 0.0, gpg = 0.0, gps = 0.0, gpp = 1e-9
+            if e1 > 1e-12 {
+                let knee = vp > 0 ? atan(vp / t.kvb) : 0
+                let pw = 2 * pow(e1, t.ex - 1) / t.kg1
+                ip = pw * e1 * knee
+                let dE = t.ex * pw * knee
+                gpg = dE * sg
+                if vs > 1 { gps = dE * (sp / t.kp - sg * vg / vse) }
+                if vp > 0 { gpp += pw * e1 / (t.kvb * (1 + vp * vp / (t.kvb * t.kvb))) }
+            }
+            ip += 1e-9 * vp
+            // screen current
+            let u = vg + vse / t.mu
+            var isc = 0.0, gsg = 0.0, gss = 1e-9
+            if u > 0 {
+                let pw = pow(u, t.ex - 1) / t.kg2
+                isc = pw * u
+                gsg = t.ex * pw
+                if vs > 1 { gss += gsg / t.mu }
+            }
+            isc += 1e-9 * vs
+            stamp3(t.p, i0: ip, g1: gpp, c1p: t.p, c1n: t.k, v1: vp, g2: gpg, c2p: t.g, c2n: t.k, v2: vg)
+            stamp3(t.p, i0: 0, g1: gps, c1p: t.s, c1n: t.k, v1: vs, g2: 0, c2p: -1, c2n: -1, v2: 0)
+            stamp3(t.s, i0: isc, g1: gss, c1p: t.s, c1n: t.k, v1: vs, g2: gsg, c2p: t.g, c2n: t.k, v2: vg)
+            stamp3(t.k, i0: -(ip + isc), g1: -gpp, c1p: t.p, c1n: t.k, v1: vp, g2: -(gpg + gsg), c2p: t.g, c2n: t.k, v2: vg)
+            stamp3(t.k, i0: 0, g1: -(gps + gss), c1p: t.s, c1n: t.k, v1: vs, g2: 0, c2p: -1, c2n: -1, v2: 0)
+            // grid current when the grid goes positive of the cathode
+            var ig = 0.0, gg = gmin
+            if vg > 0 { ig = pow(vg, 1.5) / 1300; gg += 1.5 * sqrt(vg) / 1300 }
+            nlConductance(t.g, t.k, gg)
+            let ieq = ig - gg * vg
+            inject(t.g, -ieq); inject(t.k, ieq)
+        }
         // Op-amps: slew-limited input stage → integrator node → soft-saturating output
         for i in opamps.indices {
             let o = opamps[i]
@@ -655,6 +788,32 @@ public final class CircuitEngine {
 
     // MARK: Linear algebra
 
+    /// Dot product with four running sums, so the additions don't wait on one another (a single running sum
+    /// is limited by the latency of each add, which made these short loops several times slower than they need be).
+    @inline(__always) static func dot(_ a: UnsafePointer<Double>, _ b: UnsafePointer<Double>, _ n: Int) -> Double {
+        var s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0
+        var i = 0
+        while i + 4 <= n {
+            s0 += a[i] * b[i]; s1 += a[i + 1] * b[i + 1]; s2 += a[i + 2] * b[i + 2]; s3 += a[i + 3] * b[i + 3]
+            i += 4
+        }
+        while i < n { s0 += a[i] * b[i]; i += 1 }
+        return (s0 + s1) + (s2 + s3)
+    }
+
+    /// y[i] -= f · x[i], four at a time.
+    @inline(__always) static func subtractScaled(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ f: Double, _ n: Int) {
+        var i = 0
+        let fv = SIMD4<Double>(repeating: f)
+        while i + 4 <= n {
+            let yv = UnsafeRawPointer(y + i).loadUnaligned(as: SIMD4<Double>.self)
+            let xv = UnsafeRawPointer(x + i).loadUnaligned(as: SIMD4<Double>.self)
+            UnsafeMutableRawPointer(y + i).storeBytes(of: yv - fv * xv, as: SIMD4<Double>.self)
+            i += 4
+        }
+        while i < n { y[i] -= f * x[i]; i += 1 }
+    }
+
     /// In-place LU factorisation with partial pivoting of the n×n matrix M. Returns false if singular.
     @inline(__always) static func luFactor(_ M: UnsafeMutablePointer<Double>, _ n: Int, _ perm: UnsafeMutablePointer<Int>) -> Bool {
         for k in 0..<n {
@@ -673,9 +832,7 @@ public final class CircuitEngine {
                 let f = M[r * n + k] * inv
                 if f != 0 {
                     M[r * n + k] = f
-                    var c = k + 1
-                    let rowR = M + r * n, rowK = M + k * n
-                    while c < n { rowR[c] -= f * rowK[c]; c += 1 }
+                    subtractScaled(M + r * n + k + 1, M + k * n + k + 1, f, n - k - 1)
                 } else {
                     M[r * n + k] = 0
                 }
@@ -689,22 +846,9 @@ public final class CircuitEngine {
     @inline(__always) static func luSolve(_ M: UnsafeMutablePointer<Double>, _ n: Int, _ perm: UnsafeMutablePointer<Int>,
                                           _ b: UnsafeMutablePointer<Double>) {
         for k in 0..<n { let p = perm[k]; if p != k { let t = b[k]; b[k] = b[p]; b[p] = t } }
-        var r = 1
-        while r < n {
-            var s = b[r]; let row = M + r * n
-            var c = 0
-            while c < r { s -= row[c] * b[c]; c += 1 }
-            b[r] = s
-            r += 1
-        }
-        r = n - 1
-        while r >= 0 {
-            var s = b[r]; let row = M + r * n
-            var c = r + 1
-            while c < n { s -= row[c] * b[c]; c += 1 }
-            b[r] = s / row[r]
-            r -= 1
-        }
+        // forward substitution with the unit lower factor, then back substitution with the upper one
+        cblas_dtrsv(CblasRowMajor, CblasLower, CblasNoTrans, CblasUnit, Int32(n), M, Int32(n), b, 1)
+        cblas_dtrsv(CblasRowMajor, CblasUpper, CblasNoTrans, CblasNonUnit, Int32(n), M, Int32(n), b, 1)
     }
 
     @inline(__always) func factor() -> Bool { CircuitEngine.luFactor(A, n, perm) }
@@ -752,19 +896,10 @@ public final class CircuitEngine {
     @inline(__always) func newtonReduced(maxIter: Int, tol: Double) -> Bool {
         let l = nl, s = ns
         // zL = Minv · rhs0[L]
-        for i in 0..<l {
-            let row = Minv + i * l
-            var acc = 0.0
-            for j in 0..<l { acc += row[j] * rhs0[j] }
-            zL[i] = acc
-        }
+        if l > 0 { cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(l), Int32(l), 1, Minv, Int32(l), rhs0, 1, 0, zL, 1) }
         // rS = rhs0[S] − G0[S,L] · zL
-        for i in 0..<s {
-            let row = G0 + (l + i) * n
-            var acc = rhs0[l + i]
-            for j in 0..<l { acc -= row[j] * zL[j] }
-            rS[i] = acc
-        }
+        rS.update(from: rhs0 + l, count: s)
+        if l > 0 { cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(s), Int32(l), -1, G0 + l * n, Int32(n), zL, 1, 1, rS, 1) }
         targetReduced()
         let xs = x + l
         var converged = false
@@ -782,11 +917,9 @@ public final class CircuitEngine {
             converged = iterateReduced(maxIter: maxIter, tol: tol)
         }
         // linear nodes: x[L] = zL − Y · x[S]
-        for i in 0..<l {
-            let row = Y + i * s
-            var acc = zL[i]
-            for j in 0..<s { acc -= row[j] * xs[j] }
-            x[i] = acc
+        if l > 0 {
+            x.update(from: zL, count: l)
+            cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(l), Int32(s), -1, Y, Int32(s), xs, 1, 1, x, 1)
         }
         return converged
     }
@@ -794,12 +927,14 @@ public final class CircuitEngine {
     @inline(__always) func iterateReduced(maxIter: Int, tol: Double) -> Bool {
         let s = ns
         let xs = x + nl
+        var prevDelta = Double.infinity
         for _ in 0..<maxIter {
             iterationCount &+= 1
             As.update(from: K, count: s * s)
             bS.update(from: rS, count: s)
             stampNonlinear()
             guard CircuitEngine.luFactor(As, s, permS) else { return false }
+            factorCount &+= 1
             CircuitEngine.luSolve(As, s, permS, bS)
             var delta = 0.0
             for i in 0..<s {
@@ -811,6 +946,10 @@ public final class CircuitEngine {
             }
             if delta < tol { return true }
             if !delta.isFinite { return false }
+            // Close to the answer Newton's steps shrink quadratically: the next would be about delta²/previous.
+            // When that is already below the tolerance, taking it would change nothing that matters.
+            if earlyExit && prevDelta < 1e-3 && delta * delta < tol * prevDelta { return true }
+            prevDelta = delta
         }
         return false
     }
@@ -826,6 +965,40 @@ public final class CircuitEngine {
             let t = triodes[i]
             triodes[i].vgkOld = v(t.g) - v(t.k); triodes[i].vpkOld = v(t.p) - v(t.k)
         }
+        for i in pentodes.indices {
+            let t = pentodes[i]
+            pentodes[i].vgOld = v(t.g) - v(t.k); pentodes[i].vpOld = v(t.p) - v(t.k); pentodes[i].vsOld = v(t.s) - v(t.k)
+        }
+    }
+
+    /// Testing aid: nanoseconds for one pass of each part of a Newton iteration at the present state.
+    public func profile(passes: Int = 200_000) -> [(String, Double)] {
+        guard reducedValid else { return [] }
+        targetReduced()
+        let s = ns
+        func time(_ body: () -> Void) -> Double {
+            let t0 = DispatchTime.now().uptimeNanoseconds
+            for _ in 0..<passes { body() }
+            return Double(DispatchTime.now().uptimeNanoseconds - t0) / Double(passes)
+        }
+        let copy = time { As.update(from: K, count: s * s); bS.update(from: rS, count: s) }
+        let stamp = time { stampNonlinear() }
+        let lu = time { LUs.update(from: K, count: s * s); for i in 0..<s { LUs[i * s + i] += 1e-3 }; _ = CircuitEngine.luFactor(LUs, s, permS) }
+        let solve = time { bS.update(from: rS, count: s); CircuitEngine.luSolve(LUs, s, permS, bS) }
+        let l = nl
+        let reduceRHS = time {
+            cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(l), Int32(l), 1, Minv, Int32(l), rhs0, 1, 0, zL, 1)
+            rS.update(from: rhs0 + l, count: s)
+            cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(s), Int32(l), -1, G0 + l * n, Int32(n), zL, 1, 1, rS, 1)
+            x.update(from: zL, count: l)
+            cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(l), Int32(s), -1, Y, Int32(s), x + l, 1, 1, x, 1)
+        }
+        let whole = time { _ = tick(0.05) }
+        let rhs = time { buildRHS(0.1) }
+        let accept = time { acceptStep() }
+        try? solveOperatingPoint()
+        return [("copy K", copy), ("device stamps", stamp), ("factorise", lu), ("solve", solve), ("build right-hand side", rhs), ("accept step", accept),
+                ("linear nodes in and out", reduceRHS), ("whole sample, small steady input", whole)]
     }
 
     /// True while every node voltage is a number. After a blow-up, call recover().
@@ -851,6 +1024,16 @@ public final class CircuitEngine {
             l.iPrev = l.iPrev + l.geq * (vNow + l.vPrev)
             l.vPrev = vNow
             inds[i] = l
+        }
+        for i in xfmrs.indices {
+            var t = xfmrs[i]
+            let v0 = v(t.a.0) - v(t.b.0), v1 = v(t.a.1) - v(t.b.1), v2 = v(t.a.2) - v(t.b.2)
+            let s0 = v0 + t.vPrev.0, s1 = v1 + t.vPrev.1, s2 = v2 + t.vPrev.2
+            t.iPrev.0 += 0.5 * dt * (t.gamma.0 * s0 + t.gamma.1 * s1 + t.gamma.2 * s2)
+            t.iPrev.1 += 0.5 * dt * (t.gamma.3 * s0 + t.gamma.4 * s1 + t.gamma.5 * s2)
+            t.iPrev.2 += 0.5 * dt * (t.gamma.6 * s0 + t.gamma.7 * s1 + t.gamma.8 * s2)
+            t.vPrev = (v0, v1, v2)
+            xfmrs[i] = t
         }
     }
 
@@ -882,6 +1065,11 @@ public final class CircuitEngine {
             let vv = v(inds[i].m) - v(inds[i].b)
             inds[i].iPrev = 1e3 * vv
             inds[i].vPrev = 0
+        }
+        for i in xfmrs.indices {
+            let t = xfmrs[i]
+            xfmrs[i].iPrev = (1e3 * (v(t.a.0) - v(t.b.0)), 1e3 * (v(t.a.1) - v(t.b.1)), 1e3 * (v(t.a.2) - v(t.b.2)))
+            xfmrs[i].vPrev = (0, 0, 0)
         }
         dcMode = false
         stampLinear()
@@ -958,6 +1146,7 @@ public final class CircuitEngine {
         stampLinear()
         // inductors are handled separately below, so drop their DC short
         for l in inds { conductance(G0, l.m, l.b, -l.geq) }
+        for t in xfmrs { for i in 0..<3 { conductance(G0, t.na(i), t.nb(i), -1e3) } }
         A.update(from: G0, count: n * n)
         rhs.update(repeating: 0, count: n)
         targetFull()
@@ -973,6 +1162,15 @@ public final class CircuitEngine {
         }
         for c in caps { st(&Cm, c.a, c.b, c.c) }
         for l in inds { st(&Lm, l.m, l.b, 1 / l.l) }
+        for t in xfmrs {
+            for i in 0..<3 {
+                for j in 0..<3 {
+                    let g = t.gm(i, j)
+                    func put(_ r: Int, _ c: Int, _ val: Double) { if r >= 0 && c >= 0 { Lm[r * n + c] += val } }
+                    put(t.na(i), t.na(j), g); put(t.nb(i), t.nb(j), g); put(t.na(i), t.nb(j), -g); put(t.nb(i), t.na(j), -g)
+                }
+            }
+        }
         _ = Gr.count
         // restore transient state
         dcMode = false

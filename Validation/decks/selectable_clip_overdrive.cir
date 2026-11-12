@@ -29,7 +29,8 @@ CC4 N13 0 22n
 RVR2a 0 OUT 25.8k
 RVR2b OUT N13 74.2k
 Rload OUT 0 1Meg
-VVS1 VCC_4p5V 0 DC 4.5
+VVS1 VCC_4p5V_src 0 DC 4.5
+RVS1s VCC_4p5V_src VCC_4p5V 0.01
 
 .model D_1N4148 D(Is=2.52e-09 N=1.752 Rs=0.568 Cjo=4e-12 M=0)
 .model M_BS170 NMOS(Level=1 Vto=1.9 Kp=0.08 Lambda=0.0003 Is=1e-13)
@@ -38,7 +39,10 @@ VVS1 VCC_4p5V 0 DC 4.5
 Bin 0 M I=0.13793428401297597*tanh(0.2*V(INP,INN)/0.13793428401297597)
 R1 M 0 1Meg
 C1 M 0 1.061032953945969e-08
-Bout X 0 V=4.5+3.0*V(M)/3.0/pwr(1+pwr(V(M)/3.0,4),0.25)
+* keeps the internal node inside the swing, so the amplifier recovers from clipping at once
+Bcl M 0 I=(ln(1+exp(min(6.666666666666667*(V(M)-7.5),60)))-ln(1+exp(min(6.666666666666667*(-V(M)-7.5),60))))/6.666666666666667
+* soft saturation x/(1+x^4)^(1/4), written without pwr() because simulators disagree on its sign
+Bout X 0 V=4.5+V(M)/sqrt(sqrt(1+(V(M)/3.0)*(V(M)/3.0)*(V(M)/3.0)*(V(M)/3.0)))
 Rout X OUT 75.0
 .ends
 

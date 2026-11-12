@@ -130,7 +130,8 @@ public final class CircuitStage {
     }
 
     func setPower(_ pd: Float?) {
-        if let pd {
+        // a circuit with real power tubes needs no stand-in power stage
+        if let pd, !engine.circuit.hasPowerStage {
             powerOn = true
             powerDrive = 0.5 + 6 * Double(pd)
             powerMakeup = 1 / tanh(powerDrive * 0.5)

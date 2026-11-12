@@ -70,7 +70,7 @@ enum Explainer {
                 switch p.kind {
                 case .supply: if let a = n.first { acGround.insert(a) }
                 case .opamp: opInP.insert(n[0]); opInN.insert(n[1]); opOut.insert(n[2])
-                case .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode: collectors.insert(n[0]); bases.insert(n[1]); emitters.insert(n[2])
+                case .npn, .pnp, .njfet, .pjfet, .nmos, .pmos, .triode, .pentode: collectors.insert(n[0]); bases.insert(n[1]); emitters.insert(n[2])
                 case .input: inputNode = n[0]
                 case .output: outputNode = n[0]
                 default: break
@@ -234,6 +234,12 @@ enum Explainer {
             return ("\(label): selector (\(p.switchStateName))",
                     p.switchState == 2 ? "Centre position: Common is connected to neither side, so both branches are out of the circuit."
                                        : "Common is joined to side \(p.switchStateName); whatever is on the other side is out of the circuit. Selectors like this choose between clipping parts, capacitor values or voicings.")
+        case .pentode:
+            return ("\(label): power tube (\(p.model))",
+                    "A pentode or beam tetrode: the control grid steers a large current to the plate, and the screen grid sets how much is available. In pairs working in push-pull through the output transformer they drive the speaker. Pushed hard they clip against the plate's knee and the grid's own conduction, and pull the supply down: the compression and bloom of a cranked amp.")
+        case .transformer:
+            return ("\(label): output transformer",
+                    "Matches the tubes, which want a few thousand ohms, to a speaker of a few ohms, and adds the two halves of the push-pull pair into one signal. Its primary inductance sets how low the bass goes and its leakage how high the treble; the tubes' supply comes in at the centre tap.")
         case .triode:
             return ("\(label): tube gain stage (\(p.model))",
                     "A triode with a bypassed cathode gives about 30–35 dB of gain (12AX7). It clips softly and unevenly: grid current flattens the positive peaks and cutoff flattens the negative ones, which makes rich even harmonics.")

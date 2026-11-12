@@ -12,29 +12,36 @@ var failures = 0
 if let dir = ProcessInfo.processInfo.environment["SPICE_DIR"] {
     let fm = FileManager.default
     try? fm.createDirectory(atPath: dir, withIntermediateDirectories: true)
-    let rate = 192_000.0, seconds = 0.3, freq = 220.0, amp = 0.3
+    let rate = Double(ProcessInfo.processInfo.environment["RATE"] ?? "") ?? 192_000.0, seconds = 0.3, freq = 220.0, amp = 0.3
+    let only = ProcessInfo.processInfo.environment["ONLY"]
     var index: [String] = []
-    for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") {
+    for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") && (only == nil || circuit.name == only) {
         let slug = circuit.name.lowercased().map { $0.isLetter || $0.isNumber ? $0 : "_" }.reduce("") { $0 + String($1) }
         guard let out = SpiceExport.outputNode(circuit), let e = try? CircuitEngine(circuit: circuit, sampleRate: rate) else { continue }
         let input = circuit.parts.first { $0.kind == .input }, output = circuit.parts.first { $0.kind == .output }
-        let step = 1 / rate / 4
+        // Circuits with a transformer are stiff: ngspice's trapezoidal rule rings on them (its answer changes with
+        // the step size), so those are checked with its damped Gear method at a finer step.
+        let stiff = circuit.hasPowerStage
+        let step = 1 / 192_000.0 / (stiff ? 16 : 4)
         let deck = SpiceExport.netlist(circuit, testFrequency: freq, testAmplitude: amp * (input?["scale"] ?? 1), analysis: [
-            ".options reltol=1e-5 abstol=1e-13 vntol=1e-8 method=trap",
+            ".options reltol=1e-5 abstol=1e-13 vntol=1e-8 " + (stiff ? "method=gear maxord=2" : "method=trap"),
             ".tran \(step) \(seconds) 0 \(step)",
             ".control", "set wr_singlescale", "set numdgt=12", "run", "wrdata \(slug).ngspice.txt v(\(out))", ".endc",
         ])
         try? deck.write(toFile: "\(dir)/\(slug).cir", atomically: true, encoding: .utf8)
         e.tolerance = 1e-7
-        var text = ""
+        var text = "", probeText = ""
+        let probe = ProcessInfo.processInfo.environment["PROBE"]?.split(separator: ",").map(String.init)
         let n = Int(rate * seconds), scale = output?["scale"] ?? 1
         for i in 0..<n {
             // the first sample is taken one step after the start, like the simulator's first time point
             let t = Double(i + 1) / rate
             let y = e.tick(amp * sin(2 * Double.pi * freq * t))
+            if let probe, t < 0.012 { probeText += String(format: "%.9e", t) + e.operatingPoint().filter { probe.contains($0.0) }.map { String(format: " %@=%.6f", $0.0, $0.1) }.joined() + "\n" }
             text += String(format: "%.9e %.9e\n", t, y / (scale == 0 ? 1 : scale))
         }
         try? text.write(toFile: "\(dir)/\(slug).lutherie.txt", atomically: true, encoding: .utf8)
+        if probe != nil { try? probeText.write(toFile: "\(dir)/\(slug).probe.txt", atomically: true, encoding: .utf8) }
         index.append("\(slug)\t\(circuit.name)")
         print("wrote \(slug)  (non-converged \(e.nonConverged))")
     }
@@ -42,7 +49,9 @@ if let dir = ProcessInfo.processInfo.environment["SPICE_DIR"] {
     exit(0)
 }
 
-for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") {
+let only = ProcessInfo.processInfo.environment["ONLY"]   // run one starter circuit by name
+let seconds = Int(ProcessInfo.processInfo.environment["SECONDS"] ?? "") ?? 2
+for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") && (only == nil || circuit.name == only) {
     print("== \(circuit.name)")
     let net = Netlist.build(circuit)
     if !net.problems.isEmpty { print("  problems: \(net.problems)") }
@@ -51,7 +60,9 @@ for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empt
         if let it = ProcessInfo.processInfo.environment["ITER"], let v = Int(it) { e.maxIterations = v }
         if let t = ProcessInfo.processInfo.environment["TOL"], let v = Double(t) { e.tolerance = v }
         if let t = ProcessInfo.processInfo.environment["PRED"] { e.predictor = t == "1" }
+        if let t = ProcessInfo.processInfo.environment["EARLY"] { e.earlyExit = t == "1" }
         if let t = ProcessInfo.processInfo.environment["AMP"], let v = Float(t) { testAmp = v }
+        if ProcessInfo.processInfo.environment["PROFILE"] != nil { for (k, v) in e.profile() { print(String(format: "  profile %@: %.0f ns", k, v)) } }
         print("  nodes: \(e.n)  knobs: \(e.potLabels)  warnings: \(e.warnings)")
         for (name, v) in e.operatingPoint() where !name.hasPrefix("N") || CommandLine.arguments.contains("-v") {
             print(String(format: "  %@ = %.3f V", name, v))
@@ -63,7 +74,7 @@ for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empt
         let r = e.frequencyResponse(f)
         print("  small-signal gain: " + zip(f, r).map { String(format: "%.0fHz %.1fdB", $0, $1) }.joined(separator: ", "))
         // 0.3 V, 220 Hz sine for 2 s
-        let frames = Int(sr) * 2
+        let frames = Int(sr) * seconds
         var input = [Float](repeating: 0, count: frames)
         for i in 0..<frames { input[i] = testAmp * Float(sin(2 * Double.pi * 220 * Double(i) / sr)) }
         var output = [Float](repeating: 0, count: frames)
@@ -79,11 +90,12 @@ for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empt
         let mean = tail.reduce(0, +) / Float(tail.count)
         let peak = tail.map { abs($0 - mean) }.max() ?? 0
         print(String(format: "  220 Hz 0.3 V in: output peak %.3f (DC %.3f)  speed %.1fx real time  non-converged %d",
-                     peak, mean, 2 / secs, e.nonConverged))
+                     peak, mean, Double(seconds) / secs, e.nonConverged))
         if !(peak.isFinite) || peak == 0 { failures += 1; print("  FAIL: no output") }
         // The reduced solver must give the same samples as solving the whole matrix every iteration.
         let ref = try CircuitEngine(circuit: circuit, sampleRate: sr)
         ref.useFullSolver = true
+        ref.earlyExit = false
         ref.tolerance = 1e-9
         var refOut = [Float](repeating: 0, count: frames)
         let t1 = Date()
@@ -97,7 +109,7 @@ for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empt
         var maxDiff: Float = 0
         for i in 0..<frames { maxDiff = max(maxDiff, abs(output[i] - refOut[i])) }
         print(String(format: "  reduced solver: %d of %d unknowns iterated, %.2f iterations/sample, max difference from full solve %.2e (full solve %.1fx real time)",
-                     e.ns, e.n, Double(e.iterationCount) / Double(frames), maxDiff, 2 / refSecs))
+                     e.ns, e.n, Double(e.iterationCount) / Double(frames), maxDiff, Double(seconds) / refSecs))
         if ref.nonConverged > 0 { print("  full solve non-converged \(ref.nonConverged)") }
         if maxDiff > 1e-5 { failures += 1; print("  FAIL: reduced solver differs from the full solve") }
     } catch {

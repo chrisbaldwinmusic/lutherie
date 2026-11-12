@@ -26,7 +26,7 @@ public enum Presets {
          bassBlendDriveSheet.c,
          blank("Empty pedal")]
     }
-    public static var amps: [Circuit] { [tweedSheet.c, tubePreamp, britishSheet.c, highGainSheet.c, bassPreampSheet.c, blank("Empty amp")] }
+    public static var amps: [Circuit] { [tweedSheet.c, tubePreamp, britishSheet.c, highGainSheet.c, bassPreampSheet.c, britishHeadSheet.c, blank("Empty amp")] }
 
     public static func blank(_ name: String) -> Circuit {
         var b = Builder(name, notes: "Start from an empty board.")
