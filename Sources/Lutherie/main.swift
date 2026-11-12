@@ -160,8 +160,8 @@ struct ContentView: View {
             // Testing aid: `--preset "Name"` opens that starter circuit (pedal or amp) at launch.
             let args = CommandLine.arguments
             if let i = args.firstIndex(of: "--preset"), i + 1 < args.count {
-                if let p = Presets.pedals.first(where: { $0.name == args[i + 1] }) { editor.board = .pedal; editor.load(preset: p) }
-                else if let p = Presets.amps.first(where: { $0.name == args[i + 1] }) { editor.board = .amp; editor.load(preset: p) }
+                if let p = Presets.pedals.first(where: { $0.name == args[i + 1] }) { if let f = editor.pedals.first { editor.open(.pedal(f.id)) }; editor.load(preset: p) }
+                else if let p = Presets.amps.first(where: { $0.name == args[i + 1] }) { editor.open(.amp); editor.load(preset: p) }
                 if let z = args.firstIndex(of: "--zoom"), z + 1 < args.count, let v = Double(args[z + 1]) { editor.zoom = v }
             }
             // Testing aid: `--learn-demo` turns learn mode on and moves the first pedal knob.
@@ -259,6 +259,15 @@ if let i = CommandLine.arguments.firstIndex(of: "--render"), i + 2 < CommandLine
     exit(0)
 }
 
+// Testing aid: `Lutherie --render-board out.png` draws the editor with a board of several pedals and quits.
+if let i = CommandLine.arguments.firstIndex(of: "--render-board"), i + 1 < CommandLine.arguments.count {
+    let out = CommandLine.arguments[i + 1]
+    let data = MainActor.assumeIsolated {
+        SchematicSnapshot.editorPNG(preset: nil, board: ["JFET Clean Boost", "Two-Transistor Fuzz", "Germanium Treble Booster", "Selectable-Clip Overdrive"].compactMap { n in Presets.pedals.first { $0.name == n } }, width: 2100)
+    }
+    if let data { try? data.write(to: URL(fileURLWithPath: out)) }
+    exit(data == nil ? 1 : 0)
+}
 // Testing aid: `Lutherie --render-ui "Preset name" out.png` draws the whole editor off screen and quits.
 if let i = CommandLine.arguments.firstIndex(of: "--render-ui"), i + 2 < CommandLine.arguments.count {
     let name = CommandLine.arguments[i + 1]

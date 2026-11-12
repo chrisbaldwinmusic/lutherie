@@ -29,6 +29,7 @@ public enum SelfTests {
             check(abs(20 * log10(Double(pk)) + 3.01) < 0.2, String(format: "RC transient at fc: %.2f dB", 20 * log10(Double(pk))))
         } else { check(false, "RC circuit builds") }
         signalChain(check)
+        pedalboard(check)
         mosfetsAndSwitches(check)
         zenersJfetsGangs(check)
         powerParts(check)
@@ -190,6 +191,97 @@ public enum SelfTests {
     }
 
     /// MOSFET currents against the square law they should follow, and switches doing what their position says.
+    /// The pedalboard: parameter ids, ordering, per-slot knobs and on/off switches, and timing with several pedals.
+    static func pedalboard(_ check: (Bool, String) -> Void) {
+        // parameter ids: unique, inside the storage, and each slot's switch and knobs map back to that slot
+        let ids = RigParam.allCases.map(\.rawValue)
+        var idsOK = Set(ids).count == ids.count && ids.allSatisfy { $0 < RigParam.count }
+        for s in 0..<RigParam.pedalSlots {
+            idsOK = idsOK && RigParam.pedalOn(s).pedalOnSlot == s && RigParam(rawValue: RigParam.pedalOn(s).rawValue) != nil
+            for i in 0..<RigParam.knobsPerCircuit {
+                let k = RigParam.pedalKnob(s, i)
+                idsOK = idsOK && k.pedalKnob?.slot == s && k.pedalKnob?.index == i && RigParam(rawValue: k.rawValue) != nil
+            }
+        }
+        idsOK = idsOK && RigParam.pedalKnob(0, 0) == .pedalKnob1 && RigParam.pedalOn(0) == .pedalOn
+        check(idsOK, "pedalboard parameter ids: \(ids.count) parameters, \(RigParam.pedalSlots) pedal slots, slot 1 keeps the original ids")
+
+        let sr = 48_000.0
+        func run(_ rig: Rig, _ input: [Float]) -> [Float] {
+            var out = [Float](repeating: 0, count: input.count)
+            input.withUnsafeBufferPointer { ip in
+                out.withUnsafeMutableBufferPointer { op in
+                    var s = 0
+                    while s < input.count { let c = min(256, input.count - s); rig.process(ip.baseAddress! + s, op.baseAddress! + s, c); s += c }
+                }
+            }
+            return out
+        }
+        func board(_ circuits: [(Int, Circuit)], order: [Int], factor: Int = 4, amp: Bool = false) -> Rig? {
+            let rig = Rig(sampleRate: sr)
+            for (slot, c) in circuits {
+                guard let st = try? CircuitStage(circuit: c, hostRate: sr, factor: factor) else { return nil }
+                rig.install(pedal: st, slot: slot)
+            }
+            if amp, let a = try? CircuitStage(circuit: passThrough, hostRate: sr, factor: factor) { rig.install(amp: a) }
+            rig.setOrder(order)
+            rig[.ampMode] = amp ? 1 : 0; rig[.cabMode] = 0; rig[.outputLevel] = 0; rig[.powerDrive] = 0
+            return rig
+        }
+        func rms(_ a: [Float], _ b: [Float]) -> Double {
+            var s = 0.0
+            for i in 4800..<a.count { let d = Double(a[i] - b[i]); s += d * d }
+            return (s / Double(a.count - 4800)).squareRoot()
+        }
+        let tone = (0..<14_400).map { Float(0.2 * sin(2 * Double.pi * 196 * Double($0) / sr)) }
+
+        // 1. Order matters: a fuzz into a treble booster is not a treble booster into a fuzz.
+        if let ab = board([(0, Presets.fuzz), (3, Presets.trebleBoosterSheet.c)], order: [0, 3]),
+           let ba = board([(0, Presets.fuzz), (3, Presets.trebleBoosterSheet.c)], order: [3, 0]),
+           let fuzzOnly = board([(0, Presets.fuzz)], order: [0]) {
+            let x = run(ab, tone), y = run(ba, tone), z = run(fuzzOnly, tone)
+            let finite = (x + y).allSatisfy(\.isFinite)
+            check(finite && rms(x, y) > 0.01 && rms(x, z) > 0.01,
+                  String(format: "pedal order changes the sound: difference %.3f between orders, %.3f from fuzz alone", rms(x, y), rms(x, z)))
+        } else { check(false, "pedalboard builds") }
+
+        // 2. Each slot's knobs and switch reach that pedal only.
+        if let rig = board([(4, Presets.overdrive)], order: [0, 1, 2, 3, 4, 5]) {
+            rig[RigParam.pedalKnob(4, 0)] = 0.05
+            let low = run(rig, tone)
+            rig[RigParam.pedalKnob(0, 0)] = 1     // slot 1's knob: nothing there
+            let same = run(rig, tone)
+            rig[RigParam.pedalKnob(4, 0)] = 1
+            let high = run(rig, tone)
+            rig[RigParam.pedalOn(4)] = 0
+            let off = run(rig, tone)
+            let lat = rig.latencySamples
+            let dryErr = (4800..<tone.count).map { abs(off[$0] - tone[$0 - lat]) }.max() ?? 1
+            check(rms(low, same) < 1e-4 && rms(low, high) > 0.003 && dryErr < 1e-4,
+                  String(format: "slot 5's knob turns slot 5 (%.3f change), slot 1's doesn't (%.4f), its switch bypasses it (error %.1e)",
+                         rms(low, high), rms(low, same), dryErr))
+        }
+
+        // 3. Three pedals and the amp at 4×: still one oversampled pass; bypassing the middle one keeps the timing.
+        if let rig = board([(0, passThrough), (2, passThrough), (5, passThrough)], order: [5, 0, 2], amp: true) {
+            var imp = [Float](repeating: 0, count: 2048); imp[100] = 0.5
+            let on = run(rig, imp)
+            rig[RigParam.pedalOn(0)] = 0
+            let off = run(rig, imp)
+            func peak(_ o: [Float]) -> Int { o.indices.max { abs(o[$0]) < abs(o[$1]) }! - 100 }
+            check(peak(on) == 48 && peak(off) == 48 && rig.latencySamples == 48 && rig.expectedLatency == 48,
+                  "three pedals and the amp at 4×: \(peak(on)) samples, \(peak(off)) with the middle pedal bypassed, reported \(rig.latencySamples)")
+        }
+
+        // 4. A slot left out of the order doesn't run.
+        if let rig = board([(1, Presets.fuzz)], order: [0, 2]) {
+            let out = run(rig, tone)
+            let lat = rig.latencySamples
+            let err = (4800..<tone.count).map { abs(out[$0] - tone[$0 - lat]) }.max() ?? 1
+            check(err < 1e-4, String(format: "a pedal left out of the order is skipped (error %.1e)", err))
+        }
+    }
+
     static func mosfetsAndSwitches(_ check: (Bool, String) -> Void) {
         func drainVolts(pmos: Bool) -> Double? {
             var s = Sheet("MOS test", notes: "")

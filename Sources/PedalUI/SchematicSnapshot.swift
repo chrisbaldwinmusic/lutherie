@@ -5,6 +5,9 @@ import SwiftUI
 /// Draws a circuit to a PNG without needing a window (testing aid: `Lutherie --render "Preset name" out.png`).
 @MainActor
 public enum SchematicSnapshot {
+    /// True while drawing off screen.
+    static var rendering = false
+
     public static func png(_ c: Circuit, scale: CGFloat = 22) -> Data? {
         let points = c.parts.flatMap { [$0.position] + $0.pins } + c.wires.flatMap { [$0.a, $0.b] }
         guard let minX = points.map(\.x).min(), let maxX = points.map(\.x).max(),
@@ -31,8 +34,11 @@ public enum SchematicSnapshot {
     }
 
     /// The whole editor drawn off screen (system pickers and menus don't draw this way; everything else does).
-    public static func editorPNG(preset: Circuit?, width: CGFloat = 1440, height: CGFloat = 920) -> Data? {
+    public static func editorPNG(preset: Circuit?, board: [Circuit] = [], width: CGFloat = 1440, height: CGFloat = 920) -> Data? {
+        rendering = true
+        defer { rendering = false }
         let model = EditorModel()
+        for c in board { model.addPedal(c) }
         if let p = preset { model.load(preset: p) }
         model.fitView()
         let view = EditorView(model: model) { EmptyView() }.frame(width: width, height: height)

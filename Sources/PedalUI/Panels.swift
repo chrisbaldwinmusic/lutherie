@@ -293,7 +293,7 @@ struct InspectorView: View {
 
     @ViewBuilder
     var circuitInfo: some View {
-        Text(model.board == .pedal ? "PEDAL CIRCUIT" : "AMP CIRCUIT").font(.system(size: 10, weight: .semibold)).foregroundColor(Theme.accent)
+        Text(model.title(model.board).uppercased() + " CIRCUIT").font(.system(size: 10, weight: .semibold)).foregroundColor(Theme.accent)
         TextField("Name", text: Binding(get: { model.circuit.name }, set: { v in model.edit { $0.name = v } }))
             .textFieldStyle(.roundedBorder)
         Text(model.circuit.notes).foregroundColor(Theme.dim).fixedSize(horizontal: false, vertical: true)
@@ -321,6 +321,14 @@ struct InspectorView: View {
 
 // MARK: - Knob
 
+/// How a knob is drawn: Atelier's lit ring for the utility controls, a skirted knob on a printed scale for
+/// pedals, and a chickenhead on a numbered panel for amps.
+enum KnobStyle: Equatable {
+    case atelier
+    case pedal(cream: Bool)
+    case chicken
+}
+
 struct Knob: View {
     let label: String
     let value: Float
@@ -328,42 +336,29 @@ struct Knob: View {
     var format: (Float) -> String = { String(format: "%.0f", $0 * 10) }
     var size: CGFloat = 46
     var accent: Color = Theme.gold
+    var style: KnobStyle = .atelier
+    /// Colour of the printed label and scale (the panel's ink).
+    var ink: Color = Theme.dim
+    /// Show the value only while turning (faceplates have no room for a readout).
+    var compact = false
     let set: (Float) -> Void
     @State private var startValue: Float?
 
     var fraction: Double { Double((value - range.lowerBound) / (range.upperBound - range.lowerBound)) }
+    var pad: CGFloat { style == .chicken ? 24 : 14 }
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: compact ? 1 : 2) {
             Canvas { ctx, sz in
-                // Atelier's knob: a ring of eleven dots that light up to the setting, a dark skirt,
-                // a cap in the section's colour and a cream pointer.
                 let c = CGPoint(x: sz.width / 2, y: sz.height / 2)
-                let radius = min(sz.width, sz.height) / 2 - 7
-                func angle(_ t: Double) -> Double { (-225 + 270 * t) * .pi / 180 }
-                for i in 0...10 {
-                    let t = Double(i) / 10, a = angle(t)
-                    let p = CGPoint(x: c.x + (radius + 4.5) * cos(a), y: c.y + (radius + 4.5) * sin(a))
-                    ctx.fill(Path(ellipseIn: CGRect(x: p.x - 1.3, y: p.y - 1.3, width: 2.6, height: 2.6)),
-                             with: .color(t <= fraction + 0.001 ? accent : Theme.hex(0x3a3c42)))
+                switch style {
+                case .atelier: drawAtelier(&ctx, c, min(sz.width, sz.height) / 2 - 7)
+                case .pedal(let cream): drawPedal(&ctx, c, min(sz.width, sz.height) / 2 - 7, cream: cream)
+                case .chicken: drawChicken(&ctx, c, min(sz.width, sz.height) / 2 - 12)
                 }
-                let skirt = CGRect(x: c.x - radius, y: c.y - radius, width: radius * 2, height: radius * 2)
-                ctx.fill(Path(ellipseIn: skirt.offsetBy(dx: 0, dy: 2.5)), with: .color(.black.opacity(0.45)))
-                ctx.fill(Path(ellipseIn: skirt), with: .linearGradient(Gradient(colors: [Theme.hex(0x4a4d54), Theme.hex(0x101113)]),
-                                                                       startPoint: CGPoint(x: c.x, y: skirt.minY), endPoint: CGPoint(x: c.x, y: skirt.maxY)))
-                ctx.stroke(Path(ellipseIn: skirt), with: .color(.black.opacity(0.8)), lineWidth: 1)
-                let cap = skirt.insetBy(dx: radius * 0.24, dy: radius * 0.24)
-                ctx.fill(Path(ellipseIn: cap), with: .linearGradient(Gradient(colors: [accent.opacity(1), accent.opacity(0.45)]),
-                                                                     startPoint: CGPoint(x: c.x, y: cap.minY), endPoint: CGPoint(x: c.x, y: cap.maxY)))
-                ctx.stroke(Path(ellipseIn: cap.insetBy(dx: 0.5, dy: 0.5)), with: .color(.white.opacity(0.18)), lineWidth: 1)
-                let a = angle(fraction)
-                var pointer = Path()
-                pointer.move(to: CGPoint(x: c.x + radius * 0.36 * cos(a), y: c.y + radius * 0.36 * sin(a)))
-                pointer.addLine(to: CGPoint(x: c.x + radius * 0.96 * cos(a), y: c.y + radius * 0.96 * sin(a)))
-                ctx.stroke(pointer, with: .color(Theme.hex(0xf6f0de)), style: StrokeStyle(lineWidth: 2.6, lineCap: .round))
             }
-            .frame(width: size + 14, height: size + 14)
-            .contentShape(Rectangle())
+            .frame(width: size + pad, height: size + pad)
+            .contentShape(Circle())
             .gesture(DragGesture(minimumDistance: 0).onChanged { g in
                 if startValue == nil { startValue = value }
                 let span = range.upperBound - range.lowerBound
@@ -372,11 +367,113 @@ struct Knob: View {
                 set(min(max(v, range.lowerBound), range.upperBound))
             }.onEnded { _ in startValue = nil })
             .onTapGesture(count: 2) { set((range.lowerBound + range.upperBound) / 2) }
-            Text(label.uppercased()).font(Theme.label(9.5)).tracking(0.8).foregroundColor(Theme.dim).lineLimit(1).minimumScaleFactor(0.7)
-            Text(format(value)).font(.system(size: 9, weight: .semibold).monospacedDigit()).foregroundColor(startValue == nil ? Theme.dim.opacity(0.8) : Theme.text)
+            .overlay(alignment: .top) {
+                if compact && startValue != nil {
+                    Text(format(value)).font(.system(size: 9, weight: .bold).monospacedDigit()).foregroundColor(Theme.text)
+                        .padding(.horizontal, 5).padding(.vertical, 1.5)
+                        .background(Theme.well.opacity(0.92), in: Capsule())
+                        .offset(y: -12).fixedSize()
+                }
+            }
+            Text(label.uppercased()).font(Theme.label(compact ? 8 : 9.5)).tracking(compact ? 0.5 : 0.8)
+                .foregroundColor(ink).lineLimit(1).minimumScaleFactor(0.6)
+            if !compact {
+                Text(format(value)).font(.system(size: 9, weight: .semibold).monospacedDigit()).foregroundColor(startValue == nil ? Theme.dim.opacity(0.8) : Theme.text)
+            }
         }
         .frame(minWidth: size + 18)
-        .help("Drag up or down (Option for fine control). Double-click to centre.")
+        .help("\(label): \(format(value)). Drag up or down (Option for fine control). Double-click to centre.")
+    }
+
+    func angle(_ t: Double) -> Double { (-225 + 270 * t) * .pi / 180 }
+    func at(_ c: CGPoint, _ r: CGFloat, _ a: Double) -> CGPoint { CGPoint(x: c.x + r * cos(a), y: c.y + r * sin(a)) }
+
+    /// Atelier's knob: a ring of eleven dots that light up to the setting, a dark skirt, a cap in the section's
+    /// colour and a cream pointer.
+    func drawAtelier(_ ctx: inout GraphicsContext, _ c: CGPoint, _ radius: CGFloat) {
+        for i in 0...10 {
+            let t = Double(i) / 10, p = at(c, radius + 4.5, angle(t))
+            ctx.fill(Path(ellipseIn: CGRect(x: p.x - 1.3, y: p.y - 1.3, width: 2.6, height: 2.6)),
+                     with: .color(t <= fraction + 0.001 ? accent : Theme.hex(0x3a3c42)))
+        }
+        let skirt = CGRect(x: c.x - radius, y: c.y - radius, width: radius * 2, height: radius * 2)
+        ctx.fill(Path(ellipseIn: skirt.offsetBy(dx: 0, dy: 2.5)), with: .color(.black.opacity(0.45)))
+        ctx.fill(Path(ellipseIn: skirt), with: .linearGradient(Gradient(colors: [Theme.hex(0x4a4d54), Theme.hex(0x101113)]),
+                                                               startPoint: CGPoint(x: c.x, y: skirt.minY), endPoint: CGPoint(x: c.x, y: skirt.maxY)))
+        ctx.stroke(Path(ellipseIn: skirt), with: .color(.black.opacity(0.8)), lineWidth: 1)
+        let cap = skirt.insetBy(dx: radius * 0.24, dy: radius * 0.24)
+        ctx.fill(Path(ellipseIn: cap), with: .linearGradient(Gradient(colors: [accent.opacity(1), accent.opacity(0.45)]),
+                                                             startPoint: CGPoint(x: c.x, y: cap.minY), endPoint: CGPoint(x: c.x, y: cap.maxY)))
+        ctx.stroke(Path(ellipseIn: cap.insetBy(dx: 0.5, dy: 0.5)), with: .color(.white.opacity(0.18)), lineWidth: 1)
+        var pointer = Path()
+        pointer.move(to: at(c, radius * 0.36, angle(fraction)))
+        pointer.addLine(to: at(c, radius * 0.96, angle(fraction)))
+        ctx.stroke(pointer, with: .color(Theme.hex(0xf6f0de)), style: StrokeStyle(lineWidth: 2.6, lineCap: .round))
+    }
+
+    /// A pedal knob: printed scale ticks on the enclosure, a knurled skirt, a flat top and a pointer line.
+    func drawPedal(_ ctx: inout GraphicsContext, _ c: CGPoint, _ radius: CGFloat, cream: Bool) {
+        for i in 0...10 {
+            let a = angle(Double(i) / 10)
+            var t = Path()
+            t.move(to: at(c, radius + 2.5, a)); t.addLine(to: at(c, radius + (i % 5 == 0 ? 6.5 : 5), a))
+            ctx.stroke(t, with: .color(ink.opacity(i % 5 == 0 ? 0.9 : 0.6)), lineWidth: i % 5 == 0 ? 1.4 : 1)
+        }
+        let skirt = CGRect(x: c.x - radius, y: c.y - radius, width: radius * 2, height: radius * 2)
+        ctx.fill(Path(ellipseIn: skirt.offsetBy(dx: 0.5, dy: 2.5)), with: .color(.black.opacity(0.5)))
+        let (hi, lo, line): (UInt32, UInt32, UInt32) = cream ? (0xf1ead6, 0xb9b09a, 0x1a1718) : (0x3b3b3f, 0x0b0b0c, 0xf4efe2)
+        ctx.fill(Path(ellipseIn: skirt), with: .linearGradient(Gradient(colors: [Theme.hex(hi), Theme.hex(lo)]),
+                                                               startPoint: CGPoint(x: c.x, y: skirt.minY), endPoint: CGPoint(x: c.x, y: skirt.maxY)))
+        // knurling round the edge
+        for i in 0..<28 {
+            let a = Double(i) / 28 * 2 * .pi
+            var k = Path(); k.move(to: at(c, radius * 0.8, a)); k.addLine(to: at(c, radius - 0.6, a))
+            ctx.stroke(k, with: .color((cream ? Color.black : .white).opacity(0.10)), lineWidth: 0.8)
+        }
+        ctx.stroke(Path(ellipseIn: skirt), with: .color(.black.opacity(0.75)), lineWidth: 1)
+        let top = skirt.insetBy(dx: radius * 0.22, dy: radius * 0.22)
+        let (thi, tlo): (UInt32, UInt32) = cream ? (0xfbf6e8, 0xd9d0b8) : (0x2e2e31, 0x161618)
+        ctx.fill(Path(ellipseIn: top), with: .linearGradient(Gradient(colors: [Theme.hex(thi), Theme.hex(tlo)]),
+                                                             startPoint: CGPoint(x: c.x, y: top.minY), endPoint: CGPoint(x: c.x, y: top.maxY)))
+        ctx.stroke(Path(ellipseIn: top.insetBy(dx: 0.4, dy: 0.4)), with: .color(.white.opacity(cream ? 0.5 : 0.12)), lineWidth: 0.8)
+        var pointer = Path()
+        pointer.move(to: at(c, radius * 0.18, angle(fraction)))
+        pointer.addLine(to: at(c, radius * 0.97, angle(fraction)))
+        ctx.stroke(pointer, with: .color(Theme.hex(line)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+    }
+
+    /// An amp knob: a chickenhead pointer over numbers printed on the control panel.
+    func drawChicken(_ ctx: inout GraphicsContext, _ c: CGPoint, _ radius: CGFloat) {
+        for i in 0...10 {
+            let a = angle(Double(i) / 10)
+            ctx.draw(Text("\(i)").font(.system(size: 6, weight: .bold)).foregroundColor(ink), at: at(c, radius + 7.5, a))
+            var t = Path(); t.move(to: at(c, radius + 1.5, a)); t.addLine(to: at(c, radius + 4, a))
+            ctx.stroke(t, with: .color(ink.opacity(0.7)), lineWidth: 0.9)
+        }
+        let a = angle(fraction)
+        let base = CGRect(x: c.x - radius * 0.7, y: c.y - radius * 0.7, width: radius * 1.4, height: radius * 1.4)
+        ctx.fill(Path(ellipseIn: base.offsetBy(dx: 0.5, dy: 2.5)), with: .color(.black.opacity(0.45)))
+        // the pointer: a long tapered blade and a short tail, in one shape
+        var blade = Path()
+        let side = a + .pi / 2
+        blade.move(to: at(c, radius * 1.0, a))
+        blade.addQuadCurve(to: at(at(c, radius * 0.1, a), radius * 0.42, side), control: at(at(c, radius * 0.6, a), radius * 0.2, side))
+        blade.addQuadCurve(to: at(c, radius * 0.62, a + .pi), control: at(at(c, radius * 0.45, a + .pi), radius * 0.45, side))
+        blade.addQuadCurve(to: at(at(c, radius * 0.1, a), radius * 0.42, side + .pi), control: at(at(c, radius * 0.45, a + .pi), radius * 0.45, side + .pi))
+        blade.addQuadCurve(to: at(c, radius * 1.0, a), control: at(at(c, radius * 0.6, a), radius * 0.2, side + .pi))
+        blade.closeSubpath()
+        ctx.fill(blade.offsetBy(dx: 0.5, dy: 2), with: .color(.black.opacity(0.35)))
+        ctx.fill(Path(ellipseIn: base), with: .linearGradient(Gradient(colors: [Theme.hex(0x3a3638), Theme.hex(0x0c0a0b)]),
+                                                              startPoint: CGPoint(x: c.x, y: base.minY), endPoint: CGPoint(x: c.x, y: base.maxY)))
+        ctx.fill(blade, with: .linearGradient(Gradient(colors: [Theme.hex(0x413c3e), Theme.hex(0x0f0d0e)]),
+                                              startPoint: CGPoint(x: c.x, y: c.y - radius), endPoint: CGPoint(x: c.x, y: c.y + radius)))
+        ctx.stroke(blade, with: .color(.black.opacity(0.8)), lineWidth: 0.8)
+        var line = Path()
+        line.move(to: at(c, radius * 0.15, a)); line.addLine(to: at(c, radius * 0.9, a))
+        ctx.stroke(line, with: .color(Theme.hex(0xf1e9d2)), style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
+        let hub = CGRect(x: c.x - radius * 0.2, y: c.y - radius * 0.2, width: radius * 0.4, height: radius * 0.4)
+        ctx.fill(Path(ellipseIn: hub), with: .color(Theme.hex(0x1d1a1b)))
+        ctx.stroke(Path(ellipseIn: hub), with: .color(.white.opacity(0.12)), lineWidth: 0.7)
     }
 }
 

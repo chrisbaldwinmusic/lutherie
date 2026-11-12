@@ -150,6 +150,30 @@ for factor in [1, 2, 4, 8] {
     if !peak.isFinite || peak == 0 { failures += 1; print("  FAIL: no output") }
 }
 
+// A full board: boost, overdrive and fuzz into the tube amp, all in one oversampled pass.
+for factor in [1, 4] {
+    let rig = Rig(sampleRate: sr)
+    var ok = true
+    for (slot, c) in [Presets.boost, Presets.overdrive, Presets.fuzz].enumerated() {
+        guard let st = try? CircuitStage(circuit: c, hostRate: sr, factor: factor) else { ok = false; continue }
+        rig.install(pedal: st, slot: slot)
+    }
+    guard ok, let amp = try? CircuitStage(circuit: Presets.tubePreamp, hostRate: sr, factor: factor) else { failures += 1; print("  FAIL: board builds"); continue }
+    rig.install(amp: amp)
+    let frames = Int(sr) * 2
+    var buf = (0..<frames).map { 0.3 * Float(sin(2 * Double.pi * 220 * Double($0) / sr)) }
+    let t0 = Date()
+    buf.withUnsafeMutableBufferPointer { b in
+        var s = 0
+        while s < frames { let c = min(256, frames - s); rig.process(b.baseAddress! + s, b.baseAddress! + s, c); s += c }
+    }
+    let secs = Date().timeIntervalSince(t0)
+    let peak = buf[(frames / 2)...].map { abs($0) }.max() ?? 0
+    print(String(format: "Board of 3 pedals + amp at %d×: %.0f%% of one core, latency %d samples, output peak %.3f",
+                 factor, secs / 2 * 100, rig.latencySamples, peak))
+    if !peak.isFinite || peak == 0 { failures += 1; print("  FAIL: no output") }
+}
+
 // Extra checks provided by other modules
 for line in SelfTests.run() { print(line); if line.contains("FAIL") { failures += 1 } }
 print(failures == 0 ? "ALL OK" : "\(failures) FAILURE(S)")

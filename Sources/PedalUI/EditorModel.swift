@@ -4,11 +4,19 @@ import PedalCore
 import SwiftUI
 import UniformTypeIdentifiers
 
-public enum Board: String, CaseIterable, Identifiable, Codable {
-    case pedal, amp
-    public var id: String { rawValue }
-    public var title: String { self == .pedal ? "Pedal" : "Amp" }
-    var knobBase: RigParam { self == .pedal ? .pedalKnob1 : .ampKnob1 }
+/// One pedal on the board. Its slot fixes which host parameters it answers to, and stays with it when it moves.
+public struct BoardPedal: Codable, Hashable, Identifiable, Sendable {
+    public var id = UUID()
+    public var slot: Int
+    public var circuit: Circuit
+    public init(slot: Int, circuit: Circuit) { self.slot = slot; self.circuit = circuit }
+}
+
+/// Which module of the rig is open in the workshop.
+public enum Board: Hashable, Codable {
+    case pedal(UUID)
+    case amp
+    public var isAmp: Bool { self == .amp }
 }
 
 public enum Tool: Equatable {
@@ -27,8 +35,11 @@ public protocol ParamBridge: AnyObject {
 
 /// Everything saved with a session or a plugin preset.
 public struct PedalDocument: Codable {
-    public var version = 1
+    public var version = 2
+    /// The first pedal, for versions that had only one.
     public var pedal: Circuit
+    /// The whole board in signal order (version 2 on).
+    public var pedals: [BoardPedal]?
     public var amp: Circuit
     public var params: [Int: Float]
     public var quality: Int
@@ -54,20 +65,39 @@ public struct Analysis {
     public var nodeCount = 0
     public var harmonics: [Double] = []  // amplitudes of harmonics 1…9 at the test tone
     public var outPeak: Double = 0
+    /// Share of one core this circuit takes at the current sample rate and oversampling (1 = all of it).
+    public var cpu: Double?
+}
+
+/// See EditorModel.clock.
+@MainActor
+public final class ParamClock: ObservableObject {
+    @Published public var tick = 0
+}
+
+/// Redraws its content on every clock tick.
+struct Ticking<Content: View>: View {
+    @ObservedObject var clock: ParamClock
+    @ViewBuilder let content: () -> Content
+    var body: some View {
+        let _ = clock.tick
+        content()
+    }
 }
 
 @MainActor
 public final class EditorModel: ObservableObject {
-    @Published public var pedal: Circuit
+    /// The pedalboard in signal order, guitar first.
+    @Published public var pedals: [BoardPedal]
     @Published public var amp: Circuit
-    @Published public var board: Board = .pedal
+    @Published public var board: Board
     @Published public var tool: Tool = .select
     @Published public var selection: Set<UUID> = []
     @Published public var selectedWires: Set<UUID> = []
     @Published public var zoom: CGFloat = 1
     @Published public var pan: CGSize = CGSize(width: 120, height: 320)
     @Published public var analysis: [Board: Analysis] = [:]
-    @Published public var quality: Int = 4 { didSet { if quality != oldValue { rebuild(.pedal); rebuild(.amp) } } }
+    @Published public var quality: Int = 4 { didSet { if quality != oldValue { syncKnobsFromParams(); rebuildAll() } } }
     @Published public var profileName: String?
     @Published public var irName: String?
     @Published public var cabinet: CabinetChoice?
@@ -77,38 +107,43 @@ public final class EditorModel: ObservableObject {
     /// True when a session names a TONE3000 tone that hasn't been fetched yet.
     @Published public var tone3000NeedsReload = false
     @Published public var message: String?
-    @Published public var paramTick = 0
+    /// Ticks 20 times a second and on every parameter change. Only the views that show live values watch it,
+    /// so meters and host automation never redraw the schematic.
+    public let clock = ParamClock()
     @Published public var scopeFrequency: Double = 220
     @Published public var scopeLevel: Double = 0.3
     @Published public var learnMode = false { didSet { if !learnMode { lesson = nil } } }
     @Published public var lesson: Lesson?
+    /// Whether the schematic workshop is showing under the board (otherwise the board fills the window).
+    @Published public var workshopOpen = true
     var pendingChange: [Board: Change] = [:]
 
     public weak var bridge: ParamBridge?
     var profileData: Data?
     var irSamples: [Float]?
-    var undoStack: [(Circuit, Circuit)] = []
-    var redoStack: [(Circuit, Circuit)] = []
+    var undoStack: [([BoardPedal], Circuit)] = []
+    var redoStack: [([BoardPedal], Circuit)] = []
     var pending: [Board: DispatchWorkItem] = [:]
-    var generation: [Board: Int] = [.pedal: 0, .amp: 0]
+    var generation: [Board: Int] = [:]
     var meterTimer: Timer?
     var reportedLatency = 0
     let workQueue = DispatchQueue(label: "lutherie.compile", qos: .userInitiated)
 
     public init() {
-        pedal = Presets.overdrive
+        let first = BoardPedal(slot: 0, circuit: Presets.overdrive)
+        pedals = [first]
         amp = Presets.tubePreamp
+        board = .pedal(first.id)
     }
 
     public func attach(_ bridge: ParamBridge) {
         self.bridge = bridge
-        rebuild(.pedal)
-        rebuild(.amp)
+        rebuildAll(pushKnobs: true)
         meterTimer?.invalidate()
         meterTimer = Timer.scheduledTimer(withTimeInterval: 1 / 20, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                self.paramTick &+= 1
+                self.clock.tick &+= 1
                 if let rig = self.bridge?.rig, rig.expectedLatency != self.reportedLatency {
                     self.reportedLatency = rig.expectedLatency
                     self.bridge?.latencyChanged()
@@ -119,15 +154,55 @@ public final class EditorModel: ObservableObject {
 
     // MARK: Circuits
 
+    /// Every module on the rig, in signal order.
+    public var modules: [Board] { pedals.map { .pedal($0.id) } + [.amp] }
+
+    public func pedal(_ id: UUID) -> BoardPedal? { pedals.first { $0.id == id } }
+
+    /// The circuit open in the workshop.
     public var circuit: Circuit {
-        get { board == .pedal ? pedal : amp }
-        set { if board == .pedal { pedal = newValue } else { amp = newValue } }
+        get { circuit(board) }
+        set {
+            switch board {
+            case .amp: amp = newValue
+            case .pedal(let id): if let i = pedals.firstIndex(where: { $0.id == id }) { pedals[i].circuit = newValue }
+            }
+        }
     }
 
-    public func circuit(_ b: Board) -> Circuit { b == .pedal ? pedal : amp }
+    public func circuit(_ b: Board) -> Circuit {
+        switch b {
+        case .amp: return amp
+        case .pedal(let id): return pedal(id)?.circuit ?? Circuit(name: "Empty pedal")
+        }
+    }
+
+    /// A short name for a module ("Pedal 2", "Amp").
+    public func title(_ b: Board) -> String {
+        switch b {
+        case .amp: return "Amp"
+        case .pedal(let id): return "Pedal \((pedals.firstIndex { $0.id == id } ?? 0) + 1)"
+        }
+    }
+
+    /// The host parameter for knob `i` of a module.
+    public func knobParam(_ b: Board, _ i: Int) -> RigParam? {
+        guard i < RigParam.knobsPerCircuit else { return nil }
+        switch b {
+        case .amp: return RigParam.ampKnob(i)
+        case .pedal(let id): return pedal(id).map { RigParam.pedalKnob($0.slot, i) }
+        }
+    }
+
+    /// The module a host parameter belongs to (for knobs).
+    func module(for p: RigParam) -> (Board, Int)? {
+        if let k = p.ampKnob { return (.amp, k) }
+        if let k = p.pedalKnob, let pd = pedals.first(where: { $0.slot == k.slot }) { return (.pedal(pd.id), k.index) }
+        return nil
+    }
 
     public func checkpoint() {
-        undoStack.append((pedal, amp))
+        undoStack.append((pedals, amp))
         if undoStack.count > 200 { undoStack.removeFirst() }
         redoStack.removeAll()
     }
@@ -140,7 +215,7 @@ public final class EditorModel: ObservableObject {
         body(&c)
         circuit = c
         if learnMode, let ch = describe(old, c) { pendingChange[board] = ch }
-        rebuild(board)
+        rebuild(board, pushKnobs: old.knobs.map(\.id) != c.knobs.map(\.id))
     }
 
     /// What differs between two versions of a circuit, for learn mode.
@@ -168,16 +243,26 @@ public final class EditorModel: ObservableObject {
 
     public func undo() {
         guard let s = undoStack.popLast() else { return }
-        redoStack.append((pedal, amp))
-        pedal = s.0; amp = s.1
-        rebuild(.pedal); rebuild(.amp)
+        redoStack.append((pedals, amp))
+        restore(s)
     }
 
     public func redo() {
         guard let s = redoStack.popLast() else { return }
-        undoStack.append((pedal, amp))
-        pedal = s.0; amp = s.1
-        rebuild(.pedal); rebuild(.amp)
+        undoStack.append((pedals, amp))
+        restore(s)
+    }
+
+    /// Puts back a whole board, re-simulating only the circuits that differ.
+    private func restore(_ s: ([BoardPedal], Circuit)) {
+        let before = Dictionary(uniqueKeysWithValues: pedals.map { ($0.id, $0) })
+        let ampBefore = amp
+        pedals = s.0; amp = s.1
+        for p in pedals where before[p.id] != p { rebuild(.pedal(p.id), pushKnobs: true) }
+        if amp != ampBefore { rebuild(.amp, pushKnobs: true) }
+        clearUnusedSlots()
+        pushOrder()
+        if !modules.contains(board) { board = modules.first ?? .amp }
     }
 
     public func load(preset: Circuit) {
@@ -185,7 +270,7 @@ public final class EditorModel: ObservableObject {
         circuit = preset
         selection = []; selectedWires = []
         fitView()
-        rebuild(board)
+        rebuild(board, pushKnobs: true)
     }
 
     public func fitView() {
@@ -193,6 +278,82 @@ public final class EditorModel: ObservableObject {
         guard let minX = pts.map(\.x).min(), let minY = pts.map(\.y).min() else { return }
         zoom = 1
         pan = CGSize(width: CGFloat(-minX + 3) * 20 * zoom, height: CGFloat(-minY + 4) * 20 * zoom)
+    }
+
+    /// Opens a module in the workshop.
+    public func open(_ b: Board) {
+        guard b != board else { workshopOpen = true; return }
+        board = b
+        selection = []; selectedWires = []
+        tool = .select
+        workshopOpen = true
+        fitView()
+    }
+
+    // MARK: The pedalboard
+
+    public var canAddPedal: Bool { pedals.count < Rig.maxPedals }
+
+    /// Adds a pedal after the one open in the workshop (or at the end), switched on, and opens it.
+    public func addPedal(_ preset: Circuit, at index: Int? = nil) {
+        let used = Set(pedals.map(\.slot))
+        guard let slot = (0..<Rig.maxPedals).first(where: { !used.contains($0) }) else {
+            message = "The board is full: it holds \(Rig.maxPedals) pedals."
+            return
+        }
+        checkpoint()
+        let p = BoardPedal(slot: slot, circuit: preset)
+        var at = pedals.count
+        if let index { at = min(max(index, 0), pedals.count) }
+        else if case .pedal(let id) = board, let i = pedals.firstIndex(where: { $0.id == id }) { at = i + 1 }
+        pedals.insert(p, at: at)
+        setParam(RigParam.pedalOn(slot), 1)
+        rebuild(.pedal(p.id), pushKnobs: true, delay: 0)
+        pushOrder()
+        open(.pedal(p.id))
+    }
+
+    public func removePedal(_ id: UUID) {
+        guard let i = pedals.firstIndex(where: { $0.id == id }) else { return }
+        checkpoint()
+        let gone = pedals.remove(at: i)
+        pending[.pedal(id)]?.cancel()
+        bridge?.rig.install(pedal: nil, slot: gone.slot)
+        analysis[.pedal(id)] = nil
+        pushOrder()
+        if board == .pedal(id) { board = pedals.indices.contains(i) ? .pedal(pedals[i].id) : (pedals.last.map { .pedal($0.id) } ?? .amp); fitView() }
+    }
+
+    /// Moves a pedal to a new place on the board (an index into the board as it is before the move).
+    public func movePedal(_ id: UUID, to index: Int) {
+        guard let from = pedals.firstIndex(where: { $0.id == id }) else { return }
+        let to = min(max(index, 0), pedals.count)
+        guard to != from && to != from + 1 else { return }
+        checkpoint()
+        let p = pedals.remove(at: from)
+        pedals.insert(p, at: to > from ? to - 1 : to)
+        pushOrder()
+    }
+
+    public func isOn(_ b: Board) -> Bool {
+        switch b {
+        case .amp: return param(.ampMode) > 0.5
+        case .pedal(let id): return pedal(id).map { param(RigParam.pedalOn($0.slot)) > 0.5 } ?? false
+        }
+    }
+
+    public func toggle(_ id: UUID) {
+        guard let p = pedal(id) else { return }
+        let on = RigParam.pedalOn(p.slot)
+        setParam(on, param(on) > 0.5 ? 0 : 1)
+    }
+
+    /// Tells the audio engine the order of the board.
+    func pushOrder() { bridge?.rig.setOrder(pedals.map(\.slot)) }
+
+    private func clearUnusedSlots() {
+        let used = Set(pedals.map(\.slot))
+        for s in 0..<Rig.maxPedals where !used.contains(s) { bridge?.rig.install(pedal: nil, slot: s) }
     }
 
     // MARK: Selection & editing
@@ -276,9 +437,40 @@ public final class EditorModel: ObservableObject {
 
     // MARK: Simulation
 
-    /// Re-simulates a board in the background and installs it in the audio engine.
-    public func rebuild(_ b: Board, install: Bool = true, delay: Double = 0.12) {
+    /// Copies the knob values the host holds into the drawings. Rebuilds set the knobs from the drawings, so
+    /// this keeps a host's settings (automation, a restored session, a validator's values) through a rebuild.
+    func syncKnobsFromParams() {
+        guard bridge != nil else { return }
+        for b in modules {
+            var c = circuit(b)
+            var changed = false
+            for i in 0..<min(c.knobs.count, RigParam.knobsPerCircuit) {
+                guard let p = knobParam(b, i) else { continue }
+                let v = Double(param(p))
+                for m in c.partIndices(forKnob: i) where c.parts[m]["position"] != v { c.parts[m]["position"] = v; changed = true }
+            }
+            if changed { setCircuit(c, for: b) }
+        }
+    }
+
+    public func rebuildAll(pushKnobs: Bool = false) {
+        for p in pedals { rebuild(.pedal(p.id), pushKnobs: pushKnobs) }
+        rebuild(.amp, pushKnobs: pushKnobs)
+        clearUnusedSlots()
+        pushOrder()
+    }
+
+    /// Re-simulates a module in the background and installs it in the audio engine.
+    /// `pushKnobs` sets the host's knobs from the positions drawn in the circuit, straight away (a circuit has
+    /// just arrived: a preset, a session, an undo, a change in which knobs there are). Otherwise the host's
+    /// values stand: they may have come from automation or a restored session since the drawing was made.
+    public func rebuild(_ b: Board, install: Bool = true, pushKnobs: Bool = false, delay: Double = 0.12) {
         pending[b]?.cancel()
+        if install && pushKnobs {
+            for (i, pot) in circuit(b).knobs.prefix(RigParam.knobsPerCircuit).enumerated() {
+                if let p = knobParam(b, i) { bridge?.set(p, Float(pot["position"])) }
+            }
+        }
         generation[b, default: 0] += 1
         let gen = generation[b]!
         let c = circuit(b)
@@ -322,6 +514,7 @@ public final class EditorModel: ObservableObject {
                     let mean = a.scopeOut.reduce(0, +) / Double(max(a.scopeOut.count, 1))
                     a.outPeak = a.scopeOut.map { abs($0 - mean) }.max() ?? 0
                 }
+                a.cpu = EditorModel.measureCost(c, hostRate: sr, factor: q)
             } catch {
                 a.error = "\(error)"
             }
@@ -334,14 +527,13 @@ public final class EditorModel: ObservableObject {
                     self.lesson = Explainer.lesson(for: ch, before: before, after: a, circuit: c)
                 }
                 guard install, let rig = self.bridge?.rig else { return }
+                // the pedal may have left the board while this was being built
+                var slot: Int?
+                if case .pedal(let id) = b { guard let p = self.pedal(id) else { return }; slot = p.slot }
                 if let s = stage {
-                    // knobs keep the positions drawn in the circuit
-                    for (i, pot) in c.knobs.prefix(8).enumerated() {
-                        self.bridge?.set(RigParam(rawValue: b.knobBase.rawValue + i)!, Float(pot["position"]))
-                    }
-                    if b == .pedal { rig.install(pedal: s) } else { rig.install(amp: s) }
+                    if let slot { rig.install(pedal: s, slot: slot) } else { rig.install(amp: s) }
                 } else {
-                    if b == .pedal { rig.install(pedal: nil) } else { rig.install(amp: nil) }
+                    if let slot { rig.install(pedal: nil, slot: slot) } else { rig.install(amp: nil) }
                 }
             }
         }
@@ -349,7 +541,20 @@ public final class EditorModel: ObservableObject {
         workQueue.asyncAfter(deadline: .now() + delay, execute: work)
     }
 
-    public func rerunScope() { rebuild(.pedal); rebuild(.amp) }
+    /// Times a copy of the circuit on a guitar-like signal: the share of one core it needs in real time.
+    nonisolated static func measureCost(_ c: Circuit, hostRate: Double, factor: Int) -> Double? {
+        guard let e = try? CircuitEngine(circuit: c, sampleRate: hostRate * Double(factor)) else { return nil }
+        let n = Int(hostRate * 0.02) * factor
+        let w = 2 * Double.pi * 196 / (hostRate * Double(factor))
+        for i in 0..<(n / 4) { _ = e.tick(0.2 * sin(w * Double(i))) }   // settle first
+        let t0 = DispatchTime.now().uptimeNanoseconds
+        var sink = 0.0
+        for i in 0..<n { sink += e.tick(0.2 * sin(w * Double(i)) + 0.05 * sin(w * 3.01 * Double(i))) }
+        let secs = Double(DispatchTime.now().uptimeNanoseconds - t0) * 1e-9
+        return sink.isNaN ? nil : secs / 0.02
+    }
+
+    public func rerunScope() { for b in modules { rebuild(b) } }
 
     // MARK: Parameters
 
@@ -358,18 +563,15 @@ public final class EditorModel: ObservableObject {
     public func setParam(_ p: RigParam, _ v: Float) {
         bridge?.set(p, v)
         // keep the drawing's knob positions in step (no undo entry, no re-simulation)
-        let raw = p.rawValue
-        if raw >= 10 && raw < 30 {
-            let b: Board = raw >= 20 ? .amp : .pedal
-            let idx = raw - b.knobBase.rawValue
+        if let (b, idx) = module(for: p) {
             var c = circuit(b)
             let pots = c.knobs
             let members = c.partIndices(forKnob: idx)
             if idx < pots.count, let i = members.first {
                 let old = c.parts[i]["position"]
                 for m in members { c.parts[m]["position"] = Double(v) }   // ganged pots turn together
-                if b == .pedal { pedal = c } else { amp = c }
-                if learnMode {
+                setCircuit(c, for: b)
+                if learnMode && b == board {
                     // keep the position from the start of the gesture
                     var from = old
                     if case .knob(let p, let f, _)? = pendingChange[b], p.id == pots[idx].id { from = f }
@@ -378,11 +580,30 @@ public final class EditorModel: ObservableObject {
                 }
             }
         }
-        paramTick &+= 1
+        clock.tick &+= 1
+    }
+
+    /// Flips a switch in any module's circuit (from its faceplate), with undo.
+    public func setSwitch(_ b: Board, _ id: UUID, _ state: Int) {
+        var c = circuit(b)
+        guard let i = c.parts.firstIndex(where: { $0.id == id }), c.parts[i].switchState != state else { return }
+        checkpoint()
+        c.parts[i]["state"] = Double(state)
+        setCircuit(c, for: b)
+        rebuild(b, delay: 0)
+    }
+
+    private func setCircuit(_ c: Circuit, for b: Board) {
+        switch b {
+        case .amp: amp = c
+        case .pedal(let id): if let i = pedals.firstIndex(where: { $0.id == id }) { pedals[i].circuit = c }
+        }
     }
 
     public func knobs(_ b: Board) -> [(RigParam, String)] {
-        circuit(b).knobs.prefix(8).enumerated().map { (RigParam(rawValue: b.knobBase.rawValue + $0)!, $1.text.isEmpty ? $1.name : $1.text) }
+        circuit(b).knobs.prefix(RigParam.knobsPerCircuit).enumerated().compactMap { i, pot in
+            knobParam(b, i).map { ($0, pot.text.isEmpty ? pot.name : pot.text) }
+        }
     }
 
     // MARK: Amp profiles and cabinets
@@ -484,7 +705,8 @@ public final class EditorModel: ObservableObject {
 
     /// Called when the host changes sample rate.
     public func sampleRateChanged() {
-        rebuild(.pedal); rebuild(.amp)
+        syncKnobsFromParams()
+        rebuildAll()
         if let d = profileData, let n = profileName { try? applyProfile(data: d, name: n) }
         if let c = cabinet, let s = CabinetLibrary.impulse(c, sampleRate: bridge?.rig.sampleRate ?? 48_000) { irSamples = s }
         if let s = irSamples { bridge?.rig.install(impulse: s) }
@@ -493,18 +715,27 @@ public final class EditorModel: ObservableObject {
     // MARK: Documents
 
     public var document: PedalDocument {
+        syncKnobsFromParams()
         var params: [Int: Float] = [:]
         for p in RigParam.allCases { params[p.rawValue] = param(p) }
-        return PedalDocument(pedal: pedal, amp: amp, params: params, quality: quality, profileName: profileName,
+        return PedalDocument(pedal: pedals.first?.circuit ?? Circuit(name: "Empty pedal"), pedals: pedals, amp: amp,
+                             params: params, quality: quality, profileName: profileName,
                              profileData: tone3000 == nil ? profileData : nil, irName: irName, irSamples: irSamples,
                              cabinet: cabinet, tone3000: tone3000)
     }
 
     public func apply(_ d: PedalDocument) {
         checkpoint()
-        pedal = d.pedal
+        // oversampling first: changing it rebuilds what is on the board now, before the session replaces it
+        if quality != d.quality { quality = d.quality }
+        // a session from before the pedalboard holds one pedal, in slot 1
+        var board = d.pedals ?? [BoardPedal(slot: 0, circuit: d.pedal)]
+        var used = Set<Int>()
+        board = board.filter { (0..<Rig.maxPedals).contains($0.slot) && used.insert($0.slot).inserted }
+        pedals = board
         amp = d.amp
-        quality = d.quality
+        self.board = pedals.first.map { .pedal($0.id) } ?? .amp
+        analysis = [:]
         if let ref = d.tone3000 {
             // TONE3000 models aren't stored in sessions: fetch this one again through the player's account
             tone3000 = ref; profileName = ref.title; tone3000Models = []; tone3000NeedsReload = true
@@ -516,8 +747,9 @@ public final class EditorModel: ObservableObject {
         if let c = d.cabinet, CabinetLibrary.contains(c), let s = CabinetLibrary.impulse(c, sampleRate: bridge?.rig.sampleRate ?? 48_000) {
             irSamples = s; irName = c.cabinet; cabinet = c; bridge?.rig.install(impulse: s)
         } else if let s = d.irSamples { irSamples = s; irName = d.irName; cabinet = nil; bridge?.rig.install(impulse: s) }
-        rebuild(.pedal); rebuild(.amp)
-        for (k, v) in d.params { if let p = RigParam(rawValue: k), !(10..<30).contains(k) { bridge?.set(p, v) } }
+        rebuildAll(pushKnobs: true)
+        // knob positions come from the drawings; everything else from the saved values
+        for (k, v) in d.params { if let p = RigParam(rawValue: k), !p.isCircuitKnob { bridge?.set(p, v) } }
         fitView()
     }
 
@@ -541,7 +773,7 @@ public final class EditorModel: ObservableObject {
     public func saveDocumentPanel() {
         let panel = NSSavePanel()
         panel.allowedContentTypes = [UTType(filenameExtension: "lutherie") ?? .json]
-        panel.nameFieldStringValue = pedal.name + ".lutherie"
+        panel.nameFieldStringValue = (pedals.first?.circuit.name ?? amp.name) + ".lutherie"
         guard panel.runModal() == .OK, let url = panel.url, let data = encodedDocument() else { return }
         do { try data.write(to: url); message = "Saved \(url.lastPathComponent)" } catch { message = "Couldn't save: \(error)" }
     }

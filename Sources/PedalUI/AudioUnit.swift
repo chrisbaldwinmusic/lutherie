@@ -26,6 +26,9 @@ public final class LutherieAudioUnit: AUAudioUnit, ParamBridge {
     private var params: [RigParam: AUParameter] = [:]
     private var pullBuffer: AVAudioPCMBuffer?
     private var monoBuffer: UnsafeMutablePointer<Float>
+    /// Frames monoBuffer holds. Hosts may ask for bigger blocks than the 4096 offered: the buffers are sized
+    /// to whatever they ask for when render resources are allocated, never on the audio thread.
+    private var monoCapacity: Int = 4096
     private let maxFramesCap: AUAudioFrameCount = 4096
     @MainActor public private(set) var editor: EditorModel!
 
@@ -115,9 +118,14 @@ public final class LutherieAudioUnit: AUAudioUnit, ParamBridge {
     public override func allocateRenderResources() throws {
         try super.allocateRenderResources()
         let sr = outBus.format.sampleRate
-        let channels = inBus.format.channelCount
-        pullBuffer = AVAudioPCMBuffer(pcmFormat: inBus.format, frameCapacity: maximumFramesToRender)
-        _ = channels
+        let frames = Int(max(maximumFramesToRender, maxFramesCap))
+        pullBuffer = AVAudioPCMBuffer(pcmFormat: inBus.format, frameCapacity: AUAudioFrameCount(frames))
+        if frames > monoCapacity {
+            monoBuffer.deallocate()
+            monoBuffer = .allocate(capacity: frames)
+            monoBuffer.initialize(repeating: 0, count: frames)
+            monoCapacity = frames
+        }
         if abs(sr - rig.sampleRate) > 0.5 {
             rig.setSampleRate(sr)
             DispatchQueue.main.async { MainActor.assumeIsolated { self.editor?.sampleRateChanged() } }
@@ -131,10 +139,12 @@ public final class LutherieAudioUnit: AUAudioUnit, ParamBridge {
 
     public override var internalRenderBlock: AUInternalRenderBlock {
         let rig = self.rig
-        let mono = monoBuffer
         return { [unowned self] _, timestamp, frameCount, _, outputData, _, pullInputBlock in
             guard let pull = pullInputBlock, let pb = self.pullBuffer else { return kAudioUnitErr_NoConnection }
             let frames = Int(frameCount)
+            // never write past the buffers, whatever block size arrives
+            guard frames <= self.monoCapacity, frameCount <= pb.frameCapacity else { return kAudioUnitErr_TooManyFramesToProcess }
+            let mono = self.monoBuffer
             pb.frameLength = frameCount
             var flags = AudioUnitRenderActionFlags()
             let inList = pb.mutableAudioBufferList
@@ -211,8 +221,8 @@ public final class LutherieViewController: AUViewController, AUAudioUnitFactory 
     }
 
     @MainActor func showEditor() {
-        guard isViewLoaded, let unit, let editor = unit.editor else { return }
-        view.subviews.forEach { $0.removeFromSuperview() }
+        // build the editor once: replacing a live hosting view while SwiftUI is laying it out is asking for trouble
+        guard isViewLoaded, let unit, let editor = unit.editor, !view.subviews.contains(where: { $0 is NSHostingView<EditorView<EmptyView>> }) else { return }
         let host = NSHostingView(rootView: EditorView(model: editor) { EmptyView() })
         host.frame = view.bounds
         host.autoresizingMask = [.width, .height]

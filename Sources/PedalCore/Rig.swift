@@ -2,18 +2,71 @@ import Foundation
 import os
 
 /// Parameter slots shared by the app, the Audio Unit and the VST3 plugin.
-public enum RigParam: Int, CaseIterable {
-    case inputLevel = 0, outputLevel, pedalOn, ampMode, cabMode, powerDrive, presence, gate, mix
-    case pedalKnob1 = 10, pedalKnob2, pedalKnob3, pedalKnob4, pedalKnob5, pedalKnob6, pedalKnob7, pedalKnob8
-    case ampKnob1 = 20, ampKnob2, ampKnob3, ampKnob4, ampKnob5, ampKnob6, ampKnob7, ampKnob8
+///
+/// Ids never change, so host automation keeps working across versions. The pedalboard has six slots: slot 1
+/// keeps the ids of the original single pedal (On at 2, knobs at 10…17); slots 2…6 each take a block of ten from
+/// 32 (On, then eight knobs). A pedal keeps its slot when it is moved along the board, so its automation follows it.
+public struct RigParam: RawRepresentable, Hashable, CaseIterable, Comparable, Sendable {
+    public let rawValue: Int
+    public init?(rawValue: Int) {
+        guard RigParam.valid.contains(rawValue) else { return nil }
+        self.rawValue = rawValue
+    }
+    private init(_ r: Int) { rawValue = r }
+    public static func < (a: RigParam, b: RigParam) -> Bool { a.rawValue < b.rawValue }
 
-    public static let count = 32
+    public static let inputLevel = RigParam(0), outputLevel = RigParam(1), pedalOn = RigParam(2), ampMode = RigParam(3),
+                      cabMode = RigParam(4), powerDrive = RigParam(5), presence = RigParam(6), gate = RigParam(7), mix = RigParam(8)
+    public static let pedalKnob1 = RigParam(10)
+    public static let ampKnob1 = RigParam(20)
+
+    /// Pedals the board can hold.
+    public static let pedalSlots = 6
+    /// Knobs per circuit that reach the host.
+    public static let knobsPerCircuit = 8
+
+    /// The on/off switch of a pedal slot (0-based).
+    public static func pedalOn(_ slot: Int) -> RigParam { slot == 0 ? .pedalOn : RigParam(32 + (slot - 1) * 10) }
+    /// Knob `index` (0-based) of a pedal slot.
+    public static func pedalKnob(_ slot: Int, _ index: Int) -> RigParam {
+        slot == 0 ? RigParam(10 + index) : RigParam(33 + (slot - 1) * 10 + index)
+    }
+    /// Knob `index` (0-based) of the amp circuit.
+    public static func ampKnob(_ index: Int) -> RigParam { RigParam(20 + index) }
+
+    /// Size of the storage that holds every parameter, indexed by id.
+    public static let count = 32 + (pedalSlots - 1) * 10
+
+    public static let allCases: [RigParam] = {
+        var ids = Array(0...8) + Array(10...17) + Array(20...27)
+        for s in 1..<pedalSlots { ids += Array((32 + (s - 1) * 10)...(40 + (s - 1) * 10)) }
+        return ids.map(RigParam.init)
+    }()
+    private static let valid: Set<Int> = Set(allCases.map(\.rawValue))
+
+    /// The pedal slot whose on/off switch this is.
+    public var pedalOnSlot: Int? {
+        if rawValue == 2 { return 0 }
+        guard rawValue >= 32 else { return nil }
+        let r = rawValue - 32
+        return r % 10 == 0 ? r / 10 + 1 : nil
+    }
+    /// The pedal slot and knob index, when this is a pedal knob.
+    public var pedalKnob: (slot: Int, index: Int)? {
+        if (10...17).contains(rawValue) { return (0, rawValue - 10) }
+        guard rawValue >= 32 else { return nil }
+        let r = rawValue - 32
+        return r % 10 == 0 ? nil : (r / 10 + 1, r % 10 - 1)
+    }
+    /// The amp knob index, when this is an amp knob.
+    public var ampKnob: Int? { (20...27).contains(rawValue) ? rawValue - 20 : nil }
+    /// True for knobs whose positions are also drawn in a circuit.
+    public var isCircuitKnob: Bool { pedalKnob != nil || ampKnob != nil }
 
     public var name: String {
         switch self {
         case .inputLevel: return "Input Level"
         case .outputLevel: return "Output Level"
-        case .pedalOn: return "Pedal On"
         case .ampMode: return "Amp"
         case .cabMode: return "Cabinet"
         case .powerDrive: return "Power Amp Drive"
@@ -21,15 +74,16 @@ public enum RigParam: Int, CaseIterable {
         case .gate: return "Noise Gate"
         case .mix: return "Mix"
         default:
-            let r = rawValue
-            return r >= 20 ? "Amp Knob \(r - 19)" : "Pedal Knob \(r - 9)"
+            if let s = pedalOnSlot { return "Pedal \(s + 1) On" }
+            if let k = pedalKnob { return "Pedal \(k.slot + 1) Knob \(k.index + 1)" }
+            if let k = ampKnob { return "Amp Knob \(k + 1)" }
+            return "Parameter \(rawValue)"
         }
     }
     public var range: ClosedRange<Float> {
         switch self {
         case .inputLevel: return -24...24
         case .outputLevel: return -48...12
-        case .pedalOn: return 0...1
         case .ampMode: return 0...2
         case .cabMode: return 0...2
         case .presence: return -8...8
@@ -41,14 +95,13 @@ public enum RigParam: Int, CaseIterable {
         switch self {
         case .inputLevel: return 0
         case .outputLevel: return -6
-        case .pedalOn: return 1
         case .ampMode: return 1
         case .cabMode: return 1
         case .powerDrive: return 0.35
         case .presence: return 0
         case .gate: return -100
         case .mix: return 1
-        default: return 0.5
+        default: return pedalOnSlot != nil ? 1 : 0.5
         }
     }
     public var unit: String {
@@ -57,10 +110,10 @@ public enum RigParam: Int, CaseIterable {
         default: return ""
         }
     }
-    public var isIndexed: Bool { self == .pedalOn || self == .ampMode || self == .cabMode }
+    public var isIndexed: Bool { pedalOnSlot != nil || self == .ampMode || self == .cabMode }
     public var valueNames: [String]? {
+        if pedalOnSlot != nil { return ["Bypassed", "On"] }
         switch self {
-        case .pedalOn: return ["Bypassed", "On"]
         case .ampMode: return ["Off", "Tube circuit", "Amp profile"]
         case .cabMode: return ["Off", "Built-in", "Impulse response"]
         default: return nil
@@ -143,32 +196,6 @@ public final class CircuitStage {
         if !(powerDC.y1.isFinite && powerDC.x1.isFinite) { powerDC.x1 = 0; powerDC.y1 = 0 }
         if !(chainDC.y1.isFinite && chainDC.x1.isFinite) { chainDC.x1 = 0; chainDC.y1 = 0 }
     }
-
-    /// This circuit straight into `next` (pedal into amp) inside one oversampled pass: one interpolator and one
-    /// decimator for both, so half the delay and filtering of running them separately. Needs equal factors.
-    func processChained(_ x: UnsafeMutablePointer<Float>, _ frames: Int, knobs: UnsafePointer<Float>,
-                        next: CircuitStage, nextKnobs: UnsafePointer<Float>, powerDrive pd: Float?) {
-        for i in 0..<min(engine.knobCount, 8) { engine.setKnob(i, Double(knobs[i])) }
-        for i in 0..<min(next.engine.knobCount, 8) { next.engine.setKnob(i, Double(nextKnobs[i])) }
-        next.setPower(pd)
-        let a = engine, b = next.engine
-        var start = 0
-        while start < frames {
-            let n = min(32, frames - start)
-            a.applyKnobs(); b.applyKnobs()
-            for f in start..<(start + n) {
-                os.up(Double(x[f]), buf)
-                for k in 0..<factor {
-                    let y = b.tick(chainDC.run(a.tick(buf[k])))
-                    buf[k] = next.powerOn ? next.power(y) : y
-                }
-                let y = os.down(buf)
-                x[f] = y.isFinite ? Float(y) : 0
-            }
-            start += n
-        }
-        checkHealth(); next.checkHealth()
-    }
 }
 
 /// An amp profile running at its own sample rate when that differs from the host.
@@ -217,22 +244,32 @@ public final class ProfileStage {
     }
 }
 
-/// The whole signal chain: input level → pedal circuit → amp (tube circuit or profile) → power stage → cabinet → output.
+/// The whole signal chain: input level → gate → pedalboard (up to six circuits, in any order) → amp (tube circuit
+/// or profile) → power stage → cabinet → output.
 public final class Rig {
+    public static let maxPedals = RigParam.pedalSlots
     public private(set) var sampleRate: Double
     public let maxFrames: Int
     public let params: UnsafeMutablePointer<Float>
 
     // installed processing (swapped from the main thread)
-    var pedal: CircuitStage?
+    var pedals: [CircuitStage?] = Array(repeating: nil, count: Rig.maxPedals)   // indexed by slot
+    let order: UnsafeMutablePointer<Int>                                         // slots in signal order
+    var orderCount = 0
     var amp: CircuitStage?
     var profile: ProfileStage?
     var ir: Convolver?
+    /// One interpolator and decimator around every circuit on the board, so they all share a single
+    /// oversampled pass: the delay and filtering stay the same however many pedals are on.
+    var chainOS: Oversampler?
     var lock = os_unfair_lock()
-    var pendingPedal: CircuitStage??
+    var pendingPedals: [CircuitStage??] = Array(repeating: nil, count: Rig.maxPedals)
+    let pendingOrder: UnsafeMutablePointer<Int>
+    var pendingOrderCount: Int?
     var pendingAmp: CircuitStage??
     var pendingProfile: ProfileStage??
     var pendingIR: Convolver??
+    var pendingOS: Oversampler??
     var retired: [AnyObject] = []
 
     var cab: CabinetSim
@@ -247,6 +284,10 @@ public final class Rig {
     var trash: [AnyObject] = []
     let dry: UnsafeMutablePointer<Float>
     let scratch: UnsafeMutablePointer<Float>
+    let chainBuf: UnsafeMutablePointer<Double>
+    // the pedals running this block, in order (capacity reserved up front: no allocation on the audio thread)
+    var active = ContiguousArray<CircuitStage>()
+    var activeSlots = ContiguousArray<Int>()
 
     // meters (read by the UI)
     public private(set) var inputPeak: Float = 0
@@ -262,13 +303,20 @@ public final class Rig {
         params = .allocate(capacity: RigParam.count)
         params.initialize(repeating: 0, count: RigParam.count)
         for p in RigParam.allCases { params[p.rawValue] = p.defaultValue }
+        order = .allocate(capacity: Rig.maxPedals)
+        pendingOrder = .allocate(capacity: Rig.maxPedals)
+        for i in 0..<Rig.maxPedals { order[i] = i; pendingOrder[i] = i }
+        orderCount = Rig.maxPedals
         cab = CabinetSim(sr: sampleRate)
         presence = Biquad(.highShelf, f: 3500, q: 0.7, gainDB: 0, sr: sampleRate)
         dcPedal = DCBlocker(sr: sampleRate)
         dry = .allocate(capacity: maxFrames)
         scratch = .allocate(capacity: maxFrames)
-        retired.reserveCapacity(16)
-        trash.reserveCapacity(16)
+        chainBuf = .allocate(capacity: 16)
+        retired.reserveCapacity(64)
+        trash.reserveCapacity(64)
+        active.reserveCapacity(Rig.maxPedals)
+        activeSlots.reserveCapacity(Rig.maxPedals)
         setGateTiming()
     }
 
@@ -279,7 +327,10 @@ public final class Rig {
         gateRelease = Float(1 - exp(-1 / (0.040 * sampleRate)))
         gateHoldSamples = Int(0.020 * sampleRate)
     }
-    deinit { params.deallocate(); dry.deallocate(); scratch.deallocate() }
+    deinit {
+        params.deallocate(); dry.deallocate(); scratch.deallocate(); chainBuf.deallocate()
+        order.deallocate(); pendingOrder.deallocate()
+    }
 
     public subscript(_ p: RigParam) -> Float {
         get { params[p.rawValue] }
@@ -298,12 +349,32 @@ public final class Rig {
         os_unfair_lock_unlock(&lock)
     }
 
-    public func install(pedal stage: CircuitStage?) { swapIn { self.pendingPedal = .some(stage) } }
-    public func install(amp stage: CircuitStage?) { swapIn { self.pendingAmp = .some(stage) } }
+    /// Puts a pedal circuit in a slot of the board (nil empties the slot). Slot 0 is the original single pedal.
+    public func install(pedal stage: CircuitStage?, slot: Int = 0) {
+        guard (0..<Rig.maxPedals).contains(slot) else { return }
+        swapIn { self.pendingPedals[slot] = .some(stage); self.prepareOversampler(for: stage) }
+    }
+    /// Sets the order the slots run in. Slots left out don't run.
+    public func setOrder(_ slots: [Int]) {
+        var seen = Set<Int>()
+        let s = slots.filter { (0..<Rig.maxPedals).contains($0) && seen.insert($0).inserted }
+        swapIn {
+            for (i, v) in s.enumerated() { self.pendingOrder[i] = v }
+            self.pendingOrderCount = s.count
+        }
+    }
+    public func install(amp stage: CircuitStage?) { swapIn { self.pendingAmp = .some(stage); self.prepareOversampler(for: stage) } }
     public func install(profile stage: ProfileStage?) { swapIn { self.pendingProfile = .some(stage) } }
     public func install(impulse ir: [Float]?) {
         let conv = ir.map { Convolver(ir: $0, maxFrames: 512) }
         swapIn { self.pendingIR = .some(conv) }
+    }
+
+    /// Makes sure the shared oversampler matches a newly installed circuit's factor (called with the lock held).
+    private func prepareOversampler(for stage: CircuitStage?) {
+        guard let s = stage, s.factor > 1 else { return }
+        let current: Oversampler? = pendingOS ?? chainOS
+        if current?.factor != s.factor { pendingOS = .some(Oversampler(factor: s.factor)) }
     }
 
     private func swapIn(_ body: () -> Void) {
@@ -319,22 +390,35 @@ public final class Rig {
     /// What latencySamples will be once the audio thread has picked up everything installed.
     public var expectedLatency: Int {
         os_unfair_lock_lock(&lock)
-        let p: CircuitStage? = pendingPedal ?? pedal
+        var circuits = 0
+        let pending = pendingOrderCount != nil
+        for j in 0..<(pendingOrderCount ?? orderCount) {
+            let s = pending ? pendingOrder[j] : order[j]
+            let st: CircuitStage? = pendingPedals[s] ?? pedals[s]
+            circuits = max(circuits, st?.latency ?? 0)
+        }
         let a: CircuitStage? = pendingAmp ?? amp
         let pr: ProfileStage? = pendingProfile ?? profile
         os_unfair_lock_unlock(&lock)
-        return latency(pedal: p, amp: a, profile: pr)
+        return latency(circuits: circuits, amp: a, profile: pr)
     }
 
-    private func latency(pedal p: CircuitStage?, amp a: CircuitStage?, profile pr: ProfileStage?) -> Int {
-        // Pedal and amp circuits share one oversampled pass, and a bypassed pedal is delayed to match,
-        // so switching the pedal on and off never shifts timing.
+    private func latency(circuits: Int, amp a: CircuitStage?, profile pr: ProfileStage?) -> Int {
+        // Every circuit shares one oversampled pass, and bypassed pedals are delayed to match,
+        // so switching pedals on and off never shifts timing.
         let mode = Int(self[.ampMode].rounded())
-        let circuits = max(p?.latency ?? 0, mode == 1 ? (a?.latency ?? 0) : 0)
-        return circuits + (mode == 2 ? (pr?.latency ?? 0) : 0)
+        return max(circuits, mode == 1 ? (a?.latency ?? 0) : 0) + (mode == 2 ? (pr?.latency ?? 0) : 0)
     }
 
-    public var pedalEngine: CircuitEngine? { pedal?.engine }
+    /// Delay of the pedals on the board (audio thread).
+    private var boardLatency: Int {
+        var l = 0
+        for j in 0..<orderCount { if let st = pedals[order[j]] { l = max(l, st.latency) } }
+        return l
+    }
+
+    public var pedalEngine: CircuitEngine? { pedals[0]?.engine }
+    public func pedalEngine(slot: Int) -> CircuitEngine? { pedals[slot]?.engine }
     public var ampEngine: CircuitEngine? { amp?.engine }
     public var hasProfile: Bool { profile != nil }
     public var hasImpulse: Bool { ir != nil }
@@ -345,13 +429,20 @@ public final class Rig {
         // Pick up newly installed circuits. If the main thread holds the lock this instant, carry on with
         // the current ones and pick the new ones up next block: audio never stops for a swap.
         if os_unfair_lock_trylock(&lock) {
-            if let p = pendingPedal { if let old = pedal { retired.append(old) }; pedal = p; pendingPedal = nil }
+            for s in 0..<Rig.maxPedals {
+                if let p = pendingPedals[s] { if let old = pedals[s] { retired.append(old) }; pedals[s] = p; pendingPedals[s] = nil }
+            }
+            if let c = pendingOrderCount {
+                for i in 0..<c { order[i] = pendingOrder[i] }
+                orderCount = c; pendingOrderCount = nil
+            }
             if let p = pendingAmp { if let old = amp { retired.append(old) }; amp = p; pendingAmp = nil }
             if let p = pendingProfile { if let old = profile { retired.append(old) }; profile = p; pendingProfile = nil }
             if let p = pendingIR { if let old = ir { retired.append(old) }; ir = p; pendingIR = nil }
+            if let p = pendingOS { if let old = chainOS { retired.append(old) }; chainOS = p; pendingOS = nil }
             os_unfair_lock_unlock(&lock)
         }
-        latencySamples = latency(pedal: pedal, amp: amp, profile: profile)
+        latencySamples = latency(circuits: boardLatency, amp: amp, profile: profile)
 
         var done = 0
         while done < frames {
@@ -383,7 +474,7 @@ public final class Rig {
         // The dry side of Mix waits as long as the processed side takes, so blending never comb-filters.
         dryDelay.process(dry, n, delay: latencySamples)
 
-        // noise gate (before the pedal, like a real one in front): opens at the threshold, closes 6 dB below it
+        // noise gate (before the pedals, like a real one in front): opens at the threshold, closes 6 dB below it
         let gateDB = self[.gate]
         if gateDB > -99 {
             let thr = powf(10, gateDB / 20), closeThr = thr * 0.5
@@ -399,23 +490,33 @@ public final class Rig {
         } else { gateGain = 1; gateOpen = true }
 
         let mode = Int(self[.ampMode].rounded())
-        let pedalStage = self[.pedalOn] > 0.5 ? pedal : nil
         let ampStage = mode == 1 ? amp : nil
-        let circuitDelay = max(pedal?.latency ?? 0, ampStage?.latency ?? 0)
-        let pedalKnobs = params + RigParam.pedalKnob1.rawValue, ampKnobs = params + RigParam.ampKnob1.rawValue
-        if pedalStage == nil && ampStage == nil {
+        var circuitDelay = ampStage?.latency ?? 0
+        active.removeAll(keepingCapacity: true)
+        activeSlots.removeAll(keepingCapacity: true)
+        for j in 0..<orderCount {
+            let s = order[j]
+            guard let st = pedals[s] else { continue }
+            circuitDelay = max(circuitDelay, st.latency)
+            if params[RigParam.pedalOn(s).rawValue] > 0.5 { active.append(st); activeSlots.append(s) }
+        }
+        if active.isEmpty && ampStage == nil {
             // nothing oversampled is running: wait as long as it would have taken
             if circuitDelay > 0 { bypassDelay.process(scratch, n, delay: circuitDelay) }
         } else {
             if circuitDelay > 0 { bypassDelay.push(scratch, n) }
-            if let p = pedalStage, let a = ampStage, p.factor == a.factor, p.factor > 1 {
-                p.processChained(scratch, n, knobs: pedalKnobs, next: a, nextKnobs: ampKnobs, powerDrive: self[.powerDrive])
+            let f = ampStage?.factor ?? active[0].factor
+            var same = true
+            for st in active where st.factor != f { same = false }
+            if same && (f == 1 || chainOS?.factor == f) {
+                runChain(scratch, n, amp: ampStage, os: f > 1 ? chainOS : nil)
             } else {
-                if let p = pedalStage {
-                    p.process(scratch, n, knobs: pedalKnobs)
+                // Only for the moment while circuits rebuilt at a new oversampling factor arrive one by one.
+                for j in 0..<active.count {
+                    active[j].process(scratch, n, knobs: params + RigParam.pedalKnob(activeSlots[j], 0).rawValue)
                     for i in 0..<n { scratch[i] = Float(dcPedal.run(Double(scratch[i]))) }
                 }
-                if let a = ampStage { a.process(scratch, n, knobs: ampKnobs, powerDrive: self[.powerDrive]) }
+                if let a = ampStage { a.process(scratch, n, knobs: params + RigParam.ampKnob1.rawValue, powerDrive: self[.powerDrive]) }
             }
         }
         if mode == 2, let pr = profile { pr.process(scratch, n) }
@@ -446,5 +547,54 @@ public final class Rig {
             peakOut = max(peakOut, abs(y))
         }
         outputPeak = max(peakOut, outputPeak * 0.9)
+    }
+
+    /// Every pedal that is on, then the amp circuit and its power stage, inside one oversampled pass (or at the
+    /// host rate when `os` is nil). A DC blocker after each pedal stands in for its output coupling capacitor.
+    private func runChain(_ x: UnsafeMutablePointer<Float>, _ n: Int, amp a: CircuitStage?, os: Oversampler?) {
+        let count = active.count
+        for j in 0..<count {
+            let st = active[j], k = params + RigParam.pedalKnob(activeSlots[j], 0).rawValue
+            for i in 0..<min(st.engine.knobCount, RigParam.knobsPerCircuit) { st.engine.setKnob(i, Double(k[i])) }
+        }
+        if let a {
+            let k = params + RigParam.ampKnob1.rawValue
+            for i in 0..<min(a.engine.knobCount, RigParam.knobsPerCircuit) { a.engine.setKnob(i, Double(k[i])) }
+            a.setPower(self[.powerDrive])
+        }
+        let f = os?.factor ?? 1
+        var start = 0
+        while start < n {
+            let m = min(32, n - start)
+            for j in 0..<count { active[j].engine.applyKnobs() }
+            a?.engine.applyKnobs()
+            for i in start..<(start + m) {
+                let y: Double
+                if let os {
+                    os.up(Double(x[i]), chainBuf)
+                    for k in 0..<f { chainBuf[k] = tickChain(chainBuf[k], count, a) }
+                    y = os.down(chainBuf)
+                } else {
+                    y = tickChain(Double(x[i]), count, a)
+                }
+                x[i] = y.isFinite ? Float(y) : 0
+            }
+            start += m
+        }
+        for j in 0..<count { active[j].checkHealth() }
+        a?.checkHealth()
+    }
+
+    @inline(__always) private func tickChain(_ v0: Double, _ count: Int, _ a: CircuitStage?) -> Double {
+        var v = v0
+        for j in 0..<count {
+            let st = active[j]
+            v = st.chainDC.run(st.engine.tick(v))
+        }
+        if let a {
+            let y = a.engine.tick(v)
+            v = a.powerOn ? a.power(y) : y
+        }
+        return v
     }
 }
