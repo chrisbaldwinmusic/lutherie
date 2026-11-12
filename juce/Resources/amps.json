@@ -1,0 +1,6397 @@
+[
+  {
+    "name" : "Tweed-Style Preamp",
+    "notes" : "The simplest classic valve amp: two 12AX7 stages with a volume control between them and a single tone knob that bleeds treble to ground. Warm, and it breaks up early and smoothly.",
+    "parts" : [
+      {
+        "flipped" : false,
+        "id" : "6789FE81-A360-4294-987E-0ECB89C348B3",
+        "kind" : "input",
+        "model" : "",
+        "name" : "IN",
+        "position" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "props" : {
+          "rs" : 1000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "3DD0E8C5-7EE6-4155-B0B1-8351CFCF2AAF",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R1",
+        "position" : {
+          "x" : 2,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F350AD31-54C0-4438-A59B-2869F8F9EAAC",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R2",
+        "position" : {
+          "x" : 5,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 68000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "DD9BA8F1-28A9-4611-B10B-05C14746B299",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V1",
+        "position" : {
+          "x" : 10,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "9EC8BADE-E2C2-45DD-AA4A-AD90D7129E66",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R3",
+        "position" : {
+          "x" : 11,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1500
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "FFF487BD-00F2-4E8B-9426-0B5AA5172077",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C1",
+        "position" : {
+          "x" : 13,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 2.2e-05
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "0E69F975-E6C5-426C-BD35-812B639B2F28",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R4",
+        "position" : {
+          "x" : 11,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "0BA5BD0A-5800-4F40-9BE8-800399D62E86",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C2",
+        "position" : {
+          "x" : 15,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "9B173CD7-0E03-485A-BB15-0C9294E2BFBA",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND1",
+        "position" : {
+          "x" : 2,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "FAEC7A3E-61FE-4350-A3A0-7179424D5D60",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND2",
+        "position" : {
+          "x" : 11,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "10389B2B-05AC-4349-A0A1-D90E556BE2FD",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND3",
+        "position" : {
+          "x" : 13,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "69264E57-BBF7-43B2-9E29-BE9B64AF9906",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS4",
+        "position" : {
+          "x" : 11,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 250
+        },
+        "rotation" : 0,
+        "text" : "B+ 250V"
+      },
+      {
+        "flipped" : true,
+        "id" : "8E0677FB-3D9E-455A-BF8E-17BDBFD47D4C",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR1",
+        "position" : {
+          "x" : 19,
+          "y" : 0
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Volume"
+      },
+      {
+        "flipped" : false,
+        "id" : "5D5D0ED0-35EB-4BE4-AE0B-DC74AABAF7AF",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V2",
+        "position" : {
+          "x" : 25,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "DE277503-16EF-41CD-B0EE-9D2C029EB55B",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R5",
+        "position" : {
+          "x" : 26,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1500
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "0B42294F-8D17-4FBD-9844-F340BA03DBD4",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C3",
+        "position" : {
+          "x" : 28,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 2.2e-05
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "436FB819-61AF-492B-BDFC-250C48EA4F79",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R6",
+        "position" : {
+          "x" : 26,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "64B832A4-1B86-4942-B529-875C4F4C4B2E",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C4",
+        "position" : {
+          "x" : 30,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "89986BF6-3A3E-4185-A621-C621F9477D72",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C5",
+        "position" : {
+          "x" : 34,
+          "y" : 0
+        },
+        "props" : {
+          "c" : 4.7e-09
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "11B09B33-3379-46C3-A0CB-28B812557F40",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR2",
+        "position" : {
+          "x" : 34,
+          "y" : 4
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Tone"
+      },
+      {
+        "flipped" : true,
+        "id" : "F57C57A5-BA16-41CA-9E62-6CB32FEDF286",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR3",
+        "position" : {
+          "x" : 38,
+          "y" : 0
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Master"
+      },
+      {
+        "flipped" : false,
+        "id" : "C42FBE57-8123-44E6-B972-2F6D06418E52",
+        "kind" : "output",
+        "model" : "",
+        "name" : "OUT",
+        "position" : {
+          "x" : 42,
+          "y" : 0
+        },
+        "props" : {
+          "rl" : 1000000,
+          "scale" : 0.05
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "58AEFFAE-6B2A-4DAF-98DB-BA21CC6E7CCF",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND5",
+        "position" : {
+          "x" : 19,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "9CB79465-2216-48EE-815B-4FA06D337D96",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND6",
+        "position" : {
+          "x" : 26,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "A18D2723-977F-468C-8011-F50173118193",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND7",
+        "position" : {
+          "x" : 28,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "0AE21E95-2F01-4B53-835E-DE1E622C8372",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS8",
+        "position" : {
+          "x" : 26,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 250
+        },
+        "rotation" : 0,
+        "text" : "B+ 250V"
+      },
+      {
+        "flipped" : false,
+        "id" : "C4FAD30D-FE85-4930-9D2F-9CA868B781F7",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND9",
+        "position" : {
+          "x" : 34,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2E485736-EB6F-4342-8D36-26BE17CCD45D",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND10",
+        "position" : {
+          "x" : 38,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      }
+    ],
+    "wires" : [
+      {
+        "a" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "id" : "29A69BEB-6035-4EFC-BB20-B78BBED2D4D5"
+      },
+      {
+        "a" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 3,
+          "y" : 0
+        },
+        "id" : "9B80D6BE-4AD8-4F5F-B818-58FB369ED407"
+      },
+      {
+        "a" : {
+          "x" : 7,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 8,
+          "y" : 0
+        },
+        "id" : "4ABED511-8A81-4531-B786-B27E3F330D99"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : 2
+        },
+        "id" : "3B3A31BA-8D37-4294-8B59-43C73B15B905"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : -2
+        },
+        "id" : "586665F9-53A4-43E8-92B0-6A6BFFDB1660"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 19,
+          "y" : -2
+        },
+        "id" : "DCB33BDB-1C0F-471D-A0DE-F68603E5786C"
+      },
+      {
+        "a" : {
+          "x" : 21,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 23,
+          "y" : 0
+        },
+        "id" : "C98CED42-5437-4C4D-964E-EBF4AD7428A8"
+      },
+      {
+        "a" : {
+          "x" : 26,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 28,
+          "y" : 2
+        },
+        "id" : "02E5F98A-4834-4A95-A69B-D838D874AE29"
+      },
+      {
+        "a" : {
+          "x" : 26,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 28,
+          "y" : -2
+        },
+        "id" : "5A09D03F-D2B2-42CE-8793-40DF819446C6"
+      },
+      {
+        "a" : {
+          "x" : 32,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "id" : "2ECA28C3-8D51-4C3D-8FDA-50D9E03FB86E"
+      },
+      {
+        "a" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 38,
+          "y" : -2
+        },
+        "id" : "6E90BB40-238F-4E9D-8403-E9263F06DF78"
+      },
+      {
+        "a" : {
+          "x" : 36,
+          "y" : 4
+        },
+        "b" : {
+          "x" : 36,
+          "y" : 6
+        },
+        "id" : "FC76E08B-9EE4-498F-A151-18824BE5221C"
+      },
+      {
+        "a" : {
+          "x" : 36,
+          "y" : 6
+        },
+        "b" : {
+          "x" : 34,
+          "y" : 6
+        },
+        "id" : "08C35ADE-BD6C-4FF6-B2C8-8C3031D0185B"
+      },
+      {
+        "a" : {
+          "x" : 40,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 42,
+          "y" : 0
+        },
+        "id" : "994A8A94-C422-46B5-8BCB-7E53372888B5"
+      }
+    ]
+  },
+  {
+    "name" : "Two-Stage Tube Preamp",
+    "notes" : "Two common-cathode 12AX7 stages, a treble\/bass\/middle passive tone stack driven from the second plate, and a master volume.",
+    "parts" : [
+      {
+        "flipped" : false,
+        "id" : "21F2109F-A12B-4409-A3A7-7124CC1DBFF5",
+        "kind" : "input",
+        "model" : "",
+        "name" : "IN",
+        "position" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "props" : {
+          "rs" : 1000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "C15F1CE8-F613-469B-A7C9-3096FDBFE5CF",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R1",
+        "position" : {
+          "x" : 2,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "CA8416A7-D0C6-44B7-B3B9-B35CF4AEE65D",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND1",
+        "position" : {
+          "x" : 2,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5B45C1E2-F29B-4A8A-84E9-EC47A79506C3",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R2",
+        "position" : {
+          "x" : 4,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 68000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "12B56D9C-C412-412F-BA76-9F33897A321C",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V1",
+        "position" : {
+          "x" : 8,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B142E215-6CE0-4C38-B1A9-79C1C91C9158",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R3",
+        "position" : {
+          "x" : 9,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1500
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "CCD29357-1CF2-4586-8A6C-A2BC234CC062",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND2",
+        "position" : {
+          "x" : 9,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "7A450E8D-403F-4A41-B8AF-C39D25700A03",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C1",
+        "position" : {
+          "x" : 11,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 2.2e-05
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "100A82F3-7A45-4B13-8E2B-3648CA4693F9",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND3",
+        "position" : {
+          "x" : 11,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "9FA55BFF-511D-4AB6-9EFE-62D51AEC8695",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R4",
+        "position" : {
+          "x" : 9,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "CC849CA0-E684-4A41-AFB2-6C34FB700C0C",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VB1",
+        "position" : {
+          "x" : 9,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 250
+        },
+        "rotation" : 0,
+        "text" : "B+ 250V"
+      },
+      {
+        "flipped" : false,
+        "id" : "5FAAA14C-9B16-484F-8CF0-53F577071638",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C2",
+        "position" : {
+          "x" : 13,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "D3F4EEDF-768C-482F-999D-7AD21AB4EAEF",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR1",
+        "position" : {
+          "x" : 15,
+          "y" : 0
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Gain"
+      },
+      {
+        "flipped" : false,
+        "id" : "1B573886-DD90-4FC8-BB45-94A2B3306060",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND4",
+        "position" : {
+          "x" : 15,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F3F732B8-2654-4332-B2B0-5CC3EB30BDC2",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R5",
+        "position" : {
+          "x" : 19,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 68000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "7ED940C6-FA39-427D-99C4-381F0B02D0D4",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V2",
+        "position" : {
+          "x" : 23,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "AFC429D0-99CC-48BD-B15C-39E05337D6E3",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R6",
+        "position" : {
+          "x" : 24,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1500
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "34367CF6-3935-4903-8EDF-EE0D8ECC5EAF",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND5",
+        "position" : {
+          "x" : 24,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5E48C7AD-19EE-4B55-ADC2-8148D5C607AF",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C3",
+        "position" : {
+          "x" : 26,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 1e-06
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "483DDBAD-1860-4C65-86CD-41ED40AA52A9",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND6",
+        "position" : {
+          "x" : 26,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F61D5525-ABD8-406B-8C69-EA89B5BFB12D",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R7",
+        "position" : {
+          "x" : 24,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "EBC6FC87-6F47-436A-9DCB-FA535AC5ABEB",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VB2",
+        "position" : {
+          "x" : 24,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 250
+        },
+        "rotation" : 0,
+        "text" : "B+ 250V"
+      },
+      {
+        "flipped" : false,
+        "id" : "7FCC0689-95DC-4F01-92D9-2F15B17D9D5C",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C4",
+        "position" : {
+          "x" : 30,
+          "y" : -8
+        },
+        "props" : {
+          "c" : 2.5e-10
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "243CB134-7F47-433F-99C5-282C647150B6",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR2",
+        "position" : {
+          "x" : 32,
+          "y" : -6
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 250000
+        },
+        "rotation" : 1,
+        "text" : "Treble"
+      },
+      {
+        "flipped" : false,
+        "id" : "A2192DC8-62FA-4160-ACC7-F08602DFE793",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R8",
+        "position" : {
+          "x" : 30,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "8B130B54-AD8C-4CF7-AEDD-B229E070A8F5",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C5",
+        "position" : {
+          "x" : 32,
+          "y" : 0
+        },
+        "props" : {
+          "c" : 1e-07
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "4141C589-EE66-4416-A5B5-FA6C3C944A49",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR3",
+        "position" : {
+          "x" : 36,
+          "y" : -4
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 2,
+        "text" : "Bass"
+      },
+      {
+        "flipped" : false,
+        "id" : "8DFC445F-E1BC-4460-9679-261B19905F68",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C6",
+        "position" : {
+          "x" : 38,
+          "y" : 0
+        },
+        "props" : {
+          "c" : 4.7e-08
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "951193AF-E64F-4753-BB03-1153D5A543A7",
+        "kind" : "pot",
+        "model" : "B",
+        "name" : "VR4",
+        "position" : {
+          "x" : 42,
+          "y" : -4
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 25000
+        },
+        "rotation" : 0,
+        "text" : "Middle"
+      },
+      {
+        "flipped" : false,
+        "id" : "EF883DE9-8A28-4250-BDBE-FAD895BA0D73",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND7",
+        "position" : {
+          "x" : 44,
+          "y" : -4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "B3A88F45-5268-4B1E-899D-D1B7DDD692B8",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR5",
+        "position" : {
+          "x" : 48,
+          "y" : -8
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Master"
+      },
+      {
+        "flipped" : false,
+        "id" : "AFA6A99B-F7EE-4ACC-92BB-3AD72CD45212",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND8",
+        "position" : {
+          "x" : 48,
+          "y" : -6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "7E17650C-E34B-43F3-A8A8-65753849703A",
+        "kind" : "output",
+        "model" : "",
+        "name" : "OUT",
+        "position" : {
+          "x" : 52,
+          "y" : -8
+        },
+        "props" : {
+          "rl" : 1000000,
+          "scale" : 0.1
+        },
+        "rotation" : 0,
+        "text" : ""
+      }
+    ],
+    "wires" : [
+      {
+        "a" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "id" : "48004F8E-E7EC-455B-B8F9-6DE443D6DBD7"
+      },
+      {
+        "a" : {
+          "x" : 9,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 11,
+          "y" : 2
+        },
+        "id" : "E6A0C00E-788F-4850-8DAB-0B4EEA866977"
+      },
+      {
+        "a" : {
+          "x" : 9,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 11,
+          "y" : -2
+        },
+        "id" : "20EBE76F-2861-45B3-B096-9066F25E63AF"
+      },
+      {
+        "a" : {
+          "x" : 24,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 26,
+          "y" : 2
+        },
+        "id" : "EF278D55-75E1-4D69-A4C1-FA8521F2458B"
+      },
+      {
+        "a" : {
+          "x" : 24,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 28,
+          "y" : -2
+        },
+        "id" : "7C1DE010-1A3E-4FF1-8C2B-66092B1E0122"
+      },
+      {
+        "a" : {
+          "x" : 28,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 28,
+          "y" : -8
+        },
+        "id" : "1535F48B-2E88-4E83-8BF1-AD89A7BCA469"
+      },
+      {
+        "a" : {
+          "x" : 28,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 28,
+          "y" : 2
+        },
+        "id" : "B58F9390-CF39-46CF-938C-DF15DAF0133D"
+      },
+      {
+        "a" : {
+          "x" : 32,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 32,
+          "y" : -2
+        },
+        "id" : "E163817A-C421-4E6A-8807-B2DF6F4468CD"
+      },
+      {
+        "a" : {
+          "x" : 32,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -4
+        },
+        "id" : "F7A178FC-5D2B-4B4E-A527-B670BA8CAB3A"
+      },
+      {
+        "a" : {
+          "x" : 36,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "id" : "5A81F212-DE1A-43F5-9EE1-443E0779F50B"
+      },
+      {
+        "a" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -4
+        },
+        "id" : "2B37A619-2285-4BF5-AD7E-9FB68CA86C32"
+      },
+      {
+        "a" : {
+          "x" : 32,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 38,
+          "y" : 2
+        },
+        "id" : "A0A53D10-6AB6-4E30-9CA8-427753FFB305"
+      },
+      {
+        "a" : {
+          "x" : 38,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 38,
+          "y" : -2
+        },
+        "id" : "A0257F3E-ECDB-4348-B9A3-79400400837A"
+      },
+      {
+        "a" : {
+          "x" : 38,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 40,
+          "y" : -4
+        },
+        "id" : "EA9E1300-11FB-427D-ACC4-A875559B24D4"
+      },
+      {
+        "a" : {
+          "x" : 42,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 44,
+          "y" : -6
+        },
+        "id" : "F4DC7576-AB99-4823-A2E1-B10C2C20F5BE"
+      },
+      {
+        "a" : {
+          "x" : 44,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 44,
+          "y" : -4
+        },
+        "id" : "419CEBE3-2F50-40B3-8D2D-9C7D9B3D970F"
+      },
+      {
+        "a" : {
+          "x" : 34,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -10
+        },
+        "id" : "29332064-23EC-401E-8426-A33CD93FD257"
+      },
+      {
+        "a" : {
+          "x" : 34,
+          "y" : -10
+        },
+        "b" : {
+          "x" : 48,
+          "y" : -10
+        },
+        "id" : "92946D0E-33F6-45A9-8ADC-AF1153B826CF"
+      },
+      {
+        "a" : {
+          "x" : 50,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 52,
+          "y" : -8
+        },
+        "id" : "01F60CF9-5451-4B84-9A8D-6D8C9C50E91B"
+      }
+    ]
+  },
+  {
+    "name" : "British Stack Preamp",
+    "notes" : "The 1960s British 100-watt preamp: a bright first stage, a second stage wired straight into a cathode follower (which squashes the peaks as it's pushed), then the treble\/bass\/middle stack. Crunchy and mid-forward.",
+    "parts" : [
+      {
+        "flipped" : false,
+        "id" : "23675484-DBA1-439A-AE71-4DF2C85E45CD",
+        "kind" : "input",
+        "model" : "",
+        "name" : "IN",
+        "position" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "props" : {
+          "rs" : 1000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E494B9B8-DE4D-4C19-A1D5-DA9F85F2973B",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R1",
+        "position" : {
+          "x" : 2,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "ED90E46A-8E8C-45EB-BA89-FE998AF132A0",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R2",
+        "position" : {
+          "x" : 5,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 68000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "8B1D633A-64C4-4C35-8180-4B34BEA912E0",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V1",
+        "position" : {
+          "x" : 10,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5F8338AA-833D-4A68-A5D7-7D340C46785C",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R3",
+        "position" : {
+          "x" : 11,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 2700
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "1E801F91-DDB3-45F6-B38A-71ADB7DE8559",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C1",
+        "position" : {
+          "x" : 13,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 6.8e-07
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B14D111E-8F16-4E25-8D9A-791B00754F89",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R4",
+        "position" : {
+          "x" : 11,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "6C6D13BF-D6CD-42D1-8485-619D81D80B4E",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C2",
+        "position" : {
+          "x" : 15,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "107D2061-DA96-4A81-A5C6-E78F2DDC5290",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND1",
+        "position" : {
+          "x" : 2,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B2740D00-FEA8-4CF4-891D-845F5030AFFC",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND2",
+        "position" : {
+          "x" : 11,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "69A5F2FA-6EF3-44A9-980A-63DC089826FD",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND3",
+        "position" : {
+          "x" : 13,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E897914D-810C-48F9-8F97-A4315C1E5FD0",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS4",
+        "position" : {
+          "x" : 11,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 300
+        },
+        "rotation" : 0,
+        "text" : "B+ 300V"
+      },
+      {
+        "flipped" : true,
+        "id" : "A1E53E86-E2D1-49F0-BDC4-6810E585A10B",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR1",
+        "position" : {
+          "x" : 19,
+          "y" : 0
+        },
+        "props" : {
+          "position" : 0.7,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Gain"
+      },
+      {
+        "flipped" : false,
+        "id" : "29705D0F-4815-4C11-9034-0A1DA5CDFDD1",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R5",
+        "position" : {
+          "x" : 24,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 470000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "57AC2D66-D0D1-492B-894A-89C51FCD52DE",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V2",
+        "position" : {
+          "x" : 29,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "4B7EC848-0C12-4117-B24B-DA17118EF7C4",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R6",
+        "position" : {
+          "x" : 30,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 820
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F5FB2B7B-8438-49FA-81D8-8CCFAAD79D57",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R7",
+        "position" : {
+          "x" : 30,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "D3E44E97-D2A6-46FD-9A1B-9FEC408800C7",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V3",
+        "position" : {
+          "x" : 36,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B438E0FA-93E9-4CD6-99ED-8E32B1AA60A2",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R8",
+        "position" : {
+          "x" : 37,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "D5785300-0048-48E5-AA9E-2F27E2D4B226",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND5",
+        "position" : {
+          "x" : 19,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2E0BBFEC-C95C-480C-98D3-91960C0837F7",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND6",
+        "position" : {
+          "x" : 30,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "032FC6C6-F7DF-4998-A654-2FD47AAD7E0F",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS7",
+        "position" : {
+          "x" : 30,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 300
+        },
+        "rotation" : 0,
+        "text" : "B+ 300V"
+      },
+      {
+        "flipped" : false,
+        "id" : "BCC97C13-6F6D-473A-839C-7CBB467AB4C7",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS8",
+        "position" : {
+          "x" : 37,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 300
+        },
+        "rotation" : 0,
+        "text" : "B+ 300V"
+      },
+      {
+        "flipped" : false,
+        "id" : "F9267345-EE1D-46F1-AE7B-53CC40D853FA",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND9",
+        "position" : {
+          "x" : 37,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "88F6E189-E584-4305-8E48-CF5904251330",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C3",
+        "position" : {
+          "x" : 43,
+          "y" : -8
+        },
+        "props" : {
+          "c" : 4.7e-10
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "955E37D4-16C4-4EF5-9E37-85288B34CC4C",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR2",
+        "position" : {
+          "x" : 47,
+          "y" : -6
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 250000
+        },
+        "rotation" : 1,
+        "text" : "Treble"
+      },
+      {
+        "flipped" : false,
+        "id" : "BB46CE46-25C7-42A8-AA6A-0CDFD9C1D43E",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R9",
+        "position" : {
+          "x" : 41,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 33000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2CE460D0-0450-497A-BEFA-74D35D1AC100",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C4",
+        "position" : {
+          "x" : 45,
+          "y" : -4
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "4F40DCCD-C9DD-465F-A6F6-0C723F17E561",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C5",
+        "position" : {
+          "x" : 45,
+          "y" : 0
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "DD83C28B-05E0-4D00-A893-F1BFDA625369",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR3",
+        "position" : {
+          "x" : 47,
+          "y" : -2
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Bass"
+      },
+      {
+        "flipped" : false,
+        "id" : "C1362EF6-4C2B-4206-8548-7DFA916B3EB1",
+        "kind" : "pot",
+        "model" : "B",
+        "name" : "VR4",
+        "position" : {
+          "x" : 47,
+          "y" : 2
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 25000
+        },
+        "rotation" : 1,
+        "text" : "Middle"
+      },
+      {
+        "flipped" : true,
+        "id" : "321A33E8-C375-459F-9FBA-3E0D1BB64AF9",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR5",
+        "position" : {
+          "x" : 53,
+          "y" : -4
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Master"
+      },
+      {
+        "flipped" : false,
+        "id" : "ACA9CF87-8E69-4E8C-8C4B-4B6FB0DF5811",
+        "kind" : "output",
+        "model" : "",
+        "name" : "OUT",
+        "position" : {
+          "x" : 57,
+          "y" : -4
+        },
+        "props" : {
+          "rl" : 1000000,
+          "scale" : 0.05
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E5DA0ABA-4E7C-4D7D-BA54-F7B98226D2EE",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND10",
+        "position" : {
+          "x" : 47,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5C91F481-3466-4202-8900-30423399FE9B",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND11",
+        "position" : {
+          "x" : 53,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      }
+    ],
+    "wires" : [
+      {
+        "a" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "id" : "30B3625C-B327-4CB8-B988-075F31424D0E"
+      },
+      {
+        "a" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 3,
+          "y" : 0
+        },
+        "id" : "8EF3C009-9F78-4983-BFCA-CBF152B58282"
+      },
+      {
+        "a" : {
+          "x" : 7,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 8,
+          "y" : 0
+        },
+        "id" : "388DEEF1-2081-4CD0-9961-CA3196571351"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : 2
+        },
+        "id" : "EF7F2F30-6966-488D-A216-9C8E3AD146CD"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : -2
+        },
+        "id" : "A6708148-F4A2-4D0E-81FC-6F34A2165CA9"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 19,
+          "y" : -2
+        },
+        "id" : "9FC22CF8-E191-42BE-9541-9F0AC142FC76"
+      },
+      {
+        "a" : {
+          "x" : 21,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 22,
+          "y" : 0
+        },
+        "id" : "64734377-C67C-4B31-8751-4443C5EF6239"
+      },
+      {
+        "a" : {
+          "x" : 26,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 27,
+          "y" : 0
+        },
+        "id" : "8366D5FC-FF52-4963-A978-5E13FED06464"
+      },
+      {
+        "a" : {
+          "x" : 30,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "id" : "1DFF53D7-3914-49B7-8E23-A72D74EAA32F"
+      },
+      {
+        "a" : {
+          "x" : 37,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 37,
+          "y" : -6
+        },
+        "id" : "0F50570A-4344-40EC-9386-4510FE5B85D2"
+      },
+      {
+        "a" : {
+          "x" : 37,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 39,
+          "y" : 0
+        },
+        "id" : "D0113408-FD0A-4371-A049-DEAA0051EEA6"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 39,
+          "y" : -8
+        },
+        "id" : "558A1C34-AEBF-4116-9422-DE186B9BFFDC"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 41,
+          "y" : -8
+        },
+        "id" : "F9D22AB6-2F25-4B4B-9844-E7E84BE73476"
+      },
+      {
+        "a" : {
+          "x" : 45,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 47,
+          "y" : -8
+        },
+        "id" : "5C40800F-D82A-416B-A48A-DE048696534E"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 43,
+          "y" : -4
+        },
+        "id" : "4C5B9A05-4884-46D0-AC9E-EE670A6DA3A7"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 49,
+          "y" : 0
+        },
+        "id" : "FF76B774-257B-4DE5-9F0D-35442F18733F"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 47,
+          "y" : 0
+        },
+        "id" : "998FCDB4-FC2E-49DD-B83A-DE1EA95C1DC7"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 49,
+          "y" : 4
+        },
+        "id" : "75BF65FA-CD72-44D0-BEA7-D5CA51003ED1"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 4
+        },
+        "b" : {
+          "x" : 47,
+          "y" : 4
+        },
+        "id" : "856817FB-EB69-4012-9101-85120EFF8801"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 53,
+          "y" : -6
+        },
+        "id" : "2BB73E90-5E56-4942-9786-252CF5E5BD61"
+      },
+      {
+        "a" : {
+          "x" : 55,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 57,
+          "y" : -4
+        },
+        "id" : "89295E79-B100-48AF-BF66-AB8A55763113"
+      }
+    ]
+  },
+  {
+    "name" : "High-Gain Cascade Preamp",
+    "notes" : "Four 12AX7 stages in a row, as in the high-gain amps of the 1980s and 90s. The third is biased cold so it clips one side of the wave hard; dividers between stages keep each from swamping the next. Tight, saturated and compressed.",
+    "parts" : [
+      {
+        "flipped" : false,
+        "id" : "AE71B2E1-2CBF-4B8E-8C07-1A1BA4BA6F6B",
+        "kind" : "input",
+        "model" : "",
+        "name" : "IN",
+        "position" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "props" : {
+          "rs" : 1000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "45F79996-B670-4488-8D1F-9ECD5DFCA418",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R1",
+        "position" : {
+          "x" : 2,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "CC234872-D4D4-4462-90BD-FF4B8FBB461D",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R2",
+        "position" : {
+          "x" : 5,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 68000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "C168BE58-E939-458D-93CC-88F93AB55258",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V1",
+        "position" : {
+          "x" : 10,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "3476AADA-E38D-44A8-9295-9D7948F9FF29",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R3",
+        "position" : {
+          "x" : 11,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1800
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "8A758EAA-42B9-433A-8148-66B032A69BD9",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C1",
+        "position" : {
+          "x" : 13,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 1e-06
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "FF549427-4915-475F-A028-DD13F66C0EAB",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R4",
+        "position" : {
+          "x" : 11,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "10BDA486-8F38-46E7-BB83-445A6D70AE8F",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C2",
+        "position" : {
+          "x" : 15,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "26CE989E-8872-4ED7-ACEC-BC24FC9E1E43",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND1",
+        "position" : {
+          "x" : 2,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "EDC62D1C-23B2-4A90-B8A5-F8D6F0A8852A",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND2",
+        "position" : {
+          "x" : 11,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5B099145-89C9-4442-8D2F-DC8595297383",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND3",
+        "position" : {
+          "x" : 13,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F2A20383-89C6-47A2-8CC9-FB785D03423E",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS4",
+        "position" : {
+          "x" : 11,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 320
+        },
+        "rotation" : 0,
+        "text" : "B+ 320V"
+      },
+      {
+        "flipped" : true,
+        "id" : "DF30C657-928B-4489-9BF9-F4B491C5ABA4",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR1",
+        "position" : {
+          "x" : 19,
+          "y" : 0
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Gain"
+      },
+      {
+        "flipped" : false,
+        "id" : "F00F6690-8F04-4852-B908-7221E62948C3",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R5",
+        "position" : {
+          "x" : 24,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 470000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "311DBC04-F5F7-4EB1-A95E-152EEFBE3352",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V2",
+        "position" : {
+          "x" : 29,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "87A62C69-9441-4087-B301-21F125F1FE33",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R6",
+        "position" : {
+          "x" : 30,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1800
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "004B3FC2-0598-4F01-B506-9823942EE1E6",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C3",
+        "position" : {
+          "x" : 32,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 1e-06
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "09FA5A62-38CB-4B47-A3DE-C4D616FFFF7B",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R7",
+        "position" : {
+          "x" : 30,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B934362F-5B2C-40E6-939F-080F935A4AB1",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C4",
+        "position" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "27C733F6-F3D5-4030-AF8A-A26AF8795B7F",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R8",
+        "position" : {
+          "x" : 39,
+          "y" : -2
+        },
+        "props" : {
+          "r" : 470000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2763A139-E768-47F7-B0A1-6ECEE05DD1CD",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R9",
+        "position" : {
+          "x" : 42,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 470000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "6848B3FB-EAB2-453D-B966-6F997D41245D",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V3",
+        "position" : {
+          "x" : 46,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B54B7D22-861C-4C0B-99E6-6E83010ACCEE",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R10",
+        "position" : {
+          "x" : 47,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 10000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "A4065A0B-E465-4A06-B626-EAA9D39021AD",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R11",
+        "position" : {
+          "x" : 47,
+          "y" : -6
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "D04C73B5-DB57-4EF1-AAE1-95797903FC04",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C5",
+        "position" : {
+          "x" : 51,
+          "y" : -4
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "79C7C925-6FF0-4A37-A490-001DDDBC54C6",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R12",
+        "position" : {
+          "x" : 56,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 470000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "08E9E168-2DD6-4C4B-8F0A-16AD27637093",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R13",
+        "position" : {
+          "x" : 59,
+          "y" : -2
+        },
+        "props" : {
+          "r" : 220000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "BDC1230F-E0AF-4DDD-B89A-252A201CB5C5",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V4",
+        "position" : {
+          "x" : 63,
+          "y" : -4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "96B1020D-341D-44F2-BDDB-B7DCA439DF6C",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R14",
+        "position" : {
+          "x" : 64,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 1800
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "57EF72C3-C948-4922-9416-7F9719A0FE96",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C6",
+        "position" : {
+          "x" : 66,
+          "y" : 0
+        },
+        "props" : {
+          "c" : 1e-06
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "215E8089-237B-4E0D-B505-C1B302222BD4",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R15",
+        "position" : {
+          "x" : 64,
+          "y" : -8
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "83F96D71-FC19-4423-9DEF-37299D869230",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND5",
+        "position" : {
+          "x" : 19,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "75C103FF-7479-4C02-ABA0-84A3A16C6164",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND6",
+        "position" : {
+          "x" : 30,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "08BBAAEB-FEC6-42DE-A53A-8D9A4938513C",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND7",
+        "position" : {
+          "x" : 32,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "91DC883B-3069-4602-8169-24894190DC10",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS8",
+        "position" : {
+          "x" : 30,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 320
+        },
+        "rotation" : 0,
+        "text" : "B+ 320V"
+      },
+      {
+        "flipped" : false,
+        "id" : "DEB8BDDF-F460-420F-858E-CD4EB98DE676",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND9",
+        "position" : {
+          "x" : 42,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "963B2FAB-8ED2-4A32-88D9-0BD33A25657E",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND10",
+        "position" : {
+          "x" : 47,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "3F77D2F4-52A8-4126-9F26-2D0C2F9C6F63",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS11",
+        "position" : {
+          "x" : 47,
+          "y" : -8
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 320
+        },
+        "rotation" : 0,
+        "text" : "B+ 320V"
+      },
+      {
+        "flipped" : false,
+        "id" : "4D32EBC7-D023-4F00-A71F-9C6D78CDB5E7",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND12",
+        "position" : {
+          "x" : 59,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "D2F81EC8-70FA-4CD3-8CAA-32AE8A0CE48B",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND13",
+        "position" : {
+          "x" : 64,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "56ED8E38-1DB2-4A34-92EA-BC771D9CB393",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND14",
+        "position" : {
+          "x" : 66,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "6F580C1F-5946-4BF1-AF36-15EB8C6B3831",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS15",
+        "position" : {
+          "x" : 64,
+          "y" : -10
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 320
+        },
+        "rotation" : 0,
+        "text" : "B+ 320V"
+      },
+      {
+        "flipped" : false,
+        "id" : "A213AD0A-227D-4123-9D88-062BB3384C63",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C7",
+        "position" : {
+          "x" : 72,
+          "y" : -14
+        },
+        "props" : {
+          "c" : 4.7e-10
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "370DF166-0201-450F-BAE8-656EC8760E66",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR2",
+        "position" : {
+          "x" : 76,
+          "y" : -12
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 250000
+        },
+        "rotation" : 1,
+        "text" : "Treble"
+      },
+      {
+        "flipped" : false,
+        "id" : "3B960C01-D77C-4E8D-B5FB-D107ADD71137",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R16",
+        "position" : {
+          "x" : 70,
+          "y" : -6
+        },
+        "props" : {
+          "r" : 39000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F7F65751-83A0-4A61-BED9-0A44B79C1C00",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C8",
+        "position" : {
+          "x" : 74,
+          "y" : -10
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "657C46C5-2DB3-43C0-8D7D-FF9A0AC0E233",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C9",
+        "position" : {
+          "x" : 74,
+          "y" : -6
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "406367DE-6B47-4F98-98EE-C2B424C7FCE7",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR3",
+        "position" : {
+          "x" : 76,
+          "y" : -8
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Bass"
+      },
+      {
+        "flipped" : false,
+        "id" : "2FCFD866-F1E1-4E24-AA73-068183CF868F",
+        "kind" : "pot",
+        "model" : "B",
+        "name" : "VR4",
+        "position" : {
+          "x" : 76,
+          "y" : -4
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 25000
+        },
+        "rotation" : 1,
+        "text" : "Middle"
+      },
+      {
+        "flipped" : true,
+        "id" : "A5A81D6D-D926-4BC6-A4F0-6FA3DA78A7B2",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR5",
+        "position" : {
+          "x" : 82,
+          "y" : -10
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Master"
+      },
+      {
+        "flipped" : false,
+        "id" : "FBC82D11-3BEB-4DB8-899C-D75E817CB825",
+        "kind" : "output",
+        "model" : "",
+        "name" : "OUT",
+        "position" : {
+          "x" : 86,
+          "y" : -10
+        },
+        "props" : {
+          "rl" : 1000000,
+          "scale" : 0.03
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "11B55170-6E0F-4458-BEB8-6CBF5F5F9B94",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND16",
+        "position" : {
+          "x" : 76,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "A3D27FC5-F240-446C-937B-F791762637B5",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND17",
+        "position" : {
+          "x" : 82,
+          "y" : -8
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      }
+    ],
+    "wires" : [
+      {
+        "a" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "id" : "811194E3-E03B-4216-AFD5-87600376727C"
+      },
+      {
+        "a" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 3,
+          "y" : 0
+        },
+        "id" : "69489756-FD0B-48B2-892C-8B54CD59406A"
+      },
+      {
+        "a" : {
+          "x" : 7,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 8,
+          "y" : 0
+        },
+        "id" : "DCEBE27C-77BF-4FAD-9A2E-B64588577880"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : 2
+        },
+        "id" : "B749A060-CB36-4CE1-8EC2-7FE1B2EA2EEB"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : -2
+        },
+        "id" : "2DECC436-0117-4671-91F9-446D98872B54"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 19,
+          "y" : -2
+        },
+        "id" : "61DBA3E0-6429-4116-A9EF-1937A2F58C51"
+      },
+      {
+        "a" : {
+          "x" : 21,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 22,
+          "y" : 0
+        },
+        "id" : "D0CFB086-8DA6-46A8-8BBD-F6A628213408"
+      },
+      {
+        "a" : {
+          "x" : 26,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 27,
+          "y" : 0
+        },
+        "id" : "8EACA52F-E086-46CF-8753-38746A274F86"
+      },
+      {
+        "a" : {
+          "x" : 30,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 32,
+          "y" : 2
+        },
+        "id" : "3BD72892-B8CC-4DE0-B2B7-C011F369D234"
+      },
+      {
+        "a" : {
+          "x" : 30,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 32,
+          "y" : -2
+        },
+        "id" : "AA3EF0EE-22E4-4ABF-A543-1322C2C5D4FD"
+      },
+      {
+        "a" : {
+          "x" : 36,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 37,
+          "y" : -2
+        },
+        "id" : "4B104134-3A28-4700-8934-29299074BAD1"
+      },
+      {
+        "a" : {
+          "x" : 41,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 42,
+          "y" : -2
+        },
+        "id" : "7481E4C2-52BF-4B5F-A583-7DF5388269F1"
+      },
+      {
+        "a" : {
+          "x" : 42,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 44,
+          "y" : -2
+        },
+        "id" : "E62A8F6A-0812-4144-B8F9-EE6426452942"
+      },
+      {
+        "a" : {
+          "x" : 47,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 49,
+          "y" : -4
+        },
+        "id" : "05C549E7-232B-4BD5-9D65-E081C0F92803"
+      },
+      {
+        "a" : {
+          "x" : 53,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 54,
+          "y" : -4
+        },
+        "id" : "24CAC38B-F806-4A0B-98FE-F28E33AF36C9"
+      },
+      {
+        "a" : {
+          "x" : 58,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 59,
+          "y" : -4
+        },
+        "id" : "F7248DC0-23C0-4300-A257-DB891413A462"
+      },
+      {
+        "a" : {
+          "x" : 59,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 61,
+          "y" : -4
+        },
+        "id" : "D14857B3-30D2-426E-961E-4622EA74EF2A"
+      },
+      {
+        "a" : {
+          "x" : 64,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 66,
+          "y" : -2
+        },
+        "id" : "78AE3174-2A17-4AAA-B33F-16E1799C3B6D"
+      },
+      {
+        "a" : {
+          "x" : 64,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 68,
+          "y" : -6
+        },
+        "id" : "0F1FD5D0-670F-4D48-AABD-96181D7893E5"
+      },
+      {
+        "a" : {
+          "x" : 68,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 68,
+          "y" : -14
+        },
+        "id" : "91368248-3E1D-4678-9122-1758948BFA89"
+      },
+      {
+        "a" : {
+          "x" : 68,
+          "y" : -14
+        },
+        "b" : {
+          "x" : 70,
+          "y" : -14
+        },
+        "id" : "ADB5C2C0-D8C8-40DD-99CC-AAB1A29173A0"
+      },
+      {
+        "a" : {
+          "x" : 74,
+          "y" : -14
+        },
+        "b" : {
+          "x" : 76,
+          "y" : -14
+        },
+        "id" : "CC2C46A3-21EE-4964-8695-3E2572F9442E"
+      },
+      {
+        "a" : {
+          "x" : 72,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 72,
+          "y" : -10
+        },
+        "id" : "EA2F88F8-D2A8-4772-909D-2A821B3E1EA3"
+      },
+      {
+        "a" : {
+          "x" : 78,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 78,
+          "y" : -6
+        },
+        "id" : "0517971A-D1FD-407B-B803-551F3F5856A2"
+      },
+      {
+        "a" : {
+          "x" : 78,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 76,
+          "y" : -6
+        },
+        "id" : "4914CDC1-D824-4B20-B3EB-1E88DF1F8BD2"
+      },
+      {
+        "a" : {
+          "x" : 78,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 78,
+          "y" : -2
+        },
+        "id" : "A0405B27-8DA9-49A2-956A-D01DADFCBCF9"
+      },
+      {
+        "a" : {
+          "x" : 78,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 76,
+          "y" : -2
+        },
+        "id" : "531C1989-4BDC-4009-8CB2-EFE3B68E3FA8"
+      },
+      {
+        "a" : {
+          "x" : 78,
+          "y" : -12
+        },
+        "b" : {
+          "x" : 82,
+          "y" : -12
+        },
+        "id" : "7CFC2053-16FC-4F0A-A962-61F734E1FC54"
+      },
+      {
+        "a" : {
+          "x" : 84,
+          "y" : -10
+        },
+        "b" : {
+          "x" : 86,
+          "y" : -10
+        },
+        "id" : "30953D9E-6610-4931-98BC-8B8BC225675B"
+      }
+    ]
+  },
+  {
+    "name" : "Bass Tube Preamp",
+    "notes" : "A valve preamp voiced for bass: fully bypassed cathodes and large coupling capacitors keep the bottom octave, and the tone stack's capacitors are several times larger than a guitar amp's so Bass and Middle work an octave or two lower. It stays clean until Volume is well up, then growls.",
+    "parts" : [
+      {
+        "flipped" : false,
+        "id" : "1B5C4504-00FB-47C2-A0E6-31037BE44C5A",
+        "kind" : "input",
+        "model" : "",
+        "name" : "IN",
+        "position" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "props" : {
+          "rs" : 1000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "C4252B67-BF60-46C3-9632-3ABC8A61F17F",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R1",
+        "position" : {
+          "x" : 2,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "4E4263D7-3C27-45F3-AAA7-B0A3B79E41D0",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R2",
+        "position" : {
+          "x" : 5,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 68000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "15C50637-AFC3-4101-BF2D-727F6DA78AE5",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V1",
+        "position" : {
+          "x" : 10,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "0B910DBB-C532-4E0A-8290-E7511DEE822B",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R3",
+        "position" : {
+          "x" : 11,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1500
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "BFF73C46-D1E5-407A-9E86-A186D79FEC8D",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C1",
+        "position" : {
+          "x" : 13,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 4.7e-05
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "1C5218B4-6CE6-4B78-A349-8753A8688EEE",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R4",
+        "position" : {
+          "x" : 11,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "DD640F3B-F053-4929-B842-69273551C36D",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C2",
+        "position" : {
+          "x" : 15,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 4.7e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "AAACD59E-66BD-42E5-BE93-3274011D2918",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND1",
+        "position" : {
+          "x" : 2,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "7CF18C3F-E6AB-4959-ADEF-7A5F0A71BE03",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND2",
+        "position" : {
+          "x" : 11,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "74CF4D9C-F3DC-4966-B74E-1B521CA15924",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND3",
+        "position" : {
+          "x" : 13,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "1767B2F2-0C63-49E8-A04C-2914134A7289",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS4",
+        "position" : {
+          "x" : 11,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 320
+        },
+        "rotation" : 0,
+        "text" : "B+ 320V"
+      },
+      {
+        "flipped" : true,
+        "id" : "EB2EBADD-B180-4653-B469-DE4F3BE98A7C",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR1",
+        "position" : {
+          "x" : 19,
+          "y" : 0
+        },
+        "props" : {
+          "position" : 0.55,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Volume"
+      },
+      {
+        "flipped" : false,
+        "id" : "3AC67369-5B66-4C6A-8883-1E85A64933AC",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R5",
+        "position" : {
+          "x" : 24,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "7E71F3D1-4552-46E3-8ED2-71A2CE610B6B",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V2",
+        "position" : {
+          "x" : 29,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "44208E3C-B9D0-43B7-AC2D-8A0E266A54DD",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R6",
+        "position" : {
+          "x" : 30,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 1500
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "C0CE162F-FAA9-405A-BBD4-C66B2BC304E8",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R7",
+        "position" : {
+          "x" : 30,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "3DD6792D-22F2-444F-BE33-5B1CAA2B5AFB",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V3",
+        "position" : {
+          "x" : 36,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5BEC87DA-FE72-480F-AE9F-103F90D77488",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R8",
+        "position" : {
+          "x" : 37,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "215E5317-4665-4E32-AD62-3171169EFA45",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND5",
+        "position" : {
+          "x" : 19,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2709366A-0C7C-4D70-B8A0-EA4733656C87",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND6",
+        "position" : {
+          "x" : 30,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "A95C85A6-434D-490D-8759-6C446130DD27",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS7",
+        "position" : {
+          "x" : 30,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 320
+        },
+        "rotation" : 0,
+        "text" : "B+ 320V"
+      },
+      {
+        "flipped" : false,
+        "id" : "1DFCC83A-671C-4D47-91CE-4CF4F0F4DFD4",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS8",
+        "position" : {
+          "x" : 37,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 320
+        },
+        "rotation" : 0,
+        "text" : "B+ 320V"
+      },
+      {
+        "flipped" : false,
+        "id" : "676C543C-8A40-4335-A660-7027EC169106",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND9",
+        "position" : {
+          "x" : 37,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "88CC742C-CE53-4A57-B7FF-5EFD8B22263F",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C3",
+        "position" : {
+          "x" : 43,
+          "y" : -8
+        },
+        "props" : {
+          "c" : 4.7e-10
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "A6E49661-116D-4AB1-B10C-BB274ED5B0D5",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR2",
+        "position" : {
+          "x" : 47,
+          "y" : -6
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 250000
+        },
+        "rotation" : 1,
+        "text" : "Treble"
+      },
+      {
+        "flipped" : false,
+        "id" : "DCC3F631-1AC0-4C1D-8964-A47779492B80",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R9",
+        "position" : {
+          "x" : 41,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 56000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5E58B0A0-02E0-4F63-95D3-1BE8EB70E04F",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C4",
+        "position" : {
+          "x" : 45,
+          "y" : -4
+        },
+        "props" : {
+          "c" : 1e-07
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "03B40103-3F10-4C26-9775-71720506E90A",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C5",
+        "position" : {
+          "x" : 45,
+          "y" : 0
+        },
+        "props" : {
+          "c" : 4.7e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "763E4C33-FDBF-4C96-A6D5-415343F66D63",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR3",
+        "position" : {
+          "x" : 47,
+          "y" : -2
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Bass"
+      },
+      {
+        "flipped" : false,
+        "id" : "3568BF83-B3B7-4D1A-9736-1F54FCDBECF5",
+        "kind" : "pot",
+        "model" : "B",
+        "name" : "VR4",
+        "position" : {
+          "x" : 47,
+          "y" : 2
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 25000
+        },
+        "rotation" : 1,
+        "text" : "Middle"
+      },
+      {
+        "flipped" : true,
+        "id" : "EA46D4C6-4B14-403B-B618-89FD2D403139",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR5",
+        "position" : {
+          "x" : 53,
+          "y" : -4
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Master"
+      },
+      {
+        "flipped" : false,
+        "id" : "D85D9B3C-8CF1-4831-BC91-92F72A96641B",
+        "kind" : "output",
+        "model" : "",
+        "name" : "OUT",
+        "position" : {
+          "x" : 57,
+          "y" : -4
+        },
+        "props" : {
+          "rl" : 1000000,
+          "scale" : 0.05
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "8A2F7581-EC54-49E3-B9AD-FF04A9788A43",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND10",
+        "position" : {
+          "x" : 47,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F3FE7C8F-3F31-4604-90D1-EC6A4495C833",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND11",
+        "position" : {
+          "x" : 53,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      }
+    ],
+    "wires" : [
+      {
+        "a" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "id" : "00266B3B-500C-457D-8683-92E0EAA89047"
+      },
+      {
+        "a" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 3,
+          "y" : 0
+        },
+        "id" : "77588005-C871-4D82-B86B-4D498EA92EEE"
+      },
+      {
+        "a" : {
+          "x" : 7,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 8,
+          "y" : 0
+        },
+        "id" : "61C67E56-BEE0-4176-9F14-B359FC8B784A"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : 2
+        },
+        "id" : "F27A6CC0-4E09-49E2-94D6-1ABD0632646F"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : -2
+        },
+        "id" : "19A4A2A5-8C5B-4756-940B-0A0F8F6DCB3F"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 19,
+          "y" : -2
+        },
+        "id" : "640B2C1F-97DA-4C2C-89C5-9C8FE5A03A89"
+      },
+      {
+        "a" : {
+          "x" : 21,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 22,
+          "y" : 0
+        },
+        "id" : "C20DDDE0-7598-4080-9A25-CE778910D553"
+      },
+      {
+        "a" : {
+          "x" : 26,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 27,
+          "y" : 0
+        },
+        "id" : "795F3509-C0EF-4FB0-BDAE-62A4934E18FB"
+      },
+      {
+        "a" : {
+          "x" : 30,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "id" : "703F8F2F-EC1B-49DA-8721-241C9E0196F6"
+      },
+      {
+        "a" : {
+          "x" : 37,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 37,
+          "y" : -6
+        },
+        "id" : "C0AA933E-4DD9-47FC-A3F5-6B8616264989"
+      },
+      {
+        "a" : {
+          "x" : 37,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 39,
+          "y" : 0
+        },
+        "id" : "9224EB27-1BF1-40C5-832A-FA1A632C459C"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 39,
+          "y" : -8
+        },
+        "id" : "E8408574-7601-4D81-8C9B-DCF5181DC6A2"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 41,
+          "y" : -8
+        },
+        "id" : "7274AD5C-3274-4B38-9100-02FC923F4575"
+      },
+      {
+        "a" : {
+          "x" : 45,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 47,
+          "y" : -8
+        },
+        "id" : "B22D1E43-D4BA-4CA7-B12D-26B69B93F7CC"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 43,
+          "y" : -4
+        },
+        "id" : "A8D4C537-7668-4F7F-BCF0-EDBB9DF8AD76"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 49,
+          "y" : 0
+        },
+        "id" : "5A7CAFF1-F10C-41FD-9020-CA98DFB4080A"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 47,
+          "y" : 0
+        },
+        "id" : "24D72ECE-92BC-49C3-8096-DD39ACE45AC8"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 49,
+          "y" : 4
+        },
+        "id" : "F9F2765F-5973-4049-9854-E571439B0410"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 4
+        },
+        "b" : {
+          "x" : 47,
+          "y" : 4
+        },
+        "id" : "EAEC8EB4-7B75-429E-A9E4-29F4EF2DF8F0"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 53,
+          "y" : -6
+        },
+        "id" : "A25BBD90-4F66-4278-906D-FCF957854617"
+      },
+      {
+        "a" : {
+          "x" : 55,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 57,
+          "y" : -4
+        },
+        "id" : "67CBADFB-009E-4CA8-8925-EC8C39B8909D"
+      }
+    ]
+  },
+  {
+    "name" : "British 50 W Head",
+    "notes" : "A whole amplifier. The British preamp feeds a long-tailed-pair phase inverter and two EL34 power tubes working in push-pull through an output transformer into a speaker-like load. Negative feedback from the speaker tightens it up, and Presence takes treble out of that feedback. Turn Master up and the power tubes clip, the supply sags and the speaker's resonance pushes back: the feel of a cranked stack. Follow the DRIVE, PI A, PI B and SPKR labels between the two halves of the drawing.",
+    "parts" : [
+      {
+        "flipped" : false,
+        "id" : "EA180D8C-E138-40A4-9E8B-A6B5EDB204DE",
+        "kind" : "input",
+        "model" : "",
+        "name" : "IN",
+        "position" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "props" : {
+          "rs" : 1000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "79823F36-1610-47AF-A85E-BB9BB605D4BE",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R1",
+        "position" : {
+          "x" : 2,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2919E251-1102-415C-85DB-6424A0DD7D01",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R2",
+        "position" : {
+          "x" : 5,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 68000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "9C6F6381-5454-4E1A-8D39-3969D971A313",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V1",
+        "position" : {
+          "x" : 10,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "23B5FB4E-B63C-4C49-BAE1-860B41B124C8",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R3",
+        "position" : {
+          "x" : 11,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 2700
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "BF64452A-0077-4D8D-8FF5-C1F68DD1CC33",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C1",
+        "position" : {
+          "x" : 13,
+          "y" : 4
+        },
+        "props" : {
+          "c" : 6.8e-07
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "954406AA-5056-4892-9022-EDEF3F1FA46E",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R4",
+        "position" : {
+          "x" : 11,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "715D3C16-6445-48FD-85AB-35497B813731",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C2",
+        "position" : {
+          "x" : 15,
+          "y" : -2
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E6EEAFBC-69CE-4F57-A6F6-155E30931B1F",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND1",
+        "position" : {
+          "x" : 2,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "787153A1-DA43-426C-A29B-9EA304E22941",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND2",
+        "position" : {
+          "x" : 11,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "43E4A9E6-1903-497A-BBBE-9EAB81A5EFE9",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND3",
+        "position" : {
+          "x" : 13,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "CD3EF0B9-62B7-404D-842A-B2E953EB0AE2",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS4",
+        "position" : {
+          "x" : 11,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 300
+        },
+        "rotation" : 0,
+        "text" : "B+ 300V"
+      },
+      {
+        "flipped" : true,
+        "id" : "BC3CE331-3F1B-46E4-8836-95CD2BB6ECCB",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR1",
+        "position" : {
+          "x" : 19,
+          "y" : 0
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Gain"
+      },
+      {
+        "flipped" : false,
+        "id" : "23CE75A5-2648-4B95-9D47-7C0EC6DE7B43",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R5",
+        "position" : {
+          "x" : 24,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 470000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "FEE63CD9-D5A0-4691-A1FD-A5DE29585892",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V2",
+        "position" : {
+          "x" : 29,
+          "y" : 0
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E226FE4A-4B5E-4904-BE0E-5F75361F8292",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R6",
+        "position" : {
+          "x" : 30,
+          "y" : 4
+        },
+        "props" : {
+          "r" : 820
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "02DFA0C6-5189-45D1-923F-1960F06FE969",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R7",
+        "position" : {
+          "x" : 30,
+          "y" : -4
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "4DB40148-C4AC-4821-AE1B-9E28FCC50A4B",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V3",
+        "position" : {
+          "x" : 36,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "36716102-68BF-4C71-81D4-80E886DEA477",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R8",
+        "position" : {
+          "x" : 37,
+          "y" : 2
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "D5A1DC80-4A5C-49F6-B4CB-51EFF121D5B2",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND5",
+        "position" : {
+          "x" : 19,
+          "y" : 2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "93FB5D68-5290-4C13-A5E8-0D7D24FDA376",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND6",
+        "position" : {
+          "x" : 30,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "57902715-D9CB-4E14-9A3A-C3CB0F1B624F",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS7",
+        "position" : {
+          "x" : 30,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 300
+        },
+        "rotation" : 0,
+        "text" : "B+ 300V"
+      },
+      {
+        "flipped" : false,
+        "id" : "CF97A8A8-1BD4-4468-B21D-8118D407B186",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS8",
+        "position" : {
+          "x" : 37,
+          "y" : -6
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 300
+        },
+        "rotation" : 0,
+        "text" : "B+ 300V"
+      },
+      {
+        "flipped" : false,
+        "id" : "E8B2B5A9-0AFE-4766-A5BA-60AA1A619686",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND9",
+        "position" : {
+          "x" : 37,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "51DD01BD-6ADE-43A3-8471-F1D1D56E5A02",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C3",
+        "position" : {
+          "x" : 43,
+          "y" : -8
+        },
+        "props" : {
+          "c" : 4.7e-10
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "BB10A533-3346-43FC-9962-E8D961D6E741",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR2",
+        "position" : {
+          "x" : 47,
+          "y" : -6
+        },
+        "props" : {
+          "position" : 0.6,
+          "r" : 250000
+        },
+        "rotation" : 1,
+        "text" : "Treble"
+      },
+      {
+        "flipped" : false,
+        "id" : "23D9C7CC-6F26-4E3B-82FB-922F0D6AA22D",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R9",
+        "position" : {
+          "x" : 41,
+          "y" : 0
+        },
+        "props" : {
+          "r" : 33000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E57480A3-9415-426E-A2FA-6D5F78AA7B7A",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C4",
+        "position" : {
+          "x" : 45,
+          "y" : -4
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B199B5BD-14BE-4CBF-A4E6-6130C8748FBB",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C5",
+        "position" : {
+          "x" : 45,
+          "y" : 0
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "D498ACFB-13E2-4EBF-BD4B-EAEB586B1957",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR3",
+        "position" : {
+          "x" : 47,
+          "y" : -2
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Bass"
+      },
+      {
+        "flipped" : false,
+        "id" : "04B023F4-5916-44FD-AA93-E50DDCE70465",
+        "kind" : "pot",
+        "model" : "B",
+        "name" : "VR4",
+        "position" : {
+          "x" : 47,
+          "y" : 2
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 25000
+        },
+        "rotation" : 1,
+        "text" : "Middle"
+      },
+      {
+        "flipped" : true,
+        "id" : "65BD6803-B18F-4610-AEBC-A679D0627838",
+        "kind" : "pot",
+        "model" : "A",
+        "name" : "VR5",
+        "position" : {
+          "x" : 53,
+          "y" : -4
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : "Master"
+      },
+      {
+        "flipped" : false,
+        "id" : "C36EB248-0E58-43CB-9B82-37520F98E761",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND10",
+        "position" : {
+          "x" : 47,
+          "y" : 4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E9ACFECE-2F9D-4CC6-9EFA-40F6728A9F70",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND11",
+        "position" : {
+          "x" : 53,
+          "y" : -2
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "41D69F62-EE29-4F51-B679-2624C5C863AF",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET12",
+        "position" : {
+          "x" : 58,
+          "y" : -4
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : "DRIVE"
+      },
+      {
+        "flipped" : false,
+        "id" : "94FF3A4B-E710-4C64-98DC-7D55A5802506",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C30",
+        "position" : {
+          "x" : 4,
+          "y" : 28
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2DF83FF9-7325-4472-942A-418968FDBB4A",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V7",
+        "position" : {
+          "x" : 10,
+          "y" : 28
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "17C08DCE-5A63-4C5A-890B-A0A073FB0772",
+        "kind" : "triode",
+        "model" : "12AX7",
+        "name" : "V8",
+        "position" : {
+          "x" : 18,
+          "y" : 28
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "ED07385B-54A6-47BB-9C56-E8FDED257270",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R30",
+        "position" : {
+          "x" : 8,
+          "y" : 30
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "8D0C6D68-B5C5-4817-8443-F07C4AF94405",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R31",
+        "position" : {
+          "x" : 20,
+          "y" : 30
+        },
+        "props" : {
+          "r" : 1000000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "06742840-0A3B-49E2-9CE2-01C03C2E7F4C",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R32",
+        "position" : {
+          "x" : 14,
+          "y" : 32
+        },
+        "props" : {
+          "r" : 470
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5CF6572C-B5FB-4F07-9482-605D74914634",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R33",
+        "position" : {
+          "x" : 14,
+          "y" : 36
+        },
+        "props" : {
+          "r" : 10000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "31DB6449-A028-4017-96E3-FCF426EA900A",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R34",
+        "position" : {
+          "x" : 14,
+          "y" : 40
+        },
+        "props" : {
+          "r" : 4700
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B8677ACB-CC9A-46EB-95EA-9195B3B99A0B",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C31",
+        "position" : {
+          "x" : 23,
+          "y" : 30
+        },
+        "props" : {
+          "c" : 1e-07
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "674A9E22-C0AD-4236-9EA8-D85B7B320248",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R35",
+        "position" : {
+          "x" : 11,
+          "y" : 21
+        },
+        "props" : {
+          "r" : 82000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "84B7BE00-194A-4D2C-A36D-06F53DCC2328",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R36",
+        "position" : {
+          "x" : 17,
+          "y" : 21
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B3CE191C-2D3A-47F6-8DD4-EC8CDF9753A7",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C32",
+        "position" : {
+          "x" : 7,
+          "y" : 24
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "FBF44296-900B-4ACD-9940-9D6DD3A0FE9A",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C33",
+        "position" : {
+          "x" : 21,
+          "y" : 24
+        },
+        "props" : {
+          "c" : 2.2e-08
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "3AF9E9CB-2428-4361-857D-1B1FBDD71400",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C34",
+        "position" : {
+          "x" : 11,
+          "y" : 38
+        },
+        "props" : {
+          "c" : 1e-07
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "0B2131D5-6981-411F-B397-765D63D19C0B",
+        "kind" : "pot",
+        "model" : "B",
+        "name" : "VR9",
+        "position" : {
+          "x" : 9,
+          "y" : 40
+        },
+        "props" : {
+          "position" : 0.5,
+          "r" : 5000
+        },
+        "rotation" : 1,
+        "text" : "Presence"
+      },
+      {
+        "flipped" : false,
+        "id" : "26E5EE7E-99DF-447D-93A1-CD231DEE0A93",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R37",
+        "position" : {
+          "x" : 18,
+          "y" : 40
+        },
+        "props" : {
+          "r" : 100000
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "03331579-2296-4A80-8928-3B4A4BC71059",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET13",
+        "position" : {
+          "x" : 2,
+          "y" : 28
+        },
+        "props" : {
+
+        },
+        "rotation" : 2,
+        "text" : "DRIVE"
+      },
+      {
+        "flipped" : false,
+        "id" : "A965CA00-210B-4556-B084-D866AD0D26E0",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND14",
+        "position" : {
+          "x" : 14,
+          "y" : 42
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "99065900-B5D0-4C06-8383-D642053767F9",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND15",
+        "position" : {
+          "x" : 9,
+          "y" : 42
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "BEF7FD21-9596-4877-9AD1-E580C7E38757",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET16",
+        "position" : {
+          "x" : 20,
+          "y" : 40
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : "SPKR"
+      },
+      {
+        "flipped" : false,
+        "id" : "1DB43FFA-AE48-4442-B1B9-83A803146421",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS17",
+        "position" : {
+          "x" : 11,
+          "y" : 18
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 350
+        },
+        "rotation" : 0,
+        "text" : "B+ 350V"
+      },
+      {
+        "flipped" : false,
+        "id" : "F54DC08B-2C02-4AA5-9A1F-C7CB7F4117C0",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS18",
+        "position" : {
+          "x" : 17,
+          "y" : 18
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : 350
+        },
+        "rotation" : 0,
+        "text" : "B+ 350V"
+      },
+      {
+        "flipped" : false,
+        "id" : "4FB4D9E6-B8D0-4065-A558-26FFFF475A52",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET19",
+        "position" : {
+          "x" : 5,
+          "y" : 24
+        },
+        "props" : {
+
+        },
+        "rotation" : 2,
+        "text" : "PI A"
+      },
+      {
+        "flipped" : false,
+        "id" : "222B65B1-7D0A-4F82-9E21-0DA0BB45B4FD",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET20",
+        "position" : {
+          "x" : 23,
+          "y" : 24
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : "PI B"
+      },
+      {
+        "flipped" : false,
+        "id" : "82889DB5-7B0A-4DEE-8CB4-5E26B780D6F3",
+        "kind" : "pentode",
+        "model" : "EL34",
+        "name" : "V9",
+        "position" : {
+          "x" : 42,
+          "y" : 22
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : true,
+        "id" : "76B00D3A-05DF-4998-8265-68C400C58732",
+        "kind" : "pentode",
+        "model" : "EL34",
+        "name" : "V10",
+        "position" : {
+          "x" : 42,
+          "y" : 34
+        },
+        "props" : {
+
+        },
+        "rotation" : 2,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "7488B94B-C974-43AC-B660-72C87011E884",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R40",
+        "position" : {
+          "x" : 37,
+          "y" : 22
+        },
+        "props" : {
+          "r" : 5600
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "939CBC23-3952-41C2-B8FB-766818E1865D",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R41",
+        "position" : {
+          "x" : 37,
+          "y" : 34
+        },
+        "props" : {
+          "r" : 5600
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "B83EB00B-7BA1-415D-A50B-071252BA3EC1",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R42",
+        "position" : {
+          "x" : 35,
+          "y" : 24
+        },
+        "props" : {
+          "r" : 220000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E8114C4B-4871-4D4C-9248-1FA618F61F51",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R43",
+        "position" : {
+          "x" : 35,
+          "y" : 32
+        },
+        "props" : {
+          "r" : 220000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E5C75FB6-751E-43D2-BBE6-661DB23A4D3B",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R44",
+        "position" : {
+          "x" : 45,
+          "y" : 24
+        },
+        "props" : {
+          "r" : 1000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2B40267A-3566-4DC1-9D0F-035660D78544",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R45",
+        "position" : {
+          "x" : 45,
+          "y" : 32
+        },
+        "props" : {
+          "r" : 1000
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "02FC7657-22E2-444D-98FB-ADFD65F04D17",
+        "kind" : "transformer",
+        "model" : "",
+        "name" : "T1",
+        "position" : {
+          "x" : 52,
+          "y" : 28
+        },
+        "props" : {
+          "k" : 0.9985,
+          "lp" : 40,
+          "rp" : 150,
+          "rsec" : 0.5,
+          "zpp" : 3400,
+          "zs" : 8
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "CA31E491-8257-4743-B406-E104A6ED2DA3",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C40",
+        "position" : {
+          "x" : 48,
+          "y" : 31
+        },
+        "props" : {
+          "c" : 4.7e-05
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "7275D67B-EBAC-4223-9FFE-654EA92DEB6E",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET21",
+        "position" : {
+          "x" : 35,
+          "y" : 22
+        },
+        "props" : {
+
+        },
+        "rotation" : 2,
+        "text" : "PI A"
+      },
+      {
+        "flipped" : false,
+        "id" : "179B9230-7A76-4826-9659-80A5AC046442",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET22",
+        "position" : {
+          "x" : 35,
+          "y" : 34
+        },
+        "props" : {
+
+        },
+        "rotation" : 2,
+        "text" : "PI B"
+      },
+      {
+        "flipped" : false,
+        "id" : "A979CFAD-CC56-4951-8C33-537255213472",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS23",
+        "position" : {
+          "x" : 32,
+          "y" : 28
+        },
+        "props" : {
+          "rs" : 0.01,
+          "v" : -40
+        },
+        "rotation" : 0,
+        "text" : "-40V"
+      },
+      {
+        "flipped" : false,
+        "id" : "B7E08CDE-66F0-4BDB-80E7-7636BD91E6D7",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND24",
+        "position" : {
+          "x" : 41,
+          "y" : 28
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "70927266-45A6-41E5-AE4D-AF21AC6FF01D",
+        "kind" : "supply",
+        "model" : "",
+        "name" : "VS25",
+        "position" : {
+          "x" : 48,
+          "y" : 25
+        },
+        "props" : {
+          "rs" : 60,
+          "v" : 440
+        },
+        "rotation" : 0,
+        "text" : "B+ 440V"
+      },
+      {
+        "flipped" : false,
+        "id" : "A8F68127-3A22-4CFB-A573-4231F7C21F05",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND26",
+        "position" : {
+          "x" : 48,
+          "y" : 33
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "20249696-A2CA-44EE-B215-9E36447D3090",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R50",
+        "position" : {
+          "x" : 58,
+          "y" : 26
+        },
+        "props" : {
+          "r" : 6.4
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "510C48D7-C339-4820-BC7D-E32B130987E4",
+        "kind" : "inductor",
+        "model" : "",
+        "name" : "L50",
+        "position" : {
+          "x" : 63,
+          "y" : 26
+        },
+        "props" : {
+          "l" : 0.0005,
+          "rs" : 0.01
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "F57F62F1-0A62-4DA7-92F9-BB5BFCA3179C",
+        "kind" : "inductor",
+        "model" : "",
+        "name" : "L51",
+        "position" : {
+          "x" : 65,
+          "y" : 28
+        },
+        "props" : {
+          "l" : 0.025,
+          "rs" : 0.01
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "D3F577B8-81EF-4A6F-8B58-5F5B6E134AFA",
+        "kind" : "capacitor",
+        "model" : "",
+        "name" : "C50",
+        "position" : {
+          "x" : 68,
+          "y" : 28
+        },
+        "props" : {
+          "c" : 0.00016
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "E936C42D-586F-4381-A69D-CCAB16AADC9A",
+        "kind" : "resistor",
+        "model" : "",
+        "name" : "R51",
+        "position" : {
+          "x" : 71,
+          "y" : 28
+        },
+        "props" : {
+          "r" : 30
+        },
+        "rotation" : 1,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "34F36275-10FC-4727-9324-B193F0371E27",
+        "kind" : "output",
+        "model" : "",
+        "name" : "OUT",
+        "position" : {
+          "x" : 58,
+          "y" : 23
+        },
+        "props" : {
+          "rl" : 1000000,
+          "scale" : 0.006
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "5BE24A2E-50D8-418F-95DA-75F33CA50588",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND27",
+        "position" : {
+          "x" : 71,
+          "y" : 30
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "A6C109F7-A3DC-4071-819A-0E740CBC76E1",
+        "kind" : "label",
+        "model" : "",
+        "name" : "NET28",
+        "position" : {
+          "x" : 55,
+          "y" : 20
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : "SPKR"
+      }
+    ],
+    "wires" : [
+      {
+        "a" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "id" : "5474D82B-2350-4E81-8DC9-04E68512E731"
+      },
+      {
+        "a" : {
+          "x" : 2,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 3,
+          "y" : 0
+        },
+        "id" : "190C74B8-51B9-4AA4-92C3-C6BE4D3C2903"
+      },
+      {
+        "a" : {
+          "x" : 7,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 8,
+          "y" : 0
+        },
+        "id" : "5114A736-7A3F-4B72-A50E-23E1B8E94A79"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : 2
+        },
+        "id" : "C6B5534E-AF35-42F9-BCE3-DF564979D3AC"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 13,
+          "y" : -2
+        },
+        "id" : "D35CD1A0-EE47-4DC4-A3EB-5D7C4E3930B7"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 19,
+          "y" : -2
+        },
+        "id" : "F3F69947-9D59-43D7-954C-8C676626BB1D"
+      },
+      {
+        "a" : {
+          "x" : 21,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 22,
+          "y" : 0
+        },
+        "id" : "C03A1AF8-5CA3-4B6A-9CEB-13D6D7C2384F"
+      },
+      {
+        "a" : {
+          "x" : 26,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 27,
+          "y" : 0
+        },
+        "id" : "063BF80B-0330-4230-AB69-274A6B79229E"
+      },
+      {
+        "a" : {
+          "x" : 30,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 34,
+          "y" : -2
+        },
+        "id" : "BAC17428-AB92-4846-A313-C06F77D4CAD8"
+      },
+      {
+        "a" : {
+          "x" : 37,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 37,
+          "y" : -6
+        },
+        "id" : "EB5269A6-C0EF-48B2-901D-F09C1235DE40"
+      },
+      {
+        "a" : {
+          "x" : 37,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 39,
+          "y" : 0
+        },
+        "id" : "7230EDED-92EA-4F07-9035-2A587FA94A8C"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 39,
+          "y" : -8
+        },
+        "id" : "BB0F35B1-2B21-47C2-BB24-4B0C140F760F"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 41,
+          "y" : -8
+        },
+        "id" : "EFA7AEF4-384A-46B0-B094-340F13DB2742"
+      },
+      {
+        "a" : {
+          "x" : 45,
+          "y" : -8
+        },
+        "b" : {
+          "x" : 47,
+          "y" : -8
+        },
+        "id" : "615F5662-3CC4-4E1B-8B43-BE4A2E3AA229"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 43,
+          "y" : -4
+        },
+        "id" : "F2D0BC17-6C2D-4C85-BCA2-F2E8016A316D"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : -2
+        },
+        "b" : {
+          "x" : 49,
+          "y" : 0
+        },
+        "id" : "5C677A77-1A91-4B41-A684-ECEB436DFF81"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 0
+        },
+        "b" : {
+          "x" : 47,
+          "y" : 0
+        },
+        "id" : "E553A1C8-1A53-438D-B2C3-54C307DC2CDD"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 2
+        },
+        "b" : {
+          "x" : 49,
+          "y" : 4
+        },
+        "id" : "CD860AC7-5E3B-4683-B952-A739B9AE249A"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : 4
+        },
+        "b" : {
+          "x" : 47,
+          "y" : 4
+        },
+        "id" : "DAB7BA03-9344-47CA-84DD-DC4961E07087"
+      },
+      {
+        "a" : {
+          "x" : 49,
+          "y" : -6
+        },
+        "b" : {
+          "x" : 53,
+          "y" : -6
+        },
+        "id" : "C636E944-FE6C-4C29-90F0-D5285C384412"
+      },
+      {
+        "a" : {
+          "x" : 55,
+          "y" : -4
+        },
+        "b" : {
+          "x" : 58,
+          "y" : -4
+        },
+        "id" : "B6F65629-60AE-4AB8-991D-D607CCAF7DCB"
+      },
+      {
+        "a" : {
+          "x" : 6,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 8,
+          "y" : 28
+        },
+        "id" : "485C1869-3444-4D6B-BB4E-22726DABF90D"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 30
+        },
+        "b" : {
+          "x" : 17,
+          "y" : 30
+        },
+        "id" : "7D60BFCD-A87C-4702-AED8-94609ECA354C"
+      },
+      {
+        "a" : {
+          "x" : 8,
+          "y" : 32
+        },
+        "b" : {
+          "x" : 8,
+          "y" : 34
+        },
+        "id" : "2B62C294-2EA5-4A2B-A80E-9D3FB104E3D2"
+      },
+      {
+        "a" : {
+          "x" : 8,
+          "y" : 34
+        },
+        "b" : {
+          "x" : 14,
+          "y" : 34
+        },
+        "id" : "0426FBE4-7A77-437D-9376-14DE3FFD75BA"
+      },
+      {
+        "a" : {
+          "x" : 20,
+          "y" : 32
+        },
+        "b" : {
+          "x" : 20,
+          "y" : 34
+        },
+        "id" : "81707E5D-BB1E-4144-89EF-9D7AD3C4DC20"
+      },
+      {
+        "a" : {
+          "x" : 20,
+          "y" : 34
+        },
+        "b" : {
+          "x" : 14,
+          "y" : 34
+        },
+        "id" : "4F72008C-5CB3-427C-866A-386C98D0C5D8"
+      },
+      {
+        "a" : {
+          "x" : 20,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 23,
+          "y" : 28
+        },
+        "id" : "AF429A61-3270-459D-9FDA-6101D4F68102"
+      },
+      {
+        "a" : {
+          "x" : 23,
+          "y" : 32
+        },
+        "b" : {
+          "x" : 23,
+          "y" : 38
+        },
+        "id" : "72742AF2-F2AF-4BAE-B8D5-BB2B1ED01959"
+      },
+      {
+        "a" : {
+          "x" : 13,
+          "y" : 38
+        },
+        "b" : {
+          "x" : 14,
+          "y" : 38
+        },
+        "id" : "3BFEEBE0-BB19-4A7A-A3BA-83DC7500E656"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 40
+        },
+        "b" : {
+          "x" : 11,
+          "y" : 42
+        },
+        "id" : "3D896122-B9D5-4695-9A18-89FF43C16E16"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 42
+        },
+        "b" : {
+          "x" : 9,
+          "y" : 42
+        },
+        "id" : "38367BBE-2C70-498B-A25A-81E835437C46"
+      },
+      {
+        "a" : {
+          "x" : 23,
+          "y" : 38
+        },
+        "b" : {
+          "x" : 16,
+          "y" : 38
+        },
+        "id" : "18E8A3DC-3479-4A3F-97B0-321890F2137C"
+      },
+      {
+        "a" : {
+          "x" : 16,
+          "y" : 38
+        },
+        "b" : {
+          "x" : 14,
+          "y" : 38
+        },
+        "id" : "89B45A3C-271C-4057-9133-BEDEAA71FE8D"
+      },
+      {
+        "a" : {
+          "x" : 14,
+          "y" : 38
+        },
+        "b" : {
+          "x" : 16,
+          "y" : 38
+        },
+        "id" : "0B809141-9085-4B15-A69F-D967D2675D0B"
+      },
+      {
+        "a" : {
+          "x" : 16,
+          "y" : 38
+        },
+        "b" : {
+          "x" : 16,
+          "y" : 40
+        },
+        "id" : "20273128-8ADE-412D-A00E-65755FFC7280"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 19
+        },
+        "b" : {
+          "x" : 11,
+          "y" : 18
+        },
+        "id" : "32A578E3-8A63-47DC-9CC3-14B4FCF24144"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : 19
+        },
+        "b" : {
+          "x" : 17,
+          "y" : 18
+        },
+        "id" : "3BCEA451-AB74-48B3-9F34-26BE869F1455"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 11,
+          "y" : 24
+        },
+        "id" : "D586D0EE-E9CB-4D36-B254-63BA1A3221D1"
+      },
+      {
+        "a" : {
+          "x" : 11,
+          "y" : 24
+        },
+        "b" : {
+          "x" : 11,
+          "y" : 23
+        },
+        "id" : "C59DC595-CB6E-4A72-A74F-B7069CE75D76"
+      },
+      {
+        "a" : {
+          "x" : 9,
+          "y" : 24
+        },
+        "b" : {
+          "x" : 11,
+          "y" : 24
+        },
+        "id" : "B41ADD0C-302B-418F-A765-62CB9EFC2213"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 17,
+          "y" : 24
+        },
+        "id" : "33956819-00FA-47D5-9E86-3A6F4388555D"
+      },
+      {
+        "a" : {
+          "x" : 17,
+          "y" : 24
+        },
+        "b" : {
+          "x" : 17,
+          "y" : 23
+        },
+        "id" : "8FEE1B0D-D5F0-4E42-B8AD-2CCD4EA473D9"
+      },
+      {
+        "a" : {
+          "x" : 19,
+          "y" : 24
+        },
+        "b" : {
+          "x" : 17,
+          "y" : 24
+        },
+        "id" : "DDED2BB8-CFFF-4043-82E1-2FE100F6CB09"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : 22
+        },
+        "b" : {
+          "x" : 40,
+          "y" : 22
+        },
+        "id" : "4CD3869B-4D80-4E32-875B-1A571054223D"
+      },
+      {
+        "a" : {
+          "x" : 39,
+          "y" : 34
+        },
+        "b" : {
+          "x" : 40,
+          "y" : 34
+        },
+        "id" : "0C1EC9E4-2117-47EF-B9D7-3479C4B24BA0"
+      },
+      {
+        "a" : {
+          "x" : 35,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 35,
+          "y" : 28
+        },
+        "id" : "BEB17207-F59C-41D8-8BFD-F0A16A2472C8"
+      },
+      {
+        "a" : {
+          "x" : 35,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 35,
+          "y" : 30
+        },
+        "id" : "B15EAF04-3027-4AB0-B99B-8E7A427D1B6E"
+      },
+      {
+        "a" : {
+          "x" : 35,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 32,
+          "y" : 28
+        },
+        "id" : "3D91A085-4CCF-4163-ABD6-A1006FE55AB2"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 24
+        },
+        "b" : {
+          "x" : 43,
+          "y" : 28
+        },
+        "id" : "95266810-95B7-4098-B8E1-F7A91996A347"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 43,
+          "y" : 32
+        },
+        "id" : "67F2D51D-5FE3-45A1-AEA9-89E70B3A2E04"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 41,
+          "y" : 28
+        },
+        "id" : "6E04AF49-D885-4DA2-A56E-992B165D4B2B"
+      },
+      {
+        "a" : {
+          "x" : 45,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 45,
+          "y" : 28
+        },
+        "id" : "0E92E048-CC48-41B3-8EE5-20A605E6841B"
+      },
+      {
+        "a" : {
+          "x" : 45,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 45,
+          "y" : 30
+        },
+        "id" : "8C578E51-F3C4-4B55-A0C8-DDA332217E32"
+      },
+      {
+        "a" : {
+          "x" : 45,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 48,
+          "y" : 28
+        },
+        "id" : "7904D5AD-5F45-4052-9438-F46FC136FFE7"
+      },
+      {
+        "a" : {
+          "x" : 48,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 50,
+          "y" : 28
+        },
+        "id" : "DCF5798B-D2FA-4A75-AC06-91EF909DEBC4"
+      },
+      {
+        "a" : {
+          "x" : 48,
+          "y" : 28
+        },
+        "b" : {
+          "x" : 48,
+          "y" : 25
+        },
+        "id" : "A81F3DD8-6FA6-4237-83E3-3C4B066F8E5C"
+      },
+      {
+        "a" : {
+          "x" : 48,
+          "y" : 29
+        },
+        "b" : {
+          "x" : 48,
+          "y" : 28
+        },
+        "id" : "3DA964A4-AC73-4AB6-984F-2D98FD6CD064"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 20
+        },
+        "b" : {
+          "x" : 50,
+          "y" : 20
+        },
+        "id" : "BF59856E-1FAE-4212-8C3E-D35AFC7B16F9"
+      },
+      {
+        "a" : {
+          "x" : 50,
+          "y" : 20
+        },
+        "b" : {
+          "x" : 50,
+          "y" : 26
+        },
+        "id" : "5872FEB4-B250-4A3B-BCA6-7B7AA770BB00"
+      },
+      {
+        "a" : {
+          "x" : 43,
+          "y" : 36
+        },
+        "b" : {
+          "x" : 50,
+          "y" : 36
+        },
+        "id" : "C40D9CBC-93BC-4118-BE06-F2B7E3F28859"
+      },
+      {
+        "a" : {
+          "x" : 50,
+          "y" : 36
+        },
+        "b" : {
+          "x" : 50,
+          "y" : 30
+        },
+        "id" : "A696DD81-5B2D-45A2-8B08-8D54D4C9A666"
+      },
+      {
+        "a" : {
+          "x" : 60,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 61,
+          "y" : 26
+        },
+        "id" : "7F5FB063-C49E-4523-8F7A-5A5E0CCF690F"
+      },
+      {
+        "a" : {
+          "x" : 65,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 68,
+          "y" : 26
+        },
+        "id" : "D15B2BA1-9EAB-470F-9E96-68072D121190"
+      },
+      {
+        "a" : {
+          "x" : 68,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 71,
+          "y" : 26
+        },
+        "id" : "F60A8649-03EC-4BE3-9DC5-73813986AEE1"
+      },
+      {
+        "a" : {
+          "x" : 54,
+          "y" : 30
+        },
+        "b" : {
+          "x" : 65,
+          "y" : 30
+        },
+        "id" : "5669AD06-EAF5-414C-B412-4A77C6E76A37"
+      },
+      {
+        "a" : {
+          "x" : 65,
+          "y" : 30
+        },
+        "b" : {
+          "x" : 68,
+          "y" : 30
+        },
+        "id" : "ECDF47B5-8B69-48FC-9B12-E8FCBE3F2E80"
+      },
+      {
+        "a" : {
+          "x" : 68,
+          "y" : 30
+        },
+        "b" : {
+          "x" : 71,
+          "y" : 30
+        },
+        "id" : "D875F5F8-AE62-42FD-A8DF-EF70EE5FF024"
+      },
+      {
+        "a" : {
+          "x" : 54,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 55,
+          "y" : 26
+        },
+        "id" : "A928CF14-097B-4951-8AFA-A813137A0BC5"
+      },
+      {
+        "a" : {
+          "x" : 55,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 56,
+          "y" : 26
+        },
+        "id" : "2605C88C-2F70-4E12-BC0B-97D60069811E"
+      },
+      {
+        "a" : {
+          "x" : 55,
+          "y" : 26
+        },
+        "b" : {
+          "x" : 55,
+          "y" : 23
+        },
+        "id" : "9F5D30A7-4EA4-48FB-AED1-B1210B794FFF"
+      },
+      {
+        "a" : {
+          "x" : 55,
+          "y" : 23
+        },
+        "b" : {
+          "x" : 58,
+          "y" : 23
+        },
+        "id" : "5FA00F9C-E4BD-46DB-8F20-A7910A682B66"
+      },
+      {
+        "a" : {
+          "x" : 55,
+          "y" : 23
+        },
+        "b" : {
+          "x" : 55,
+          "y" : 20
+        },
+        "id" : "600B6B99-246C-451F-AE01-1829A7A4328F"
+      }
+    ]
+  },
+  {
+    "name" : "Empty amp",
+    "notes" : "Start from an empty board.",
+    "parts" : [
+      {
+        "flipped" : false,
+        "id" : "34DD3858-E41D-4F99-BFA7-FD3A425C02AD",
+        "kind" : "input",
+        "model" : "",
+        "name" : "IN",
+        "position" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "props" : {
+          "rs" : 1000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "3B6C701C-DA3E-4A42-ADE9-4350A6E1C1E9",
+        "kind" : "output",
+        "model" : "",
+        "name" : "OUT",
+        "position" : {
+          "x" : 20,
+          "y" : 0
+        },
+        "props" : {
+          "rl" : 1000000,
+          "scale" : 1
+        },
+        "rotation" : 0,
+        "text" : ""
+      },
+      {
+        "flipped" : false,
+        "id" : "2C296ECF-22AC-4CBD-98BF-8055CD49653E",
+        "kind" : "ground",
+        "model" : "",
+        "name" : "GND1",
+        "position" : {
+          "x" : 10,
+          "y" : 6
+        },
+        "props" : {
+
+        },
+        "rotation" : 0,
+        "text" : ""
+      }
+    ],
+    "wires" : [
+
+    ]
+  }
+]

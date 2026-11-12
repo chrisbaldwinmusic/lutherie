@@ -1,0 +1,23 @@
+jfet_clean_boost	JFET Clean Boost	-1
+single_transistor_boost	Single-Transistor Boost	-1
+mosfet_boost	MOSFET Boost	-1
+germanium_treble_booster	Germanium Treble Booster	-1
+diode_overdrive	Diode Overdrive	-1
+cascaded_jfet_overdrive	Cascaded JFET Overdrive	-1
+selectable_clip_overdrive	Selectable-Clip Overdrive	-1
+hard_clip_distortion	Hard-Clip Distortion	-1
+slew_limited_distortion	Slew-Limited Distortion	-1
+two_transistor_fuzz	Two-Transistor Fuzz	-1
+germanium_fuzz	Germanium Fuzz	-1
+four_stage_sustain_fuzz	Four-Stage Sustain Fuzz	-1
+bass_blend_overdrive	Bass Blend Overdrive	-1
+four_stage_phaser	Four-Stage Phaser	-1
+opto_tremolo	Opto Tremolo	-1
+bucket_brigade_chorus	Bucket-Brigade Chorus	-1
+bucket_brigade_delay	Bucket-Brigade Delay	-1
+tweed_style_preamp	Tweed-Style Preamp	-1
+two_stage_tube_preamp	Two-Stage Tube Preamp	-1
+british_stack_preamp	British Stack Preamp	-1
+high_gain_cascade_preamp	High-Gain Cascade Preamp	-1
+bass_tube_preamp	Bass Tube Preamp	-1
+british_50_w_head	British 50 W Head	12207

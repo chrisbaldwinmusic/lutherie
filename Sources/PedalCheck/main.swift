@@ -49,6 +49,57 @@ if let dir = ProcessInfo.processInfo.environment["SPICE_DIR"] {
     exit(0)
 }
 
+// Reference for the C++ port: `REF_DIR=folder PedalCheck` writes every starter circuit as JSON (the C++ version
+// loads its presets from these) and this engine's output for a fixed test signal, as raw 32-bit floats, then quits.
+if let dir = ProcessInfo.processInfo.environment["REF_DIR"] {
+    try? FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: true)
+    let enc = JSONEncoder()
+    enc.outputFormatting = [.prettyPrinted, .sortedKeys]
+    for (kind, list) in [("pedals", Presets.pedals), ("amps", Presets.amps)] {
+        if let d = try? enc.encode(list) { try? d.write(to: URL(fileURLWithPath: "\(dir)/\(kind).json")) }
+    }
+    let rate = 96_000.0, n = Int(rate * 0.25)
+    var index = ""
+    for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") {
+        let slug = circuit.name.lowercased().map { $0.isLetter || $0.isNumber ? $0 : "_" }.reduce("") { $0 + String($1) }
+        guard let e = try? CircuitEngine(circuit: circuit, sampleRate: rate) else { print("FAIL builds: \(circuit.name)"); continue }
+        var out = [Float](repeating: 0, count: n)
+        var firstNC = -1
+        for i in 0..<n {
+            let t = Double(i) / rate
+            if i == n / 2 { for k in 0..<e.knobCount { e.setKnob(k, 0.8) } }
+            if i % 32 == 0 { e.applyKnobs() }
+            out[i] = Float(e.tick(0.3 * sin(2 * Double.pi * 220 * t) + 0.1 * sin(2 * Double.pi * 1250 * t)))
+            if firstNC < 0 && e.nonConverged > 0 { firstNC = i }
+        }
+        out.withUnsafeBufferPointer { try? Data(buffer: $0).write(to: URL(fileURLWithPath: "\(dir)/\(slug).f32")) }
+        if e.nonConverged > 0 { print("\(circuit.name): non-converged \(e.nonConverged)") }
+        // where Newton first gave up (-1: never): past that point two engines may drift apart without either being wrong
+        index += "\(slug)\t\(circuit.name)\t\(firstNC)\n"
+    }
+    try? index.write(toFile: "\(dir)/index.txt", atomically: true, encoding: .utf8)
+    // The whole rig: four pedals (slots 0, 2, 3, 5, run in the order 3, 0, 5, 2) into the two-stage tube preamp
+    // with its power stage and the built-in cabinet, at 4× oversampling, 48 kHz.
+    let names = ["Diode Overdrive", "Four-Stage Phaser", "Bucket-Brigade Delay", "Germanium Fuzz"]
+    let rig = Rig(sampleRate: 48_000)
+    for (slot, name) in zip([0, 2, 3, 5], names) {
+        rig.install(pedal: try? CircuitStage(circuit: Presets.pedals.first { $0.name == name }!, hostRate: 48_000, factor: 4), slot: slot)
+    }
+    rig.setOrder([3, 0, 5, 2])
+    rig.install(amp: try? CircuitStage(circuit: Presets.tubePreamp, hostRate: 48_000, factor: 4))
+    rig[.pedalOn(5)] = 0       // the fuzz is on the board but switched off
+    rig[.mix] = 0.8
+    let frames = 48_000 / 4
+    var buf = (0..<frames).map { Float(0.3 * sin(2 * Double.pi * 220 * Double($0) / 48_000)) }
+    buf.withUnsafeMutableBufferPointer { b in
+        var s = 0
+        while s < frames { let c = min(256, frames - s); rig.process(b.baseAddress! + s, b.baseAddress! + s, c); s += c }
+    }
+    buf.withUnsafeBufferPointer { try? Data(buffer: $0).write(to: URL(fileURLWithPath: "\(dir)/rig.f32")) }
+    print("rig latency \(rig.latencySamples)")
+    exit(0)
+}
+
 let only = ProcessInfo.processInfo.environment["ONLY"]   // run one starter circuit by name
 let seconds = Int(ProcessInfo.processInfo.environment["SECONDS"] ?? "") ?? 2
 for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empty") && (only == nil || circuit.name == only) {
