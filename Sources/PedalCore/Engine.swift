@@ -122,6 +122,22 @@ public final class CircuitEngine {
     public let circuit: Circuit
     public let sampleRate: Double
     public let dt: Double
+    /// The step being taken: dt, or a fraction of it while cutting back.
+    var h: Double
+    var uPrev = 0.0
+    /// Samples that needed cutting into shorter steps to converge.
+    public private(set) var cutbacks = 0
+    /// Testing aid: off, a sample that won't converge is simply taken as it stands (the original behaviour).
+    public var cutBackEnabled = true
+    /// Output transformers are integrated by the θ-method a little past the trapezoidal rule (θ = ½). The leakage
+    /// inductance with the tubes' few picofarads makes a resonance far above the sample rate; the trapezoidal rule leaves
+    /// such a mode ringing at half the sample rate (throwing the power-tube plates hundreds of volts each step when
+    /// they cut off), where θ slightly above ½ lets it die away. In the audio band the difference is a fraction of a
+    /// percent. ngspice's trapezoidal rule rings the same way on these circuits; its Gear method doesn't.
+    static let theta = 0.55
+    let xSave: UnsafeMutablePointer<Double>
+    var capsSave: [CapEl] = [], indsSave: [IndEl] = [], xfmrsSave: [XfmrEl] = [], vactrolsSave: [VactrolEl] = []
+    var lfosSave: [LFOEl] = [], bbdsSave: [BBDEl] = [], bbdRingsSave: [UnsafeMutablePointer<Double>] = []
     public let n: Int
     public let netlist: Netlist
     public private(set) var potNames: [String] = []
@@ -214,6 +230,7 @@ public final class CircuitEngine {
         self.circuit = circuit
         self.sampleRate = sampleRate
         self.dt = 1 / sampleRate
+        self.h = 1 / sampleRate
         let net = Netlist.build(circuit)
         self.netlist = net
         if let p = net.problems.first(where: { $0.hasPrefix("Add") }) { throw CircuitError(p) }
@@ -492,6 +509,14 @@ public final class CircuitEngine {
         xPrev = .allocate(capacity: max(ns, 1)); xPrev.initialize(repeating: 0, count: max(ns, 1))
         warnings = warn + net.problems.filter { !$0.hasPrefix("Add") }
         dvLimit = max(0.5, vmax * 0.05)
+        xSave = .allocate(capacity: n); xSave.initialize(repeating: 0, count: n)
+        capsSave = Array(caps); indsSave = Array(inds); xfmrsSave = Array(xfmrs); vactrolsSave = Array(vactrols)
+        lfosSave = Array(lfos); bbdsSave = Array(bbds)
+        bbdRingsSave = bbds.map { b in
+            let r = UnsafeMutablePointer<Double>.allocate(capacity: b.mask + 1)
+            r.initialize(repeating: 0, count: b.mask + 1)
+            return r
+        }
         try solveOperatingPoint()
     }
 
@@ -506,6 +531,8 @@ public final class CircuitEngine {
             b?.deallocate()
         }
         for b in bbds { b.ring.deallocate() }
+        for r in bbdRingsSave { r.deallocate() }
+        xSave.deallocate()
         UnsafeMutableRawPointer(bbds.baseAddress)?.deallocate()
         G0.deallocate(); A.deallocate(); rhs0.deallocate(); rhs.deallocate(); x.deallocate(); perm.deallocate()
         K.deallocate(); As.deallocate(); rS.deallocate(); bS.deallocate(); Minv.deallocate(); Y.deallocate()
@@ -544,17 +571,17 @@ public final class CircuitEngine {
             conductance(G0, p.w, p.b, 1 / max(p.r * (1 - t), 0.5))
         }
         for i in caps.indices {
-            caps[i].geq = dcMode ? 0 : 2 * caps[i].c / dt
+            caps[i].geq = dcMode ? 0 : 2 * caps[i].c / h
             conductance(G0, caps[i].a, caps[i].b, caps[i].geq)
         }
         for i in inds.indices {
-            inds[i].geq = dcMode ? 1e3 : dt / (2 * inds[i].l)
+            inds[i].geq = dcMode ? 1e3 : h / (2 * inds[i].l)
             conductance(G0, inds[i].m, inds[i].b, inds[i].geq)
         }
         for t in xfmrs {
             for i in 0..<3 {
                 for j in 0..<3 {
-                    let g = dcMode ? (i == j ? 1e3 : 0) : 0.5 * dt * t.gm(i, j)
+                    let g = dcMode ? (i == j ? 1e3 : 0) : CircuitEngine.theta * h * t.gm(i, j)
                     if g == 0 { continue }
                     addG(G0, t.na(i), t.na(j), g); addG(G0, t.nb(i), t.nb(j), g)
                     addG(G0, t.na(i), t.nb(j), -g); addG(G0, t.nb(i), t.na(j), -g)
@@ -631,7 +658,7 @@ public final class CircuitEngine {
             for t in xfmrs {
                 for i in 0..<3 {
                     let pi = i == 0 ? t.iPrev.0 : (i == 1 ? t.iPrev.1 : t.iPrev.2)
-                    let ieq = pi + 0.5 * dt * (t.gm(i, 0) * t.vPrev.0 + t.gm(i, 1) * t.vPrev.1 + t.gm(i, 2) * t.vPrev.2)
+                    let ieq = pi + (1 - CircuitEngine.theta) * h * (t.gm(i, 0) * t.vPrev.0 + t.gm(i, 1) * t.vPrev.1 + t.gm(i, 2) * t.vPrev.2)
                     if t.na(i) >= 0 { rhs0[t.na(i)] -= ieq }
                     if t.nb(i) >= 0 { rhs0[t.nb(i)] += ieq }
                 }
@@ -1134,10 +1161,11 @@ public final class CircuitEngine {
         for i in xfmrs.indices {
             var t = xfmrs[i]
             let v0 = v(t.a.0) - v(t.b.0), v1 = v(t.a.1) - v(t.b.1), v2 = v(t.a.2) - v(t.b.2)
-            let s0 = v0 + t.vPrev.0, s1 = v1 + t.vPrev.1, s2 = v2 + t.vPrev.2
-            t.iPrev.0 += 0.5 * dt * (t.gamma.0 * s0 + t.gamma.1 * s1 + t.gamma.2 * s2)
-            t.iPrev.1 += 0.5 * dt * (t.gamma.3 * s0 + t.gamma.4 * s1 + t.gamma.5 * s2)
-            t.iPrev.2 += 0.5 * dt * (t.gamma.6 * s0 + t.gamma.7 * s1 + t.gamma.8 * s2)
+            let th = CircuitEngine.theta
+            let s0 = th * v0 + (1 - th) * t.vPrev.0, s1 = th * v1 + (1 - th) * t.vPrev.1, s2 = th * v2 + (1 - th) * t.vPrev.2
+            t.iPrev.0 += h * (t.gamma.0 * s0 + t.gamma.1 * s1 + t.gamma.2 * s2)
+            t.iPrev.1 += h * (t.gamma.3 * s0 + t.gamma.4 * s1 + t.gamma.5 * s2)
+            t.iPrev.2 += h * (t.gamma.6 * s0 + t.gamma.7 * s1 + t.gamma.8 * s2)
             t.vPrev = (v0, v1, v2)
             xfmrs[i] = t
         }
@@ -1146,7 +1174,7 @@ public final class CircuitEngine {
         for i in lfos.indices {
             let o = lfos[i]
             let u = min(max(v(o.cv) / o.vref, 0), 1)
-            var ph = o.phase + o.fmin * pow(o.fmax / o.fmin, u) * dt
+            var ph = o.phase + o.fmin * pow(o.fmax / o.fmin, u) * h
             if ph >= 1 { ph -= 1 }
             lfos[i].phase = ph
         }
@@ -1163,7 +1191,9 @@ public final class CircuitEngine {
     @inline(__always) func stepVactrol(_ i: Int) {
         var c = vactrols[i]
         let target = max(diodeCurrent(c.di), 0)
-        c.light += (target - c.light) * (target > c.light ? c.kOn : c.kOff)
+        var k = target > c.light ? c.kOn : c.kOff
+        if h != dt { k = 1 - pow(1 - k, h / dt) }   // a sub-step: the same time constant over a shorter step
+        c.light += (target - c.light) * k
         c.g = c.gDark + c.g10 * pow(c.light * 100, c.gamma)
         vactrols[i] = c
     }
@@ -1174,7 +1204,7 @@ public final class CircuitEngine {
         let vin = v(b.inp)
         let u = min(max(v(b.cv) / b.vref, 0), 1)
         let clock = b.fmax * pow(b.fmin / b.fmax, u)
-        let step = clock * dt
+        let step = clock * h
         b.phase += step
         // the chips run from a bias near half the supply; signals swinging more than about 2 V either side clip
         b.bias += (vin - b.bias) * b.biasCoef
@@ -1256,9 +1286,57 @@ public final class CircuitEngine {
     /// Advances one sample with input u (in input units) and returns the output in output units.
     @inline(__always) public func tick(_ u: Double) -> Double {
         buildRHS(u)
-        if !newton(maxIter: maxIterations, tol: tolerance) { nonConverged &+= 1 }
-        acceptStep()
+        xSave.update(from: x, count: n)
+        if newton(maxIter: maxIterations, tol: tolerance) {
+            acceptStep()
+        } else if cutBackEnabled {
+            cutBack(u)
+        } else {
+            nonConverged &+= 1
+            acceptStep()
+        }
+        uPrev = u
         return v(outputNode) * outputScale
+    }
+
+    /// Time-step cutback, as SPICE does: when a sample won't converge (a hard-driven power stage), go back to the
+    /// start of the sample and cross it in 8 shorter steps (64 if that isn't enough), the input rising along a
+    /// straight line. Samples that converge never come here, so it costs nothing until it's needed.
+    func cutBack(_ u: Double) {
+        for i in caps.indices { capsSave[i] = caps[i] }
+        for i in inds.indices { indsSave[i] = inds[i] }
+        for i in xfmrs.indices { xfmrsSave[i] = xfmrs[i] }
+        for i in vactrols.indices { vactrolsSave[i] = vactrols[i] }
+        for i in lfos.indices { lfosSave[i] = lfos[i] }
+        for i in bbds.indices { bbdsSave[i] = bbds[i]; bbdRingsSave[i].update(from: bbds[i].ring, count: bbds[i].mask + 1) }
+        var ok = false
+        for parts in [8, 64] {
+            if parts != 8 {
+                for i in caps.indices { caps[i] = capsSave[i] }
+                for i in inds.indices { inds[i] = indsSave[i] }
+                for i in xfmrs.indices { xfmrs[i] = xfmrsSave[i] }
+                for i in vactrols.indices { vactrols[i] = vactrolsSave[i] }
+                for i in lfos.indices { lfos[i] = lfosSave[i] }
+                for i in bbds.indices { bbds[i] = bbdsSave[i]; bbds[i].ring.update(from: bbdRingsSave[i], count: bbds[i].mask + 1) }
+            }
+            x.update(from: xSave, count: n)
+            resetLimiters()
+            h = dt / Double(parts)
+            stampLinear()
+            ok = true
+            for j in 1...parts {
+                buildRHS(uPrev + (u - uPrev) * Double(j) / Double(parts))
+                if !newton(maxIter: maxIterations, tol: tolerance) { ok = false }
+                acceptStep()
+            }
+            if ok { break }
+        }
+        h = dt
+        stampLinear()
+        // the predictor's history is whole samples: the one before this, then this one
+        for i in 0..<ns { xPrev[i] = xSave[nl + i] }
+        if !ok { nonConverged &+= 1 }
+        cutbacks &+= 1
     }
 
     /// Knobs, which can be fewer than pots: ganged pots share one.

@@ -20,4 +20,4 @@ two_stage_tube_preamp	Two-Stage Tube Preamp	-1
 british_stack_preamp	British Stack Preamp	-1
 high_gain_cascade_preamp	High-Gain Cascade Preamp	-1
 bass_tube_preamp	Bass Tube Preamp	-1
-british_50_w_head	British 50 W Head	12207
+british_50_w_head	British 50 W Head	-1

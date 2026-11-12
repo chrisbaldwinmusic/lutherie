@@ -14,6 +14,7 @@
 
 using namespace lutherie;
 
+
 int main (int argc, char** argv)
 {
     const juce::File dir (argc > 1 ? juce::String (argv[1]) : juce::File::getCurrentWorkingDirectory().getChildFile ("Tests/reference").getFullPathName());
@@ -28,6 +29,37 @@ int main (int argc, char** argv)
         if (bits.size() >= 3) swiftFirstNC[bits[0]] = bits[2].getIntValue();
     }
     int failures = 0;
+    // Accuracy of the time-step cutback: the British head driven hard (every knob at 0.8) at 96 kHz, against the same
+    // circuit stepped eight times finer all the way through. They must agree closely where the cutback works.
+    for (auto& c : circuits)
+    {
+        if (c.name != "British 50 W Head" && ! (std::getenv ("CAL") && (c.name == "High-Gain Cascade Preamp" || c.name == "Two-Transistor Fuzz" || c.name == "British Stack Preamp"))) continue;
+        auto run = [&c] (double rate, int every, int& cut, int& nc) {
+            CircuitEngine e (c, rate);
+            for (int k = 0; k < e.knobCount; ++k) e.setKnob (k, 0.8);
+            std::vector<double> out;
+            const int n = (int) (rate * 0.15);
+            for (int i = 0; i < n; ++i)
+            {
+                if (i % 32 == 0) e.applyKnobs();
+                const double t = i / rate;
+                const double y = e.tick (0.3 * std::sin (2 * M_PI * 220 * t) + 0.1 * std::sin (2 * M_PI * 1250 * t));
+                if (i % every == 0) out.push_back (y);
+            }
+            cut = e.cutbacks; nc = e.nonConverged;
+            return out;
+        };
+        int cut1 = 0, nc1 = 0, cut8 = 0, nc8 = 0;
+        const auto a = run (96'000, 1, cut1, nc1), b = run (768'000, 8, cut8, nc8);
+        double err = 0, sig = 0;
+        for (size_t i = a.size() / 3; i < std::min (a.size(), b.size()); ++i) { err += (a[i] - b[i]) * (a[i] - b[i]); sig += b[i] * b[i]; }
+        const double db = 10 * std::log10 (err / std::max (sig, 1e-30));
+        const bool ok = nc1 == 0 && db < -20;
+        if (! ok) ++failures;
+        if (c.name != "British 50 W Head") { std::printf ("     calibration %s: 96 vs 768 kHz error %.1f dB (cut back %d)\n", c.name.c_str(), db, cut1); continue; }
+        std::printf ("%s cutback: British head flat out at 96 kHz (cut back %d, failed %d) against 768 kHz (cut back %d): error %.1f dB\n",
+                     ok ? "ok  " : "FAIL", cut1, nc1, cut8, db);
+    }
     const double rate = 96'000;
     const int n = (int) (rate * 0.25);
     for (auto& c : circuits)
@@ -44,6 +76,8 @@ int main (int argc, char** argv)
             if (std::getenv ("FULL")) e.useFullSolver = true;
             if (std::getenv ("NOPRED")) e.predictor = false;
             if (std::getenv ("NOEARLY")) e.earlyExit = false;
+            if (auto* t = std::getenv ("TOL")) e.tolerance = std::atof (t);
+            if (auto* it = std::getenv ("ITER")) e.maxIterations = std::atoi (it);
             if (std::getenv ("OP") && c.name == std::getenv ("OP"))
                 for (auto& [name, val] : e.operatingPoint()) std::printf ("  %s = %.4f\n", name.c_str(), val);
             double maxDiff = 0, peak = 1e-12;
@@ -54,6 +88,7 @@ int main (int argc, char** argv)
                 const double t = i / rate;
                 if (i == n / 2) for (int k = 0; k < e.knobCount; ++k) e.setKnob (k, 0.8);
                 if (i % 32 == 0) e.applyKnobs();
+                if (auto* tr = std::getenv ("TRACE")) e.traceNewton = c.name == std::getenv ("OP") && i == std::atoi (tr);
                 const double y = e.tick (0.3 * std::sin (2 * M_PI * 220 * t) + 0.1 * std::sin (2 * M_PI * 1250 * t));
                 maxDiff = std::max (maxDiff, std::abs ((double) (float) y - want[i]));
                 if (firstBad < 0 && std::abs ((double) (float) y - want[i]) > 1e-4) firstBad = i;
@@ -65,12 +100,15 @@ int main (int argc, char** argv)
             // A circuit where the Swift engine's Newton also gives up must give up at the same sample and match until then.
             const int swiftNC = swiftFirstNC.count (slug) ? swiftFirstNC[slug] : -1;
             const bool sharedFailure = swiftNC >= 0 && firstNC == swiftNC && firstBad >= swiftNC;
-            const bool ok = db < -80 || sharedFailure;
+            // Sub-stepped samples stop at Newton's tolerance by slightly different routes in the two engines, so a
+            // circuit that needed them is held to -50 dB rather than -80.
+            const bool ok = db < (e.cutbacks > 0 ? -50 : -80) || sharedFailure;
             if (sharedFailure && db >= -80)
                 std::printf ("note %s: both engines stop converging at sample %d and drift apart after it\n", c.name.c_str(), swiftNC);
             if (! ok) { ++failures; std::printf ("  first differs at sample %d, first non-converged at %d (Swift %d)\n", firstBad, firstNC, swiftNC); }
-            std::printf ("%s %-30s difference %7.1f dB of peak   %5.1fx real time at 96 kHz   non-converged %d\n",
-                         ok ? "ok  " : "FAIL", c.name.c_str(), db, 0.25 / secs, e.nonConverged);
+            std::printf ("%s %-30s difference %7.1f dB of peak   %5.1fx real time at 96 kHz   non-converged %d  cut back %d  %.2f it/sample %.2f factorisations/sample\n",
+                         ok ? "ok  " : "FAIL", c.name.c_str(), db, 0.25 / secs, e.nonConverged, e.cutbacks,
+                         (double) e.iterationCount / n, (double) e.factorCount / n);
         }
         catch (const std::exception& ex) { std::printf ("FAIL %s: %s\n", c.name.c_str(), ex.what()); ++failures; }
     }

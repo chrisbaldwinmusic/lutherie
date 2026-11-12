@@ -23,6 +23,8 @@ public:
 
     const Circuit circuit;
     const double sampleRate, dt;
+    /// Samples that needed cutting into shorter steps to converge (for checks and the CPU readout).
+    int cutbacks = 0;
     int n = 0;
     Netlist netlist;
     std::vector<std::string> potNames, potLabels, warnings;
@@ -36,6 +38,8 @@ public:
     double tolerance = 1e-6;
     bool useFullSolver = false;
     int maxIterations = 40;
+    bool traceNewton = false;     // debugging: print every Newton iteration
+    bool cutBackEnabled = true;   // testing aid: off, a sample that won't converge is taken as it stands
     int64_t iterationCount = 0, factorCount = 0;
 
     /// Advances one sample with input u (in input units) and returns the output in output units.
@@ -51,6 +55,7 @@ public:
     void recover();
 
     std::vector<std::pair<std::string, double>> operatingPoint() const;
+    std::string nameOfIndex (int idx) const;
     std::vector<double> frequencyResponse (const std::vector<double>& freqs);
 
 private:
@@ -110,6 +115,13 @@ private:
     std::vector<VactrolEl> vactrols;
     std::vector<BBDEl> bbds;
     std::vector<LFOEl> lfos;
+    // copies of the stepping state, for a sample that has to be crossed again in finer steps
+    std::vector<CapEl> capsSave;
+    std::vector<IndEl> indsSave;
+    std::vector<XfmrEl> xfmrsSave;
+    std::vector<VactrolEl> vactrolsSave;
+    std::vector<BBDEl> bbdsSave;
+    std::vector<LFOEl> lfosSave;
 
     int inputNode = -1, outputNode = -1;
     double inputG = 1e-3, inputScale = 1, outputScale = 1, outputG = 1e-6;
@@ -119,7 +131,9 @@ private:
     std::vector<int> perm;
     bool linear = false;
     std::vector<int> nodeMap;
-    std::vector<double> K, As, rS, bS, Minv, Y, zL, LLw, xPrev;
+    std::vector<double> K, As, rS, bS, Minv, Y, zL, LLw, xPrev, xSave, xPrevSave;
+    double h;           // the step being taken: dt, or a fraction of it while cutting back
+    double uPrev = 0;   // last sample's input, to interpolate across a cut-back sample
     std::vector<int> permS, permL;
     bool reducedValid = false;
 

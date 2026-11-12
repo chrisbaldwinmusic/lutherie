@@ -140,12 +140,13 @@ for circuit in Presets.pedals + Presets.amps where !circuit.name.hasPrefix("Empt
         let tail = output[(frames / 2)...]
         let mean = tail.reduce(0, +) / Float(tail.count)
         let peak = tail.map { abs($0 - mean) }.max() ?? 0
-        print(String(format: "  220 Hz 0.3 V in: output peak %.3f (DC %.3f)  speed %.1fx real time  non-converged %d",
-                     peak, mean, Double(seconds) / secs, e.nonConverged))
+        print(String(format: "  220 Hz 0.3 V in: output peak %.3f (DC %.3f)  speed %.1fx real time  non-converged %d  cut back %d",
+                     peak, mean, Double(seconds) / secs, e.nonConverged, e.cutbacks))
         if !(peak.isFinite) || peak == 0 { failures += 1; print("  FAIL: no output") }
         // The reduced solver must give the same samples as solving the whole matrix every iteration.
         let ref = try CircuitEngine(circuit: circuit, sampleRate: sr)
         ref.useFullSolver = true
+        ref.cutBackEnabled = false
         ref.earlyExit = false
         ref.tolerance = 1e-9
         var refOut = [Float](repeating: 0, count: frames)

@@ -5,7 +5,7 @@
     "parts" : [
       {
         "flipped" : false,
-        "id" : "6789FE81-A360-4294-987E-0ECB89C348B3",
+        "id" : "08146EF9-FCD9-4BB7-9DAB-9180B0C7A810",
         "kind" : "input",
         "model" : "",
         "name" : "IN",
@@ -22,7 +22,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3DD0E8C5-7EE6-4155-B0B1-8351CFCF2AAF",
+        "id" : "9B93C91D-28EE-4781-BF9A-6972756CF992",
         "kind" : "resistor",
         "model" : "",
         "name" : "R1",
@@ -38,7 +38,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F350AD31-54C0-4438-A59B-2869F8F9EAAC",
+        "id" : "127F5FEB-1850-40D8-BB68-D031961AB677",
         "kind" : "resistor",
         "model" : "",
         "name" : "R2",
@@ -54,7 +54,7 @@
       },
       {
         "flipped" : false,
-        "id" : "DD9BA8F1-28A9-4611-B10B-05C14746B299",
+        "id" : "B8350211-4C40-45F8-9BFC-6CC9AFC8CAEA",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V1",
@@ -70,7 +70,7 @@
       },
       {
         "flipped" : false,
-        "id" : "9EC8BADE-E2C2-45DD-AA4A-AD90D7129E66",
+        "id" : "71DF47A1-3054-4907-BF49-6647081CECAA",
         "kind" : "resistor",
         "model" : "",
         "name" : "R3",
@@ -86,7 +86,7 @@
       },
       {
         "flipped" : false,
-        "id" : "FFF487BD-00F2-4E8B-9426-0B5AA5172077",
+        "id" : "20C7744F-1DA9-44A3-B9B6-DC2F98C9929F",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C1",
@@ -102,7 +102,7 @@
       },
       {
         "flipped" : false,
-        "id" : "0E69F975-E6C5-426C-BD35-812B639B2F28",
+        "id" : "68960CF1-93D7-4584-8D22-BB857A9701DC",
         "kind" : "resistor",
         "model" : "",
         "name" : "R4",
@@ -118,7 +118,7 @@
       },
       {
         "flipped" : false,
-        "id" : "0BA5BD0A-5800-4F40-9BE8-800399D62E86",
+        "id" : "ED17894B-DFEA-416E-BDE9-B6CE3ACD39CE",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C2",
@@ -134,7 +134,7 @@
       },
       {
         "flipped" : false,
-        "id" : "9B173CD7-0E03-485A-BB15-0C9294E2BFBA",
+        "id" : "26D80EE2-302A-4D5E-9C9B-9417E035955B",
         "kind" : "ground",
         "model" : "",
         "name" : "GND1",
@@ -150,7 +150,7 @@
       },
       {
         "flipped" : false,
-        "id" : "FAEC7A3E-61FE-4350-A3A0-7179424D5D60",
+        "id" : "66971830-11D6-4B12-9AA8-F328E685A63A",
         "kind" : "ground",
         "model" : "",
         "name" : "GND2",
@@ -166,7 +166,7 @@
       },
       {
         "flipped" : false,
-        "id" : "10389B2B-05AC-4349-A0A1-D90E556BE2FD",
+        "id" : "1610E974-8558-4133-BAEC-666A5C536170",
         "kind" : "ground",
         "model" : "",
         "name" : "GND3",
@@ -182,7 +182,7 @@
       },
       {
         "flipped" : false,
-        "id" : "69264E57-BBF7-43B2-9E29-BE9B64AF9906",
+        "id" : "3DE7E212-7F8F-4331-A272-8900782864FA",
         "kind" : "supply",
         "model" : "",
         "name" : "VS4",
@@ -199,7 +199,7 @@
       },
       {
         "flipped" : true,
-        "id" : "8E0677FB-3D9E-455A-BF8E-17BDBFD47D4C",
+        "id" : "866057C9-601A-406F-B4B6-DDBD4F53C44F",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR1",
@@ -216,7 +216,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5D5D0ED0-35EB-4BE4-AE0B-DC74AABAF7AF",
+        "id" : "F9595E15-072F-42DE-BC5C-1F7336F417C6",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V2",
@@ -232,7 +232,7 @@
       },
       {
         "flipped" : false,
-        "id" : "DE277503-16EF-41CD-B0EE-9D2C029EB55B",
+        "id" : "473A990B-88F8-493A-9AF3-BCF1BF8EFD25",
         "kind" : "resistor",
         "model" : "",
         "name" : "R5",
@@ -248,7 +248,7 @@
       },
       {
         "flipped" : false,
-        "id" : "0B42294F-8D17-4FBD-9844-F340BA03DBD4",
+        "id" : "EA43E164-807A-45D8-98F9-2F7567DEDBE5",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C3",
@@ -264,7 +264,7 @@
       },
       {
         "flipped" : false,
-        "id" : "436FB819-61AF-492B-BDFC-250C48EA4F79",
+        "id" : "D8E68618-B61D-4D04-878A-8C40AF2A0455",
         "kind" : "resistor",
         "model" : "",
         "name" : "R6",
@@ -280,7 +280,7 @@
       },
       {
         "flipped" : false,
-        "id" : "64B832A4-1B86-4942-B529-875C4F4C4B2E",
+        "id" : "CBD7AC09-86A8-4A7D-9322-183D74581904",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C4",
@@ -296,7 +296,7 @@
       },
       {
         "flipped" : false,
-        "id" : "89986BF6-3A3E-4185-A621-C621F9477D72",
+        "id" : "06E0F0F3-3875-401C-BFD8-31FCE7EE0A99",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C5",
@@ -312,7 +312,7 @@
       },
       {
         "flipped" : false,
-        "id" : "11B09B33-3379-46C3-A0CB-28B812557F40",
+        "id" : "62333FB1-AA3D-40A6-95AB-A4F9C0253F9F",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR2",
@@ -329,7 +329,7 @@
       },
       {
         "flipped" : true,
-        "id" : "F57C57A5-BA16-41CA-9E62-6CB32FEDF286",
+        "id" : "D8E15CEF-F93C-4964-B696-E329F1FE34BC",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR3",
@@ -346,7 +346,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C42FBE57-8123-44E6-B972-2F6D06418E52",
+        "id" : "3A6435CE-E6AD-48FF-9719-50CA60B58B1F",
         "kind" : "output",
         "model" : "",
         "name" : "OUT",
@@ -363,7 +363,7 @@
       },
       {
         "flipped" : false,
-        "id" : "58AEFFAE-6B2A-4DAF-98DB-BA21CC6E7CCF",
+        "id" : "CBD0F59A-93F7-4AE9-8137-9DC25903BD67",
         "kind" : "ground",
         "model" : "",
         "name" : "GND5",
@@ -379,7 +379,7 @@
       },
       {
         "flipped" : false,
-        "id" : "9CB79465-2216-48EE-815B-4FA06D337D96",
+        "id" : "651EFD97-3821-4990-937A-C32A1BBBC6C7",
         "kind" : "ground",
         "model" : "",
         "name" : "GND6",
@@ -395,7 +395,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A18D2723-977F-468C-8011-F50173118193",
+        "id" : "D7B9B905-310D-4983-BCD1-7E25FF6270FA",
         "kind" : "ground",
         "model" : "",
         "name" : "GND7",
@@ -411,7 +411,7 @@
       },
       {
         "flipped" : false,
-        "id" : "0AE21E95-2F01-4B53-835E-DE1E622C8372",
+        "id" : "8FD045C1-A877-415A-8A64-E260F4400DDB",
         "kind" : "supply",
         "model" : "",
         "name" : "VS8",
@@ -428,7 +428,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C4FAD30D-FE85-4930-9D2F-9CA868B781F7",
+        "id" : "6CC1611E-F111-47A8-8E26-8841BC76BA61",
         "kind" : "ground",
         "model" : "",
         "name" : "GND9",
@@ -444,7 +444,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2E485736-EB6F-4342-8D36-26BE17CCD45D",
+        "id" : "864F7406-C850-4774-BEDC-C7D712467537",
         "kind" : "ground",
         "model" : "",
         "name" : "GND10",
@@ -469,7 +469,7 @@
           "x" : 2,
           "y" : 0
         },
-        "id" : "29A69BEB-6035-4EFC-BB20-B78BBED2D4D5"
+        "id" : "327A4DB8-9A74-42C5-8978-125BD453A89D"
       },
       {
         "a" : {
@@ -480,7 +480,7 @@
           "x" : 3,
           "y" : 0
         },
-        "id" : "9B80D6BE-4AD8-4F5F-B818-58FB369ED407"
+        "id" : "042A803B-4198-43C3-BEE6-090F48A4069E"
       },
       {
         "a" : {
@@ -491,7 +491,7 @@
           "x" : 8,
           "y" : 0
         },
-        "id" : "4ABED511-8A81-4531-B786-B27E3F330D99"
+        "id" : "7E0B9D5A-4D24-482F-801B-521D099DFFDA"
       },
       {
         "a" : {
@@ -502,7 +502,7 @@
           "x" : 13,
           "y" : 2
         },
-        "id" : "3B3A31BA-8D37-4294-8B59-43C73B15B905"
+        "id" : "65100E1B-DBAA-49E0-B9CD-07A565A26681"
       },
       {
         "a" : {
@@ -513,7 +513,7 @@
           "x" : 13,
           "y" : -2
         },
-        "id" : "586665F9-53A4-43E8-92B0-6A6BFFDB1660"
+        "id" : "08116AA5-2CD0-4F96-9994-2EB0C69E375E"
       },
       {
         "a" : {
@@ -524,7 +524,7 @@
           "x" : 19,
           "y" : -2
         },
-        "id" : "DCB33BDB-1C0F-471D-A0DE-F68603E5786C"
+        "id" : "99EF0355-DB37-4243-894E-09F332086ED0"
       },
       {
         "a" : {
@@ -535,7 +535,7 @@
           "x" : 23,
           "y" : 0
         },
-        "id" : "C98CED42-5437-4C4D-964E-EBF4AD7428A8"
+        "id" : "1519A029-7D8E-42B3-AB20-D2413DB8B175"
       },
       {
         "a" : {
@@ -546,7 +546,7 @@
           "x" : 28,
           "y" : 2
         },
-        "id" : "02E5F98A-4834-4A95-A69B-D838D874AE29"
+        "id" : "CD475BB3-DF49-4B3F-BE40-25B0648DB54F"
       },
       {
         "a" : {
@@ -557,7 +557,7 @@
           "x" : 28,
           "y" : -2
         },
-        "id" : "5A09D03F-D2B2-42CE-8793-40DF819446C6"
+        "id" : "E7AB9AE9-14AF-40E5-88B4-ED62FB8D4D49"
       },
       {
         "a" : {
@@ -568,7 +568,7 @@
           "x" : 34,
           "y" : -2
         },
-        "id" : "2ECA28C3-8D51-4C3D-8FDA-50D9E03FB86E"
+        "id" : "DC282278-97B5-4DA4-8120-E20DC5D8B444"
       },
       {
         "a" : {
@@ -579,7 +579,7 @@
           "x" : 38,
           "y" : -2
         },
-        "id" : "6E90BB40-238F-4E9D-8403-E9263F06DF78"
+        "id" : "0F248EAF-2518-49B9-AFB8-313DEC97C3A8"
       },
       {
         "a" : {
@@ -590,7 +590,7 @@
           "x" : 36,
           "y" : 6
         },
-        "id" : "FC76E08B-9EE4-498F-A151-18824BE5221C"
+        "id" : "667212F2-1E03-4ED1-A2A0-46450DA88414"
       },
       {
         "a" : {
@@ -601,7 +601,7 @@
           "x" : 34,
           "y" : 6
         },
-        "id" : "08C35ADE-BD6C-4FF6-B2C8-8C3031D0185B"
+        "id" : "805F86FC-E95A-47D2-A737-1DC460424A21"
       },
       {
         "a" : {
@@ -612,7 +612,7 @@
           "x" : 42,
           "y" : 0
         },
-        "id" : "994A8A94-C422-46B5-8BCB-7E53372888B5"
+        "id" : "141B6517-48A4-4144-B612-50A7EE49A62D"
       }
     ]
   },
@@ -622,7 +622,7 @@
     "parts" : [
       {
         "flipped" : false,
-        "id" : "21F2109F-A12B-4409-A3A7-7124CC1DBFF5",
+        "id" : "AAF55FAF-FEA7-45D7-AC18-32096CF5EEC1",
         "kind" : "input",
         "model" : "",
         "name" : "IN",
@@ -639,7 +639,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C15F1CE8-F613-469B-A7C9-3096FDBFE5CF",
+        "id" : "B833D252-1979-4589-AB83-B9A2428E12E2",
         "kind" : "resistor",
         "model" : "",
         "name" : "R1",
@@ -655,7 +655,7 @@
       },
       {
         "flipped" : false,
-        "id" : "CA8416A7-D0C6-44B7-B3B9-B35CF4AEE65D",
+        "id" : "9A973CFA-6598-448C-A543-F6810F914894",
         "kind" : "ground",
         "model" : "",
         "name" : "GND1",
@@ -671,7 +671,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5B45C1E2-F29B-4A8A-84E9-EC47A79506C3",
+        "id" : "D5A42F26-C8E8-49CA-85A1-0B5266FF4E37",
         "kind" : "resistor",
         "model" : "",
         "name" : "R2",
@@ -687,7 +687,7 @@
       },
       {
         "flipped" : false,
-        "id" : "12B56D9C-C412-412F-BA76-9F33897A321C",
+        "id" : "A74B0B78-EC03-456A-997B-80F29482B237",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V1",
@@ -703,7 +703,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B142E215-6CE0-4C38-B1A9-79C1C91C9158",
+        "id" : "684488DC-DC6D-45C3-A6EA-1D8D643558AC",
         "kind" : "resistor",
         "model" : "",
         "name" : "R3",
@@ -719,7 +719,7 @@
       },
       {
         "flipped" : false,
-        "id" : "CCD29357-1CF2-4586-8A6C-A2BC234CC062",
+        "id" : "6D1B8858-8C02-4BAC-8036-37C88D39A4C0",
         "kind" : "ground",
         "model" : "",
         "name" : "GND2",
@@ -735,7 +735,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7A450E8D-403F-4A41-B8AF-C39D25700A03",
+        "id" : "71FDA628-D876-48BB-83FE-72BB0A29F449",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C1",
@@ -751,7 +751,7 @@
       },
       {
         "flipped" : false,
-        "id" : "100A82F3-7A45-4B13-8E2B-3648CA4693F9",
+        "id" : "955B905C-E3CD-4CF3-B66F-826B6F58D81E",
         "kind" : "ground",
         "model" : "",
         "name" : "GND3",
@@ -767,7 +767,7 @@
       },
       {
         "flipped" : false,
-        "id" : "9FA55BFF-511D-4AB6-9EFE-62D51AEC8695",
+        "id" : "0613C4D2-3EEC-47E8-8C30-1DD92F7E80A7",
         "kind" : "resistor",
         "model" : "",
         "name" : "R4",
@@ -783,7 +783,7 @@
       },
       {
         "flipped" : false,
-        "id" : "CC849CA0-E684-4A41-AFB2-6C34FB700C0C",
+        "id" : "741CC52C-F62D-4AF9-8265-818E4CC002E9",
         "kind" : "supply",
         "model" : "",
         "name" : "VB1",
@@ -800,7 +800,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5FAAA14C-9B16-484F-8CF0-53F577071638",
+        "id" : "EFBFB12E-38C7-4CAF-8DB9-A2958DDC3505",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C2",
@@ -816,7 +816,7 @@
       },
       {
         "flipped" : true,
-        "id" : "D3F4EEDF-768C-482F-999D-7AD21AB4EAEF",
+        "id" : "31D578B6-6EC1-458C-8932-3BEC24288EC0",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR1",
@@ -833,7 +833,7 @@
       },
       {
         "flipped" : false,
-        "id" : "1B573886-DD90-4FC8-BB45-94A2B3306060",
+        "id" : "6BAAD4AF-7637-4876-81E8-C8D43A459700",
         "kind" : "ground",
         "model" : "",
         "name" : "GND4",
@@ -849,7 +849,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F3F732B8-2654-4332-B2B0-5CC3EB30BDC2",
+        "id" : "A735D70B-D643-4495-8352-82C2309CCCF2",
         "kind" : "resistor",
         "model" : "",
         "name" : "R5",
@@ -865,7 +865,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7ED940C6-FA39-427D-99C4-381F0B02D0D4",
+        "id" : "6FE12D18-9E4A-4EAB-B3A6-CB984E867FBC",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V2",
@@ -881,7 +881,7 @@
       },
       {
         "flipped" : false,
-        "id" : "AFC429D0-99CC-48BD-B15C-39E05337D6E3",
+        "id" : "5232977C-3FAD-4A2B-911B-56DF7CD7D780",
         "kind" : "resistor",
         "model" : "",
         "name" : "R6",
@@ -897,7 +897,7 @@
       },
       {
         "flipped" : false,
-        "id" : "34367CF6-3935-4903-8EDF-EE0D8ECC5EAF",
+        "id" : "7E894A3A-647F-45CB-8560-2F9EC39F0582",
         "kind" : "ground",
         "model" : "",
         "name" : "GND5",
@@ -913,7 +913,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5E48C7AD-19EE-4B55-ADC2-8148D5C607AF",
+        "id" : "A63713C7-3699-4FF5-A651-DD28FBDB668F",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C3",
@@ -929,7 +929,7 @@
       },
       {
         "flipped" : false,
-        "id" : "483DDBAD-1860-4C65-86CD-41ED40AA52A9",
+        "id" : "6292B758-A384-4536-966F-DB9D7A23DC2D",
         "kind" : "ground",
         "model" : "",
         "name" : "GND6",
@@ -945,7 +945,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F61D5525-ABD8-406B-8C69-EA89B5BFB12D",
+        "id" : "1C61D19D-E338-4679-BBB0-7832C940DF09",
         "kind" : "resistor",
         "model" : "",
         "name" : "R7",
@@ -961,7 +961,7 @@
       },
       {
         "flipped" : false,
-        "id" : "EBC6FC87-6F47-436A-9DCB-FA535AC5ABEB",
+        "id" : "25A4342B-7715-4404-83EE-9E599ABA0A22",
         "kind" : "supply",
         "model" : "",
         "name" : "VB2",
@@ -978,7 +978,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7FCC0689-95DC-4F01-92D9-2F15B17D9D5C",
+        "id" : "E681D82E-6E3D-4468-8545-582CF68447D0",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C4",
@@ -994,7 +994,7 @@
       },
       {
         "flipped" : false,
-        "id" : "243CB134-7F47-433F-99C5-282C647150B6",
+        "id" : "5F8E33B3-4E42-4291-9918-C2E415B18844",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR2",
@@ -1011,7 +1011,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A2192DC8-62FA-4160-ACC7-F08602DFE793",
+        "id" : "0130378C-9283-4F20-B982-41C437621186",
         "kind" : "resistor",
         "model" : "",
         "name" : "R8",
@@ -1027,7 +1027,7 @@
       },
       {
         "flipped" : false,
-        "id" : "8B130B54-AD8C-4CF7-AEDD-B229E070A8F5",
+        "id" : "6CBC806B-05D7-4940-867B-ED81EE1A0C43",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C5",
@@ -1043,7 +1043,7 @@
       },
       {
         "flipped" : false,
-        "id" : "4141C589-EE66-4416-A5B5-FA6C3C944A49",
+        "id" : "7CA0DF4F-EB0C-4924-B12E-1D01359A615B",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR3",
@@ -1060,7 +1060,7 @@
       },
       {
         "flipped" : false,
-        "id" : "8DFC445F-E1BC-4460-9679-261B19905F68",
+        "id" : "9B10CC3D-1105-4980-8954-28F6DDC9DC26",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C6",
@@ -1076,7 +1076,7 @@
       },
       {
         "flipped" : false,
-        "id" : "951193AF-E64F-4753-BB03-1153D5A543A7",
+        "id" : "C4797144-28E5-4920-A3C6-AB288AF94A74",
         "kind" : "pot",
         "model" : "B",
         "name" : "VR4",
@@ -1093,7 +1093,7 @@
       },
       {
         "flipped" : false,
-        "id" : "EF883DE9-8A28-4250-BDBE-FAD895BA0D73",
+        "id" : "E42C30F6-DD1D-458E-A523-0DD0D3C02276",
         "kind" : "ground",
         "model" : "",
         "name" : "GND7",
@@ -1109,7 +1109,7 @@
       },
       {
         "flipped" : true,
-        "id" : "B3A88F45-5268-4B1E-899D-D1B7DDD692B8",
+        "id" : "A84D4BD5-7F1C-4F13-B046-32897707A5A1",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR5",
@@ -1126,7 +1126,7 @@
       },
       {
         "flipped" : false,
-        "id" : "AFA6A99B-F7EE-4ACC-92BB-3AD72CD45212",
+        "id" : "2E869047-C6B0-43CD-B9A1-02D81FD19024",
         "kind" : "ground",
         "model" : "",
         "name" : "GND8",
@@ -1142,7 +1142,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7E17650C-E34B-43F3-A8A8-65753849703A",
+        "id" : "743B3189-C05C-411F-B7DA-05D10CCF44FC",
         "kind" : "output",
         "model" : "",
         "name" : "OUT",
@@ -1168,7 +1168,7 @@
           "x" : 2,
           "y" : 0
         },
-        "id" : "48004F8E-E7EC-455B-B8F9-6DE443D6DBD7"
+        "id" : "F24B8F5E-0A37-4C32-AAA5-B3A2FE858B6B"
       },
       {
         "a" : {
@@ -1179,7 +1179,7 @@
           "x" : 11,
           "y" : 2
         },
-        "id" : "E6A0C00E-788F-4850-8DAB-0B4EEA866977"
+        "id" : "F586C6DE-B629-4387-80D6-A04F49C532CA"
       },
       {
         "a" : {
@@ -1190,7 +1190,7 @@
           "x" : 11,
           "y" : -2
         },
-        "id" : "20EBE76F-2861-45B3-B096-9066F25E63AF"
+        "id" : "75D4A5A9-87B9-4191-B2C2-09183AE35E63"
       },
       {
         "a" : {
@@ -1201,7 +1201,7 @@
           "x" : 26,
           "y" : 2
         },
-        "id" : "EF278D55-75E1-4D69-A4C1-FA8521F2458B"
+        "id" : "D49D6F05-8B53-4F8B-9749-3D0D538FCAD2"
       },
       {
         "a" : {
@@ -1212,7 +1212,7 @@
           "x" : 28,
           "y" : -2
         },
-        "id" : "7C1DE010-1A3E-4FF1-8C2B-66092B1E0122"
+        "id" : "17FBB2DC-5A7E-4572-A7D7-C49413E43A3E"
       },
       {
         "a" : {
@@ -1223,7 +1223,7 @@
           "x" : 28,
           "y" : -8
         },
-        "id" : "1535F48B-2E88-4E83-8BF1-AD89A7BCA469"
+        "id" : "89F8F1C7-9FAA-4626-A2C9-68C69234C54D"
       },
       {
         "a" : {
@@ -1234,7 +1234,7 @@
           "x" : 28,
           "y" : 2
         },
-        "id" : "B58F9390-CF39-46CF-938C-DF15DAF0133D"
+        "id" : "8794889E-4B85-4BF7-806D-C509FAAEEDB4"
       },
       {
         "a" : {
@@ -1245,7 +1245,7 @@
           "x" : 32,
           "y" : -2
         },
-        "id" : "E163817A-C421-4E6A-8807-B2DF6F4468CD"
+        "id" : "D3A9BA1E-91AE-4222-BE4A-3ACBA69010EB"
       },
       {
         "a" : {
@@ -1256,7 +1256,7 @@
           "x" : 34,
           "y" : -4
         },
-        "id" : "F7A178FC-5D2B-4B4E-A527-B670BA8CAB3A"
+        "id" : "5F6FAB10-0EE0-48CE-9B0B-A1A65E76A0FF"
       },
       {
         "a" : {
@@ -1267,7 +1267,7 @@
           "x" : 34,
           "y" : -2
         },
-        "id" : "5A81F212-DE1A-43F5-9EE1-443E0779F50B"
+        "id" : "098E9E72-31A8-445E-9A87-1E097503766B"
       },
       {
         "a" : {
@@ -1278,7 +1278,7 @@
           "x" : 34,
           "y" : -4
         },
-        "id" : "2B37A619-2285-4BF5-AD7E-9FB68CA86C32"
+        "id" : "AA31246D-3080-47B0-9FCF-0629E57D1475"
       },
       {
         "a" : {
@@ -1289,7 +1289,7 @@
           "x" : 38,
           "y" : 2
         },
-        "id" : "A0A53D10-6AB6-4E30-9CA8-427753FFB305"
+        "id" : "0321D510-3642-45C3-9A09-9D6246B7704C"
       },
       {
         "a" : {
@@ -1300,7 +1300,7 @@
           "x" : 38,
           "y" : -2
         },
-        "id" : "A0257F3E-ECDB-4348-B9A3-79400400837A"
+        "id" : "E5A1FF44-9E50-4DD8-81E1-F6F69B2DFD8F"
       },
       {
         "a" : {
@@ -1311,7 +1311,7 @@
           "x" : 40,
           "y" : -4
         },
-        "id" : "EA9E1300-11FB-427D-ACC4-A875559B24D4"
+        "id" : "2507EBC6-A69F-4F2A-A8A6-18B0B8A49F54"
       },
       {
         "a" : {
@@ -1322,7 +1322,7 @@
           "x" : 44,
           "y" : -6
         },
-        "id" : "F4DC7576-AB99-4823-A2E1-B10C2C20F5BE"
+        "id" : "41155E83-7474-4046-8852-7725264D821D"
       },
       {
         "a" : {
@@ -1333,7 +1333,7 @@
           "x" : 44,
           "y" : -4
         },
-        "id" : "419CEBE3-2F50-40B3-8D2D-9C7D9B3D970F"
+        "id" : "6A133B08-5244-4AA0-8ACD-3C65ACC4A67B"
       },
       {
         "a" : {
@@ -1344,7 +1344,7 @@
           "x" : 34,
           "y" : -10
         },
-        "id" : "29332064-23EC-401E-8426-A33CD93FD257"
+        "id" : "CD27EA4F-B72D-4E47-807E-C26276B9A135"
       },
       {
         "a" : {
@@ -1355,7 +1355,7 @@
           "x" : 48,
           "y" : -10
         },
-        "id" : "92946D0E-33F6-45A9-8ADC-AF1153B826CF"
+        "id" : "E24734B7-5064-4F78-81C2-F44581ECC988"
       },
       {
         "a" : {
@@ -1366,7 +1366,7 @@
           "x" : 52,
           "y" : -8
         },
-        "id" : "01F60CF9-5451-4B84-9A8D-6D8C9C50E91B"
+        "id" : "AC4FD4F2-2831-4573-A538-092449408900"
       }
     ]
   },
@@ -1376,7 +1376,7 @@
     "parts" : [
       {
         "flipped" : false,
-        "id" : "23675484-DBA1-439A-AE71-4DF2C85E45CD",
+        "id" : "B58C956F-3302-49C5-A0DF-2955FC925231",
         "kind" : "input",
         "model" : "",
         "name" : "IN",
@@ -1393,7 +1393,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E494B9B8-DE4D-4C19-A1D5-DA9F85F2973B",
+        "id" : "F350E69B-3526-4AE2-B7D6-C9E69A08F8B5",
         "kind" : "resistor",
         "model" : "",
         "name" : "R1",
@@ -1409,7 +1409,7 @@
       },
       {
         "flipped" : false,
-        "id" : "ED90E46A-8E8C-45EB-BA89-FE998AF132A0",
+        "id" : "ACAF39CF-5E77-4BD9-811F-DA546DF2F4C4",
         "kind" : "resistor",
         "model" : "",
         "name" : "R2",
@@ -1425,7 +1425,7 @@
       },
       {
         "flipped" : false,
-        "id" : "8B1D633A-64C4-4C35-8180-4B34BEA912E0",
+        "id" : "64F4B73E-1EA9-4B51-8242-F78C59D7659D",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V1",
@@ -1441,7 +1441,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5F8338AA-833D-4A68-A5D7-7D340C46785C",
+        "id" : "BF390B65-BF82-4DD1-9873-9E10725C5F5C",
         "kind" : "resistor",
         "model" : "",
         "name" : "R3",
@@ -1457,7 +1457,7 @@
       },
       {
         "flipped" : false,
-        "id" : "1E801F91-DDB3-45F6-B38A-71ADB7DE8559",
+        "id" : "915125C6-D634-4C30-9A7B-7D7564EA1431",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C1",
@@ -1473,7 +1473,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B14D111E-8F16-4E25-8D9A-791B00754F89",
+        "id" : "C1B49C66-E6B9-4EE9-ADE7-E58D2F706BD2",
         "kind" : "resistor",
         "model" : "",
         "name" : "R4",
@@ -1489,7 +1489,7 @@
       },
       {
         "flipped" : false,
-        "id" : "6C6D13BF-D6CD-42D1-8485-619D81D80B4E",
+        "id" : "2D796855-DA18-4C54-9B08-702BEB33C1FC",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C2",
@@ -1505,7 +1505,7 @@
       },
       {
         "flipped" : false,
-        "id" : "107D2061-DA96-4A81-A5C6-E78F2DDC5290",
+        "id" : "069EDB78-C3CF-453C-8EFB-D6C810557778",
         "kind" : "ground",
         "model" : "",
         "name" : "GND1",
@@ -1521,7 +1521,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B2740D00-FEA8-4CF4-891D-845F5030AFFC",
+        "id" : "500C22FF-AAB6-4C92-9EED-9554B94F6375",
         "kind" : "ground",
         "model" : "",
         "name" : "GND2",
@@ -1537,7 +1537,7 @@
       },
       {
         "flipped" : false,
-        "id" : "69A5F2FA-6EF3-44A9-980A-63DC089826FD",
+        "id" : "EAC9B380-4393-4D2B-A083-EE8653B2D6A7",
         "kind" : "ground",
         "model" : "",
         "name" : "GND3",
@@ -1553,7 +1553,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E897914D-810C-48F9-8F97-A4315C1E5FD0",
+        "id" : "39F0D8EE-8749-46E3-9993-8D8627675407",
         "kind" : "supply",
         "model" : "",
         "name" : "VS4",
@@ -1570,7 +1570,7 @@
       },
       {
         "flipped" : true,
-        "id" : "A1E53E86-E2D1-49F0-BDC4-6810E585A10B",
+        "id" : "98DBB2A5-0120-4F99-AB78-6A0459378D9A",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR1",
@@ -1587,7 +1587,7 @@
       },
       {
         "flipped" : false,
-        "id" : "29705D0F-4815-4C11-9034-0A1DA5CDFDD1",
+        "id" : "55E6C71E-B2F6-499C-8BC3-DD051FC55B93",
         "kind" : "resistor",
         "model" : "",
         "name" : "R5",
@@ -1603,7 +1603,7 @@
       },
       {
         "flipped" : false,
-        "id" : "57AC2D66-D0D1-492B-894A-89C51FCD52DE",
+        "id" : "D6801460-71DC-4992-85DC-CADD648CEE13",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V2",
@@ -1619,7 +1619,7 @@
       },
       {
         "flipped" : false,
-        "id" : "4B7EC848-0C12-4117-B24B-DA17118EF7C4",
+        "id" : "E149E632-747B-4151-B493-BE7192318872",
         "kind" : "resistor",
         "model" : "",
         "name" : "R6",
@@ -1635,7 +1635,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F5FB2B7B-8438-49FA-81D8-8CCFAAD79D57",
+        "id" : "9647CD45-F357-4DF6-B67A-91C1D96398B4",
         "kind" : "resistor",
         "model" : "",
         "name" : "R7",
@@ -1651,7 +1651,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D3E44E97-D2A6-46FD-9A1B-9FEC408800C7",
+        "id" : "98B2B59E-C760-4819-993E-1D7D17B79FC3",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V3",
@@ -1667,7 +1667,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B438E0FA-93E9-4CD6-99ED-8E32B1AA60A2",
+        "id" : "41C87B22-5524-484D-9003-7F649A251B0D",
         "kind" : "resistor",
         "model" : "",
         "name" : "R8",
@@ -1683,7 +1683,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D5785300-0048-48E5-AA9E-2F27E2D4B226",
+        "id" : "FAD1284A-5FBD-4D14-80D3-9ED6E7C6CE8A",
         "kind" : "ground",
         "model" : "",
         "name" : "GND5",
@@ -1699,7 +1699,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2E0BBFEC-C95C-480C-98D3-91960C0837F7",
+        "id" : "54A8E1C5-C3B6-4A7B-8C64-147AAC164785",
         "kind" : "ground",
         "model" : "",
         "name" : "GND6",
@@ -1715,7 +1715,7 @@
       },
       {
         "flipped" : false,
-        "id" : "032FC6C6-F7DF-4998-A654-2FD47AAD7E0F",
+        "id" : "F071160A-C3D5-405E-84C9-B1A718EAC965",
         "kind" : "supply",
         "model" : "",
         "name" : "VS7",
@@ -1732,7 +1732,7 @@
       },
       {
         "flipped" : false,
-        "id" : "BCC97C13-6F6D-473A-839C-7CBB467AB4C7",
+        "id" : "27F86C98-C80B-4327-80BD-BA4A4D07FC4F",
         "kind" : "supply",
         "model" : "",
         "name" : "VS8",
@@ -1749,7 +1749,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F9267345-EE1D-46F1-AE7B-53CC40D853FA",
+        "id" : "B2ADEDA4-6815-412B-BFE8-A2E03DEA83ED",
         "kind" : "ground",
         "model" : "",
         "name" : "GND9",
@@ -1765,7 +1765,7 @@
       },
       {
         "flipped" : false,
-        "id" : "88F6E189-E584-4305-8E48-CF5904251330",
+        "id" : "6878B396-D94E-4EC6-8959-9412A78EFFDE",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C3",
@@ -1781,7 +1781,7 @@
       },
       {
         "flipped" : true,
-        "id" : "955E37D4-16C4-4EF5-9E37-85288B34CC4C",
+        "id" : "EAAFE65B-66CD-4DAA-B90E-B17A986F6C75",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR2",
@@ -1798,7 +1798,7 @@
       },
       {
         "flipped" : false,
-        "id" : "BB46CE46-25C7-42A8-AA6A-0CDFD9C1D43E",
+        "id" : "42260C88-EC4A-4061-9819-01EBFD934B41",
         "kind" : "resistor",
         "model" : "",
         "name" : "R9",
@@ -1814,7 +1814,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2CE460D0-0450-497A-BEFA-74D35D1AC100",
+        "id" : "0F39A49E-0B89-47C3-BFE8-26CCACFE5153",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C4",
@@ -1830,7 +1830,7 @@
       },
       {
         "flipped" : false,
-        "id" : "4F40DCCD-C9DD-465F-A6F6-0C723F17E561",
+        "id" : "4022A413-209A-412B-8D7B-8B42B460917E",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C5",
@@ -1846,7 +1846,7 @@
       },
       {
         "flipped" : false,
-        "id" : "DD83C28B-05E0-4D00-A893-F1BFDA625369",
+        "id" : "329D3FA5-223C-402C-A3D5-6DC0945313AB",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR3",
@@ -1863,7 +1863,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C1362EF6-4C2B-4206-8548-7DFA916B3EB1",
+        "id" : "D9BC5781-C5A3-4D04-A7B3-7AA9B70F5853",
         "kind" : "pot",
         "model" : "B",
         "name" : "VR4",
@@ -1880,7 +1880,7 @@
       },
       {
         "flipped" : true,
-        "id" : "321A33E8-C375-459F-9FBA-3E0D1BB64AF9",
+        "id" : "88831227-BB59-466F-8F1F-DC6B1C80AB60",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR5",
@@ -1897,7 +1897,7 @@
       },
       {
         "flipped" : false,
-        "id" : "ACA9CF87-8E69-4E8C-8C4B-4B6FB0DF5811",
+        "id" : "5C9C0E0A-4C19-4DAE-B3F9-81DF204FF1C5",
         "kind" : "output",
         "model" : "",
         "name" : "OUT",
@@ -1914,7 +1914,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E5DA0ABA-4E7C-4D7D-BA54-F7B98226D2EE",
+        "id" : "05964052-5650-471E-A332-7D917FBF11D8",
         "kind" : "ground",
         "model" : "",
         "name" : "GND10",
@@ -1930,7 +1930,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5C91F481-3466-4202-8900-30423399FE9B",
+        "id" : "128FF7D9-E9AB-4CB8-8C2A-7F169C988CA2",
         "kind" : "ground",
         "model" : "",
         "name" : "GND11",
@@ -1955,7 +1955,7 @@
           "x" : 2,
           "y" : 0
         },
-        "id" : "30B3625C-B327-4CB8-B988-075F31424D0E"
+        "id" : "A3778205-98FC-43D0-B129-7FF370B6695B"
       },
       {
         "a" : {
@@ -1966,7 +1966,7 @@
           "x" : 3,
           "y" : 0
         },
-        "id" : "8EF3C009-9F78-4983-BFCA-CBF152B58282"
+        "id" : "9FF988F9-5B4D-46CB-B27A-C8E8C1C442FF"
       },
       {
         "a" : {
@@ -1977,7 +1977,7 @@
           "x" : 8,
           "y" : 0
         },
-        "id" : "388DEEF1-2081-4CD0-9961-CA3196571351"
+        "id" : "10D6D9AD-F83D-4CA9-BC55-42D23A37B2DA"
       },
       {
         "a" : {
@@ -1988,7 +1988,7 @@
           "x" : 13,
           "y" : 2
         },
-        "id" : "EF7F2F30-6966-488D-A216-9C8E3AD146CD"
+        "id" : "F4D0E483-954D-4DF0-8314-1464E4723CF8"
       },
       {
         "a" : {
@@ -1999,7 +1999,7 @@
           "x" : 13,
           "y" : -2
         },
-        "id" : "A6708148-F4A2-4D0E-81FC-6F34A2165CA9"
+        "id" : "95B7863B-64D7-4A65-AEDA-967E730C6D0E"
       },
       {
         "a" : {
@@ -2010,7 +2010,7 @@
           "x" : 19,
           "y" : -2
         },
-        "id" : "9FC22CF8-E191-42BE-9541-9F0AC142FC76"
+        "id" : "5C6E28AF-5D67-4450-BF68-5A4F4D988E51"
       },
       {
         "a" : {
@@ -2021,7 +2021,7 @@
           "x" : 22,
           "y" : 0
         },
-        "id" : "64734377-C67C-4B31-8751-4443C5EF6239"
+        "id" : "2FF82A02-89D2-4008-9ED7-0A8814ECB5B1"
       },
       {
         "a" : {
@@ -2032,7 +2032,7 @@
           "x" : 27,
           "y" : 0
         },
-        "id" : "8366D5FC-FF52-4963-A978-5E13FED06464"
+        "id" : "BAB1B4E8-1FA9-4C1E-AEBA-363CFDF74B8C"
       },
       {
         "a" : {
@@ -2043,7 +2043,7 @@
           "x" : 34,
           "y" : -2
         },
-        "id" : "1DFF53D7-3914-49B7-8E23-A72D74EAA32F"
+        "id" : "BE34645C-41AC-4472-B1AB-5B456A977929"
       },
       {
         "a" : {
@@ -2054,7 +2054,7 @@
           "x" : 37,
           "y" : -6
         },
-        "id" : "0F50570A-4344-40EC-9386-4510FE5B85D2"
+        "id" : "B201DCE1-B973-4004-9B2C-3A34A92E8E8A"
       },
       {
         "a" : {
@@ -2065,7 +2065,7 @@
           "x" : 39,
           "y" : 0
         },
-        "id" : "D0113408-FD0A-4371-A049-DEAA0051EEA6"
+        "id" : "7253FDEB-29ED-425A-845D-6D75E709B13E"
       },
       {
         "a" : {
@@ -2076,7 +2076,7 @@
           "x" : 39,
           "y" : -8
         },
-        "id" : "558A1C34-AEBF-4116-9422-DE186B9BFFDC"
+        "id" : "9E571E4D-8BB8-4E25-BC13-C526EEDAC507"
       },
       {
         "a" : {
@@ -2087,7 +2087,7 @@
           "x" : 41,
           "y" : -8
         },
-        "id" : "F9D22AB6-2F25-4B4B-9844-E7E84BE73476"
+        "id" : "239488E2-BB51-4695-9FB6-C80CDD96F70C"
       },
       {
         "a" : {
@@ -2098,7 +2098,7 @@
           "x" : 47,
           "y" : -8
         },
-        "id" : "5C40800F-D82A-416B-A48A-DE048696534E"
+        "id" : "B00C06DE-5D88-4CAF-AD17-F338FB614EB8"
       },
       {
         "a" : {
@@ -2109,7 +2109,7 @@
           "x" : 43,
           "y" : -4
         },
-        "id" : "4C5B9A05-4884-46D0-AC9E-EE670A6DA3A7"
+        "id" : "6D3710EF-3043-4859-BD57-70E5A6AB94F7"
       },
       {
         "a" : {
@@ -2120,7 +2120,7 @@
           "x" : 49,
           "y" : 0
         },
-        "id" : "FF76B774-257B-4DE5-9F0D-35442F18733F"
+        "id" : "BE82A513-CB45-4DE0-AD89-E083E563DF38"
       },
       {
         "a" : {
@@ -2131,7 +2131,7 @@
           "x" : 47,
           "y" : 0
         },
-        "id" : "998FCDB4-FC2E-49DD-B83A-DE1EA95C1DC7"
+        "id" : "2E76F0DD-ED3F-4E22-889C-DFAFE9C852CD"
       },
       {
         "a" : {
@@ -2142,7 +2142,7 @@
           "x" : 49,
           "y" : 4
         },
-        "id" : "75BF65FA-CD72-44D0-BEA7-D5CA51003ED1"
+        "id" : "338FEC48-3EBB-40A8-A216-D7C87397D632"
       },
       {
         "a" : {
@@ -2153,7 +2153,7 @@
           "x" : 47,
           "y" : 4
         },
-        "id" : "856817FB-EB69-4012-9101-85120EFF8801"
+        "id" : "D9B9545A-4756-4025-8A1E-4B149BA19007"
       },
       {
         "a" : {
@@ -2164,7 +2164,7 @@
           "x" : 53,
           "y" : -6
         },
-        "id" : "2BB73E90-5E56-4942-9786-252CF5E5BD61"
+        "id" : "35B876F8-C902-4B3F-A0AD-84694D094874"
       },
       {
         "a" : {
@@ -2175,7 +2175,7 @@
           "x" : 57,
           "y" : -4
         },
-        "id" : "89295E79-B100-48AF-BF66-AB8A55763113"
+        "id" : "20755AE5-DEE0-4E7C-9F96-854DECF2BA5D"
       }
     ]
   },
@@ -2185,7 +2185,7 @@
     "parts" : [
       {
         "flipped" : false,
-        "id" : "AE71B2E1-2CBF-4B8E-8C07-1A1BA4BA6F6B",
+        "id" : "2E748BE5-3E2A-4978-917A-F85708CC0D1B",
         "kind" : "input",
         "model" : "",
         "name" : "IN",
@@ -2202,7 +2202,7 @@
       },
       {
         "flipped" : false,
-        "id" : "45F79996-B670-4488-8D1F-9ECD5DFCA418",
+        "id" : "A7F3B18E-30B1-4B39-9D2A-694E45275C5E",
         "kind" : "resistor",
         "model" : "",
         "name" : "R1",
@@ -2218,7 +2218,7 @@
       },
       {
         "flipped" : false,
-        "id" : "CC234872-D4D4-4462-90BD-FF4B8FBB461D",
+        "id" : "C75B8A4B-4CC9-4396-B3DE-04089012FD94",
         "kind" : "resistor",
         "model" : "",
         "name" : "R2",
@@ -2234,7 +2234,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C168BE58-E939-458D-93CC-88F93AB55258",
+        "id" : "459FED2A-0E00-4822-90C9-7B8EA3C72441",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V1",
@@ -2250,7 +2250,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3476AADA-E38D-44A8-9295-9D7948F9FF29",
+        "id" : "DE854ED0-F0AC-42A4-B58F-D5F9DC4418D9",
         "kind" : "resistor",
         "model" : "",
         "name" : "R3",
@@ -2266,7 +2266,7 @@
       },
       {
         "flipped" : false,
-        "id" : "8A758EAA-42B9-433A-8148-66B032A69BD9",
+        "id" : "6E3B8110-76DC-4D98-84F1-090CDA9D4140",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C1",
@@ -2282,7 +2282,7 @@
       },
       {
         "flipped" : false,
-        "id" : "FF549427-4915-475F-A028-DD13F66C0EAB",
+        "id" : "A8B8B0CB-C5DB-4AA1-BAC0-297CE1B7560F",
         "kind" : "resistor",
         "model" : "",
         "name" : "R4",
@@ -2298,7 +2298,7 @@
       },
       {
         "flipped" : false,
-        "id" : "10BDA486-8F38-46E7-BB83-445A6D70AE8F",
+        "id" : "93EFA675-83CA-4871-A919-25C5C3F32AA5",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C2",
@@ -2314,7 +2314,7 @@
       },
       {
         "flipped" : false,
-        "id" : "26CE989E-8872-4ED7-ACEC-BC24FC9E1E43",
+        "id" : "091C0387-231A-4EE5-9AD7-0061D90AFCDA",
         "kind" : "ground",
         "model" : "",
         "name" : "GND1",
@@ -2330,7 +2330,7 @@
       },
       {
         "flipped" : false,
-        "id" : "EDC62D1C-23B2-4A90-B8A5-F8D6F0A8852A",
+        "id" : "C43888B9-8D44-4BFB-8FB1-0BF984B5E518",
         "kind" : "ground",
         "model" : "",
         "name" : "GND2",
@@ -2346,7 +2346,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5B099145-89C9-4442-8D2F-DC8595297383",
+        "id" : "E80A389A-E6DB-432A-8217-70F297B6D7B2",
         "kind" : "ground",
         "model" : "",
         "name" : "GND3",
@@ -2362,7 +2362,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F2A20383-89C6-47A2-8CC9-FB785D03423E",
+        "id" : "3080166B-9428-4F4B-8226-5A9A225CD827",
         "kind" : "supply",
         "model" : "",
         "name" : "VS4",
@@ -2379,7 +2379,7 @@
       },
       {
         "flipped" : true,
-        "id" : "DF30C657-928B-4489-9BF9-F4B491C5ABA4",
+        "id" : "359186F7-6DE5-4FE8-A4E7-806AEC5C9794",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR1",
@@ -2396,7 +2396,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F00F6690-8F04-4852-B908-7221E62948C3",
+        "id" : "BD52281F-5763-462E-9AEC-319A7C574A62",
         "kind" : "resistor",
         "model" : "",
         "name" : "R5",
@@ -2412,7 +2412,7 @@
       },
       {
         "flipped" : false,
-        "id" : "311DBC04-F5F7-4EB1-A95E-152EEFBE3352",
+        "id" : "A1AB1AD3-2CD5-445A-9252-AC53232B4A6D",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V2",
@@ -2428,7 +2428,7 @@
       },
       {
         "flipped" : false,
-        "id" : "87A62C69-9441-4087-B301-21F125F1FE33",
+        "id" : "FCDE63FF-F46E-498A-9A7E-25BA6FB10C59",
         "kind" : "resistor",
         "model" : "",
         "name" : "R6",
@@ -2444,7 +2444,7 @@
       },
       {
         "flipped" : false,
-        "id" : "004B3FC2-0598-4F01-B506-9823942EE1E6",
+        "id" : "218799F6-E3B6-4823-A148-7165DE3E983E",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C3",
@@ -2460,7 +2460,7 @@
       },
       {
         "flipped" : false,
-        "id" : "09FA5A62-38CB-4B47-A3DE-C4D616FFFF7B",
+        "id" : "430682A3-46B7-4500-AE6B-5054C70A22FE",
         "kind" : "resistor",
         "model" : "",
         "name" : "R7",
@@ -2476,7 +2476,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B934362F-5B2C-40E6-939F-080F935A4AB1",
+        "id" : "B9B1A657-48AE-4566-87CD-8CEE7A65A7F1",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C4",
@@ -2492,7 +2492,7 @@
       },
       {
         "flipped" : false,
-        "id" : "27C733F6-F3D5-4030-AF8A-A26AF8795B7F",
+        "id" : "3674A81B-E564-4222-9C38-30F90DB33D2B",
         "kind" : "resistor",
         "model" : "",
         "name" : "R8",
@@ -2508,7 +2508,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2763A139-E768-47F7-B0A1-6ECEE05DD1CD",
+        "id" : "81F76DF2-E24B-4F79-BC22-05AA36472F28",
         "kind" : "resistor",
         "model" : "",
         "name" : "R9",
@@ -2524,7 +2524,7 @@
       },
       {
         "flipped" : false,
-        "id" : "6848B3FB-EAB2-453D-B966-6F997D41245D",
+        "id" : "10905D04-8AC2-4F98-AA4E-56FEADC6EAF4",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V3",
@@ -2540,7 +2540,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B54B7D22-861C-4C0B-99E6-6E83010ACCEE",
+        "id" : "0D5E036D-EA56-4493-8838-CDEB650B4482",
         "kind" : "resistor",
         "model" : "",
         "name" : "R10",
@@ -2556,7 +2556,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A4065A0B-E465-4A06-B626-EAA9D39021AD",
+        "id" : "7B769237-13DC-4FD1-A8E6-A79E3A143852",
         "kind" : "resistor",
         "model" : "",
         "name" : "R11",
@@ -2572,7 +2572,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D04C73B5-DB57-4EF1-AAE1-95797903FC04",
+        "id" : "EF0EF2E4-252D-41B6-A692-36B1B71EA49E",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C5",
@@ -2588,7 +2588,7 @@
       },
       {
         "flipped" : false,
-        "id" : "79C7C925-6FF0-4A37-A490-001DDDBC54C6",
+        "id" : "31893766-461D-45A3-9B7E-83F1813ECB68",
         "kind" : "resistor",
         "model" : "",
         "name" : "R12",
@@ -2604,7 +2604,7 @@
       },
       {
         "flipped" : false,
-        "id" : "08E9E168-2DD6-4C4B-8F0A-16AD27637093",
+        "id" : "0A1F1704-30C9-458B-8FA4-281EA23AAB27",
         "kind" : "resistor",
         "model" : "",
         "name" : "R13",
@@ -2620,7 +2620,7 @@
       },
       {
         "flipped" : false,
-        "id" : "BDC1230F-E0AF-4DDD-B89A-252A201CB5C5",
+        "id" : "C6128BA4-E2C2-431B-B5D9-DA5FAAD61F1F",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V4",
@@ -2636,7 +2636,7 @@
       },
       {
         "flipped" : false,
-        "id" : "96B1020D-341D-44F2-BDDB-B7DCA439DF6C",
+        "id" : "99FDF06F-4863-4B66-B167-8227570E670E",
         "kind" : "resistor",
         "model" : "",
         "name" : "R14",
@@ -2652,7 +2652,7 @@
       },
       {
         "flipped" : false,
-        "id" : "57EF72C3-C948-4922-9416-7F9719A0FE96",
+        "id" : "B2460DFF-2574-4398-AF35-918E7409E910",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C6",
@@ -2668,7 +2668,7 @@
       },
       {
         "flipped" : false,
-        "id" : "215E8089-237B-4E0D-B505-C1B302222BD4",
+        "id" : "2005AE42-6295-4954-BA77-06215AB8085C",
         "kind" : "resistor",
         "model" : "",
         "name" : "R15",
@@ -2684,7 +2684,7 @@
       },
       {
         "flipped" : false,
-        "id" : "83F96D71-FC19-4423-9DEF-37299D869230",
+        "id" : "7F36125E-7B89-411C-B2A1-7FDED3ADA74E",
         "kind" : "ground",
         "model" : "",
         "name" : "GND5",
@@ -2700,7 +2700,7 @@
       },
       {
         "flipped" : false,
-        "id" : "75C103FF-7479-4C02-ABA0-84A3A16C6164",
+        "id" : "E82EA691-29F6-4CFF-A062-A05514411AC4",
         "kind" : "ground",
         "model" : "",
         "name" : "GND6",
@@ -2716,7 +2716,7 @@
       },
       {
         "flipped" : false,
-        "id" : "08BBAAEB-FEC6-42DE-A53A-8D9A4938513C",
+        "id" : "C7C77BC1-0417-4068-A926-AD54C569D554",
         "kind" : "ground",
         "model" : "",
         "name" : "GND7",
@@ -2732,7 +2732,7 @@
       },
       {
         "flipped" : false,
-        "id" : "91DC883B-3069-4602-8169-24894190DC10",
+        "id" : "02DF9513-ACB0-4C03-9AE8-494A218A5106",
         "kind" : "supply",
         "model" : "",
         "name" : "VS8",
@@ -2749,7 +2749,7 @@
       },
       {
         "flipped" : false,
-        "id" : "DEB8BDDF-F460-420F-858E-CD4EB98DE676",
+        "id" : "F0AA6C8B-85E7-4035-A0AA-8C7D79008A2E",
         "kind" : "ground",
         "model" : "",
         "name" : "GND9",
@@ -2765,7 +2765,7 @@
       },
       {
         "flipped" : false,
-        "id" : "963B2FAB-8ED2-4A32-88D9-0BD33A25657E",
+        "id" : "CA623EB8-D432-4F51-BA0A-05B5866EA3B7",
         "kind" : "ground",
         "model" : "",
         "name" : "GND10",
@@ -2781,7 +2781,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3F77D2F4-52A8-4126-9F26-2D0C2F9C6F63",
+        "id" : "86A30353-AAE6-450D-BC9D-5774966C8C99",
         "kind" : "supply",
         "model" : "",
         "name" : "VS11",
@@ -2798,7 +2798,7 @@
       },
       {
         "flipped" : false,
-        "id" : "4D32EBC7-D023-4F00-A71F-9C6D78CDB5E7",
+        "id" : "78734EA9-04A4-420E-9B37-92588ECF2F29",
         "kind" : "ground",
         "model" : "",
         "name" : "GND12",
@@ -2814,7 +2814,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D2F81EC8-70FA-4CD3-8CAA-32AE8A0CE48B",
+        "id" : "1BC26CAE-8BFB-4DFA-AE7D-EBC5BBC27F44",
         "kind" : "ground",
         "model" : "",
         "name" : "GND13",
@@ -2830,7 +2830,7 @@
       },
       {
         "flipped" : false,
-        "id" : "56ED8E38-1DB2-4A34-92EA-BC771D9CB393",
+        "id" : "A005C5FC-FAAC-4530-8FEA-EF37AF7A2212",
         "kind" : "ground",
         "model" : "",
         "name" : "GND14",
@@ -2846,7 +2846,7 @@
       },
       {
         "flipped" : false,
-        "id" : "6F580C1F-5946-4BF1-AF36-15EB8C6B3831",
+        "id" : "898FC9D5-A64D-4450-AFBA-81245FDDAEA3",
         "kind" : "supply",
         "model" : "",
         "name" : "VS15",
@@ -2863,7 +2863,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A213AD0A-227D-4123-9D88-062BB3384C63",
+        "id" : "70B4568E-F78F-46D5-8E87-F7CAD950BC2F",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C7",
@@ -2879,7 +2879,7 @@
       },
       {
         "flipped" : true,
-        "id" : "370DF166-0201-450F-BAE8-656EC8760E66",
+        "id" : "BA94957B-8297-4337-BB31-F70780BB8143",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR2",
@@ -2896,7 +2896,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3B960C01-D77C-4E8D-B5FB-D107ADD71137",
+        "id" : "65A94B9B-07E2-49F2-8E65-2E2A3122CF8A",
         "kind" : "resistor",
         "model" : "",
         "name" : "R16",
@@ -2912,7 +2912,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F7F65751-83A0-4A61-BED9-0A44B79C1C00",
+        "id" : "6E38A5F2-EA7C-400A-8C82-E62CB175CC2C",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C8",
@@ -2928,7 +2928,7 @@
       },
       {
         "flipped" : false,
-        "id" : "657C46C5-2DB3-43C0-8D7D-FF9A0AC0E233",
+        "id" : "54A84D26-77F1-412D-B9A8-E9A0F627E7F9",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C9",
@@ -2944,7 +2944,7 @@
       },
       {
         "flipped" : false,
-        "id" : "406367DE-6B47-4F98-98EE-C2B424C7FCE7",
+        "id" : "2CF5E34B-6E07-4E2B-8D93-3B9412DC61CA",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR3",
@@ -2961,7 +2961,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2FCFD866-F1E1-4E24-AA73-068183CF868F",
+        "id" : "6974906B-B493-431A-B64E-B12B05AAE596",
         "kind" : "pot",
         "model" : "B",
         "name" : "VR4",
@@ -2978,7 +2978,7 @@
       },
       {
         "flipped" : true,
-        "id" : "A5A81D6D-D926-4BC6-A4F0-6FA3DA78A7B2",
+        "id" : "809A614A-3C0E-4D12-BFEF-CF97802FD5CC",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR5",
@@ -2995,7 +2995,7 @@
       },
       {
         "flipped" : false,
-        "id" : "FBC82D11-3BEB-4DB8-899C-D75E817CB825",
+        "id" : "6E89FDF4-0FA8-41D6-A0C7-4F2C51196BA0",
         "kind" : "output",
         "model" : "",
         "name" : "OUT",
@@ -3012,7 +3012,7 @@
       },
       {
         "flipped" : false,
-        "id" : "11B55170-6E0F-4458-BEB8-6CBF5F5F9B94",
+        "id" : "E4581764-800F-416A-B82C-B1FA359BF026",
         "kind" : "ground",
         "model" : "",
         "name" : "GND16",
@@ -3028,7 +3028,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A3D27FC5-F240-446C-937B-F791762637B5",
+        "id" : "7CE1B5BD-EC86-495E-B89C-19FE00BD366D",
         "kind" : "ground",
         "model" : "",
         "name" : "GND17",
@@ -3053,7 +3053,7 @@
           "x" : 2,
           "y" : 0
         },
-        "id" : "811194E3-E03B-4216-AFD5-87600376727C"
+        "id" : "436B2DB0-18AB-4A70-B387-970F098792B1"
       },
       {
         "a" : {
@@ -3064,7 +3064,7 @@
           "x" : 3,
           "y" : 0
         },
-        "id" : "69489756-FD0B-48B2-892C-8B54CD59406A"
+        "id" : "B19B8340-9D22-4F86-8DDB-61279CBD7DAF"
       },
       {
         "a" : {
@@ -3075,7 +3075,7 @@
           "x" : 8,
           "y" : 0
         },
-        "id" : "DCEBE27C-77BF-4FAD-9A2E-B64588577880"
+        "id" : "136DBE57-F8F0-49D3-9843-D88776A6064D"
       },
       {
         "a" : {
@@ -3086,7 +3086,7 @@
           "x" : 13,
           "y" : 2
         },
-        "id" : "B749A060-CB36-4CE1-8EC2-7FE1B2EA2EEB"
+        "id" : "EC381C77-BF8F-478E-8B45-54B7193720E4"
       },
       {
         "a" : {
@@ -3097,7 +3097,7 @@
           "x" : 13,
           "y" : -2
         },
-        "id" : "2DECC436-0117-4671-91F9-446D98872B54"
+        "id" : "9C04F239-98E5-47DA-8AC9-5212EFA64733"
       },
       {
         "a" : {
@@ -3108,7 +3108,7 @@
           "x" : 19,
           "y" : -2
         },
-        "id" : "61DBA3E0-6429-4116-A9EF-1937A2F58C51"
+        "id" : "6D27F3EF-6CFC-4D92-8E5B-F67379BA7183"
       },
       {
         "a" : {
@@ -3119,7 +3119,7 @@
           "x" : 22,
           "y" : 0
         },
-        "id" : "D0CFB086-8DA6-46A8-8BBD-F6A628213408"
+        "id" : "EA912141-C325-41D4-A1E0-813CB6B7D91F"
       },
       {
         "a" : {
@@ -3130,7 +3130,7 @@
           "x" : 27,
           "y" : 0
         },
-        "id" : "8EACA52F-E086-46CF-8753-38746A274F86"
+        "id" : "E34E9798-0003-4BD7-911B-355D89126203"
       },
       {
         "a" : {
@@ -3141,7 +3141,7 @@
           "x" : 32,
           "y" : 2
         },
-        "id" : "3BD72892-B8CC-4DE0-B2B7-C011F369D234"
+        "id" : "6C53CB3F-2150-4878-A2AA-D0674089DAC3"
       },
       {
         "a" : {
@@ -3152,7 +3152,7 @@
           "x" : 32,
           "y" : -2
         },
-        "id" : "AA3EF0EE-22E4-4ABF-A543-1322C2C5D4FD"
+        "id" : "12C2C505-EFFF-4384-8344-E9E0AD1AED85"
       },
       {
         "a" : {
@@ -3163,7 +3163,7 @@
           "x" : 37,
           "y" : -2
         },
-        "id" : "4B104134-3A28-4700-8934-29299074BAD1"
+        "id" : "8724535A-4F29-4995-ADD7-92C59AD8E558"
       },
       {
         "a" : {
@@ -3174,7 +3174,7 @@
           "x" : 42,
           "y" : -2
         },
-        "id" : "7481E4C2-52BF-4B5F-A583-7DF5388269F1"
+        "id" : "F52FCA4A-2C8A-4983-A238-E4107C3D5238"
       },
       {
         "a" : {
@@ -3185,7 +3185,7 @@
           "x" : 44,
           "y" : -2
         },
-        "id" : "E62A8F6A-0812-4144-B8F9-EE6426452942"
+        "id" : "78658459-8190-45F5-8C8A-610B829AED14"
       },
       {
         "a" : {
@@ -3196,7 +3196,7 @@
           "x" : 49,
           "y" : -4
         },
-        "id" : "05C549E7-232B-4BD5-9D65-E081C0F92803"
+        "id" : "EFE6C689-0BFC-4920-AA9D-9A079972DFE3"
       },
       {
         "a" : {
@@ -3207,7 +3207,7 @@
           "x" : 54,
           "y" : -4
         },
-        "id" : "24CAC38B-F806-4A0B-98FE-F28E33AF36C9"
+        "id" : "4BD45595-07DF-4007-AF45-17FF14C794C2"
       },
       {
         "a" : {
@@ -3218,7 +3218,7 @@
           "x" : 59,
           "y" : -4
         },
-        "id" : "F7248DC0-23C0-4300-A257-DB891413A462"
+        "id" : "A584B0CB-47BC-4267-BB5E-3FBF82D07CA1"
       },
       {
         "a" : {
@@ -3229,7 +3229,7 @@
           "x" : 61,
           "y" : -4
         },
-        "id" : "D14857B3-30D2-426E-961E-4622EA74EF2A"
+        "id" : "BBB557A6-2C3E-4E47-967B-5194E847D6D9"
       },
       {
         "a" : {
@@ -3240,7 +3240,7 @@
           "x" : 66,
           "y" : -2
         },
-        "id" : "78AE3174-2A17-4AAA-B33F-16E1799C3B6D"
+        "id" : "E095E914-0E80-4951-AF6F-67842488896E"
       },
       {
         "a" : {
@@ -3251,7 +3251,7 @@
           "x" : 68,
           "y" : -6
         },
-        "id" : "0F1FD5D0-670F-4D48-AABD-96181D7893E5"
+        "id" : "D62B0C33-908E-4894-B8E4-3356E32538E4"
       },
       {
         "a" : {
@@ -3262,7 +3262,7 @@
           "x" : 68,
           "y" : -14
         },
-        "id" : "91368248-3E1D-4678-9122-1758948BFA89"
+        "id" : "7C2BCC23-CAC0-4AFF-9E30-2B0E955FDB5D"
       },
       {
         "a" : {
@@ -3273,7 +3273,7 @@
           "x" : 70,
           "y" : -14
         },
-        "id" : "ADB5C2C0-D8C8-40DD-99CC-AAB1A29173A0"
+        "id" : "CF40631E-AD13-4365-A950-C6303147A6A5"
       },
       {
         "a" : {
@@ -3284,7 +3284,7 @@
           "x" : 76,
           "y" : -14
         },
-        "id" : "CC2C46A3-21EE-4964-8695-3E2572F9442E"
+        "id" : "BC4FBF00-2558-44A4-8938-0C5ABC090657"
       },
       {
         "a" : {
@@ -3295,7 +3295,7 @@
           "x" : 72,
           "y" : -10
         },
-        "id" : "EA2F88F8-D2A8-4772-909D-2A821B3E1EA3"
+        "id" : "BC3ABC16-1FCA-421F-A613-F1AA3A859E9C"
       },
       {
         "a" : {
@@ -3306,7 +3306,7 @@
           "x" : 78,
           "y" : -6
         },
-        "id" : "0517971A-D1FD-407B-B803-551F3F5856A2"
+        "id" : "C3449B65-0600-4A98-BAF6-5B35653C5FB6"
       },
       {
         "a" : {
@@ -3317,7 +3317,7 @@
           "x" : 76,
           "y" : -6
         },
-        "id" : "4914CDC1-D824-4B20-B3EB-1E88DF1F8BD2"
+        "id" : "D034EC9F-E892-4AF5-BC3C-833CDD11A096"
       },
       {
         "a" : {
@@ -3328,7 +3328,7 @@
           "x" : 78,
           "y" : -2
         },
-        "id" : "A0405B27-8DA9-49A2-956A-D01DADFCBCF9"
+        "id" : "51F58515-E7FA-4F0F-9F8E-E828A54E398D"
       },
       {
         "a" : {
@@ -3339,7 +3339,7 @@
           "x" : 76,
           "y" : -2
         },
-        "id" : "531C1989-4BDC-4009-8CB2-EFE3B68E3FA8"
+        "id" : "444E601D-15AD-4F68-89CF-7AAFA930B2D3"
       },
       {
         "a" : {
@@ -3350,7 +3350,7 @@
           "x" : 82,
           "y" : -12
         },
-        "id" : "7CFC2053-16FC-4F0A-A962-61F734E1FC54"
+        "id" : "AA855EF7-86FB-4AA8-9FB0-5C191133F6C8"
       },
       {
         "a" : {
@@ -3361,7 +3361,7 @@
           "x" : 86,
           "y" : -10
         },
-        "id" : "30953D9E-6610-4931-98BC-8B8BC225675B"
+        "id" : "33BCF048-D578-4590-A6EE-A44044E1847F"
       }
     ]
   },
@@ -3371,7 +3371,7 @@
     "parts" : [
       {
         "flipped" : false,
-        "id" : "1B5C4504-00FB-47C2-A0E6-31037BE44C5A",
+        "id" : "48163AB3-C3F3-42C6-BA20-9B598A09D919",
         "kind" : "input",
         "model" : "",
         "name" : "IN",
@@ -3388,7 +3388,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C4252B67-BF60-46C3-9632-3ABC8A61F17F",
+        "id" : "B1ADD874-00FC-4C28-9427-3B45036925C7",
         "kind" : "resistor",
         "model" : "",
         "name" : "R1",
@@ -3404,7 +3404,7 @@
       },
       {
         "flipped" : false,
-        "id" : "4E4263D7-3C27-45F3-AAA7-B0A3B79E41D0",
+        "id" : "D2CD5060-85DA-4870-B2C9-BA84146B799F",
         "kind" : "resistor",
         "model" : "",
         "name" : "R2",
@@ -3420,7 +3420,7 @@
       },
       {
         "flipped" : false,
-        "id" : "15C50637-AFC3-4101-BF2D-727F6DA78AE5",
+        "id" : "5F559AB3-2CC1-44AF-A10C-FEC39B461B28",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V1",
@@ -3436,7 +3436,7 @@
       },
       {
         "flipped" : false,
-        "id" : "0B910DBB-C532-4E0A-8290-E7511DEE822B",
+        "id" : "3660CBE3-ED7B-4401-8EC2-901C9CD2D923",
         "kind" : "resistor",
         "model" : "",
         "name" : "R3",
@@ -3452,7 +3452,7 @@
       },
       {
         "flipped" : false,
-        "id" : "BFF73C46-D1E5-407A-9E86-A186D79FEC8D",
+        "id" : "93FC67C7-5C07-49C7-8B7A-34C4685D5036",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C1",
@@ -3468,7 +3468,7 @@
       },
       {
         "flipped" : false,
-        "id" : "1C5218B4-6CE6-4B78-A349-8753A8688EEE",
+        "id" : "69F46E0C-5265-4732-BA38-430339622CF3",
         "kind" : "resistor",
         "model" : "",
         "name" : "R4",
@@ -3484,7 +3484,7 @@
       },
       {
         "flipped" : false,
-        "id" : "DD640F3B-F053-4929-B842-69273551C36D",
+        "id" : "5CE3B2EB-6C25-4ED8-8253-B1B9CA04B42E",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C2",
@@ -3500,7 +3500,7 @@
       },
       {
         "flipped" : false,
-        "id" : "AAACD59E-66BD-42E5-BE93-3274011D2918",
+        "id" : "35FE952A-7E6A-4087-992E-7AFC00162A0D",
         "kind" : "ground",
         "model" : "",
         "name" : "GND1",
@@ -3516,7 +3516,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7CF18C3F-E6AB-4959-ADEF-7A5F0A71BE03",
+        "id" : "E2DBD670-0106-494C-9D0B-659488A51BA6",
         "kind" : "ground",
         "model" : "",
         "name" : "GND2",
@@ -3532,7 +3532,7 @@
       },
       {
         "flipped" : false,
-        "id" : "74CF4D9C-F3DC-4966-B74E-1B521CA15924",
+        "id" : "28E8C909-7D83-4BD6-A7BF-B74F3AF3F891",
         "kind" : "ground",
         "model" : "",
         "name" : "GND3",
@@ -3548,7 +3548,7 @@
       },
       {
         "flipped" : false,
-        "id" : "1767B2F2-0C63-49E8-A04C-2914134A7289",
+        "id" : "B3D78555-2EEB-4215-8643-A6CE4D34825C",
         "kind" : "supply",
         "model" : "",
         "name" : "VS4",
@@ -3565,7 +3565,7 @@
       },
       {
         "flipped" : true,
-        "id" : "EB2EBADD-B180-4653-B469-DE4F3BE98A7C",
+        "id" : "BA47EF97-7ABB-42CC-8B23-6A2084A63B58",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR1",
@@ -3582,7 +3582,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3AC67369-5B66-4C6A-8883-1E85A64933AC",
+        "id" : "7451DD58-260B-4EAD-8249-846AC2569B71",
         "kind" : "resistor",
         "model" : "",
         "name" : "R5",
@@ -3598,7 +3598,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7E71F3D1-4552-46E3-8ED2-71A2CE610B6B",
+        "id" : "C360B876-566A-41A9-9130-4A65760B6DAD",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V2",
@@ -3614,7 +3614,7 @@
       },
       {
         "flipped" : false,
-        "id" : "44208E3C-B9D0-43B7-AC2D-8A0E266A54DD",
+        "id" : "FFE307E6-ACED-4237-BA46-1DA74D4E46D8",
         "kind" : "resistor",
         "model" : "",
         "name" : "R6",
@@ -3630,7 +3630,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C0CE162F-FAA9-405A-BBD4-C66B2BC304E8",
+        "id" : "529CA00C-BB55-45F8-99A5-5B8D8516990B",
         "kind" : "resistor",
         "model" : "",
         "name" : "R7",
@@ -3646,7 +3646,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3DD6792D-22F2-444F-BE33-5B1CAA2B5AFB",
+        "id" : "9D0331F5-4FF4-4D16-AC59-24676E06272F",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V3",
@@ -3662,7 +3662,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5BEC87DA-FE72-480F-AE9F-103F90D77488",
+        "id" : "7DBDA358-CEB5-4B29-8619-E0E47B264B2D",
         "kind" : "resistor",
         "model" : "",
         "name" : "R8",
@@ -3678,7 +3678,7 @@
       },
       {
         "flipped" : false,
-        "id" : "215E5317-4665-4E32-AD62-3171169EFA45",
+        "id" : "9F2DD05B-60DB-4969-BD51-72745CFB6815",
         "kind" : "ground",
         "model" : "",
         "name" : "GND5",
@@ -3694,7 +3694,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2709366A-0C7C-4D70-B8A0-EA4733656C87",
+        "id" : "192D19F7-AEDD-4203-B333-215D5E057091",
         "kind" : "ground",
         "model" : "",
         "name" : "GND6",
@@ -3710,7 +3710,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A95C85A6-434D-490D-8759-6C446130DD27",
+        "id" : "3A3880CE-DD7E-441C-BADD-D7E8A3B644ED",
         "kind" : "supply",
         "model" : "",
         "name" : "VS7",
@@ -3727,7 +3727,7 @@
       },
       {
         "flipped" : false,
-        "id" : "1DFCC83A-671C-4D47-91CE-4CF4F0F4DFD4",
+        "id" : "4B9E327F-91C9-48FB-8C91-A439670E92B1",
         "kind" : "supply",
         "model" : "",
         "name" : "VS8",
@@ -3744,7 +3744,7 @@
       },
       {
         "flipped" : false,
-        "id" : "676C543C-8A40-4335-A660-7027EC169106",
+        "id" : "72097F45-5973-4734-A063-7088B61C715E",
         "kind" : "ground",
         "model" : "",
         "name" : "GND9",
@@ -3760,7 +3760,7 @@
       },
       {
         "flipped" : false,
-        "id" : "88CC742C-CE53-4A57-B7FF-5EFD8B22263F",
+        "id" : "45CB3C95-5FAD-42A2-8687-8E1D98772C77",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C3",
@@ -3776,7 +3776,7 @@
       },
       {
         "flipped" : true,
-        "id" : "A6E49661-116D-4AB1-B10C-BB274ED5B0D5",
+        "id" : "62C78D81-59B1-42CA-9E72-239CB4E8EE37",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR2",
@@ -3793,7 +3793,7 @@
       },
       {
         "flipped" : false,
-        "id" : "DCC3F631-1AC0-4C1D-8964-A47779492B80",
+        "id" : "21A7605A-4556-400C-8087-C20AEE641867",
         "kind" : "resistor",
         "model" : "",
         "name" : "R9",
@@ -3809,7 +3809,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5E58B0A0-02E0-4F63-95D3-1BE8EB70E04F",
+        "id" : "622C620D-A996-4060-B066-8684834DFBF9",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C4",
@@ -3825,7 +3825,7 @@
       },
       {
         "flipped" : false,
-        "id" : "03B40103-3F10-4C26-9775-71720506E90A",
+        "id" : "B572E971-D36C-401C-B1AA-C7274ECCD84C",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C5",
@@ -3841,7 +3841,7 @@
       },
       {
         "flipped" : false,
-        "id" : "763E4C33-FDBF-4C96-A6D5-415343F66D63",
+        "id" : "B0B56C1D-5C88-4684-B3BD-8A29ABDE3017",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR3",
@@ -3858,7 +3858,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3568BF83-B3B7-4D1A-9736-1F54FCDBECF5",
+        "id" : "E9FBA5F3-68D3-4F7F-9EB3-01463B46251A",
         "kind" : "pot",
         "model" : "B",
         "name" : "VR4",
@@ -3875,7 +3875,7 @@
       },
       {
         "flipped" : true,
-        "id" : "EA46D4C6-4B14-403B-B618-89FD2D403139",
+        "id" : "C68BB78E-7DC1-4C6D-BF8E-F4E4669A7D01",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR5",
@@ -3892,7 +3892,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D85D9B3C-8CF1-4831-BC91-92F72A96641B",
+        "id" : "D9393687-1F7E-43D6-B7AD-DAE8FF974731",
         "kind" : "output",
         "model" : "",
         "name" : "OUT",
@@ -3909,7 +3909,7 @@
       },
       {
         "flipped" : false,
-        "id" : "8A2F7581-EC54-49E3-B9AD-FF04A9788A43",
+        "id" : "D491DC6A-B168-449F-A8E9-5493002043A1",
         "kind" : "ground",
         "model" : "",
         "name" : "GND10",
@@ -3925,7 +3925,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F3FE7C8F-3F31-4604-90D1-EC6A4495C833",
+        "id" : "A5FD473C-A9D2-4961-A2EA-EA22165CB81D",
         "kind" : "ground",
         "model" : "",
         "name" : "GND11",
@@ -3950,7 +3950,7 @@
           "x" : 2,
           "y" : 0
         },
-        "id" : "00266B3B-500C-457D-8683-92E0EAA89047"
+        "id" : "8739F917-A1BF-4F0B-8636-8447D3A97C96"
       },
       {
         "a" : {
@@ -3961,7 +3961,7 @@
           "x" : 3,
           "y" : 0
         },
-        "id" : "77588005-C871-4D82-B86B-4D498EA92EEE"
+        "id" : "3ECD3151-211E-43A6-B948-E7C8E60E08F0"
       },
       {
         "a" : {
@@ -3972,7 +3972,7 @@
           "x" : 8,
           "y" : 0
         },
-        "id" : "61C67E56-BEE0-4176-9F14-B359FC8B784A"
+        "id" : "50A6EFD8-2BBC-438E-9962-B162BA883961"
       },
       {
         "a" : {
@@ -3983,7 +3983,7 @@
           "x" : 13,
           "y" : 2
         },
-        "id" : "F27A6CC0-4E09-49E2-94D6-1ABD0632646F"
+        "id" : "A4DEB2E0-74FE-4313-8821-670BEED3BCE1"
       },
       {
         "a" : {
@@ -3994,7 +3994,7 @@
           "x" : 13,
           "y" : -2
         },
-        "id" : "19A4A2A5-8C5B-4756-940B-0A0F8F6DCB3F"
+        "id" : "05553BE0-E7E6-40A3-9D94-CDB119660A7B"
       },
       {
         "a" : {
@@ -4005,7 +4005,7 @@
           "x" : 19,
           "y" : -2
         },
-        "id" : "640B2C1F-97DA-4C2C-89C5-9C8FE5A03A89"
+        "id" : "0253C56A-E3F1-4212-8599-6247319C895C"
       },
       {
         "a" : {
@@ -4016,7 +4016,7 @@
           "x" : 22,
           "y" : 0
         },
-        "id" : "C20DDDE0-7598-4080-9A25-CE778910D553"
+        "id" : "0C56E909-58FA-4A33-8280-F28097F04CAC"
       },
       {
         "a" : {
@@ -4027,7 +4027,7 @@
           "x" : 27,
           "y" : 0
         },
-        "id" : "795F3509-C0EF-4FB0-BDAE-62A4934E18FB"
+        "id" : "9246AF0E-24F6-4BE8-B3AC-18CE22124B49"
       },
       {
         "a" : {
@@ -4038,7 +4038,7 @@
           "x" : 34,
           "y" : -2
         },
-        "id" : "703F8F2F-EC1B-49DA-8721-241C9E0196F6"
+        "id" : "F7934131-360E-498B-A16D-FD4AB6026AD9"
       },
       {
         "a" : {
@@ -4049,7 +4049,7 @@
           "x" : 37,
           "y" : -6
         },
-        "id" : "C0AA933E-4DD9-47FC-A3F5-6B8616264989"
+        "id" : "7FC0D745-1C28-4630-8BF3-EEF083FC1796"
       },
       {
         "a" : {
@@ -4060,7 +4060,7 @@
           "x" : 39,
           "y" : 0
         },
-        "id" : "9224EB27-1BF1-40C5-832A-FA1A632C459C"
+        "id" : "F8E3DC0C-71B4-4FB6-A3F5-89B9A5E0846C"
       },
       {
         "a" : {
@@ -4071,7 +4071,7 @@
           "x" : 39,
           "y" : -8
         },
-        "id" : "E8408574-7601-4D81-8C9B-DCF5181DC6A2"
+        "id" : "21DF86D9-563C-409F-8D40-86D57C65248D"
       },
       {
         "a" : {
@@ -4082,7 +4082,7 @@
           "x" : 41,
           "y" : -8
         },
-        "id" : "7274AD5C-3274-4B38-9100-02FC923F4575"
+        "id" : "34EE7207-51B2-41F5-8E75-EA23DD40F456"
       },
       {
         "a" : {
@@ -4093,7 +4093,7 @@
           "x" : 47,
           "y" : -8
         },
-        "id" : "B22D1E43-D4BA-4CA7-B12D-26B69B93F7CC"
+        "id" : "BF7CBC41-C4BA-4723-8A55-2D9133EE39DD"
       },
       {
         "a" : {
@@ -4104,7 +4104,7 @@
           "x" : 43,
           "y" : -4
         },
-        "id" : "A8D4C537-7668-4F7F-BCF0-EDBB9DF8AD76"
+        "id" : "DEC6F610-E418-4232-98BC-9829A6FEC841"
       },
       {
         "a" : {
@@ -4115,7 +4115,7 @@
           "x" : 49,
           "y" : 0
         },
-        "id" : "5A7CAFF1-F10C-41FD-9020-CA98DFB4080A"
+        "id" : "6C36C9FD-3820-4241-BCB0-293666EBC3CD"
       },
       {
         "a" : {
@@ -4126,7 +4126,7 @@
           "x" : 47,
           "y" : 0
         },
-        "id" : "24D72ECE-92BC-49C3-8096-DD39ACE45AC8"
+        "id" : "D0E333AD-E373-48E0-B63C-84B9C05EB162"
       },
       {
         "a" : {
@@ -4137,7 +4137,7 @@
           "x" : 49,
           "y" : 4
         },
-        "id" : "F9F2765F-5973-4049-9854-E571439B0410"
+        "id" : "595A703F-BF2B-454A-B6E4-D86702E1E768"
       },
       {
         "a" : {
@@ -4148,7 +4148,7 @@
           "x" : 47,
           "y" : 4
         },
-        "id" : "EAEC8EB4-7B75-429E-A9E4-29F4EF2DF8F0"
+        "id" : "C0EBEED2-5B86-4564-A5C6-B23EDFFA35F1"
       },
       {
         "a" : {
@@ -4159,7 +4159,7 @@
           "x" : 53,
           "y" : -6
         },
-        "id" : "A25BBD90-4F66-4278-906D-FCF957854617"
+        "id" : "D9B2616F-082B-4B41-BFBC-E7CA0F16D372"
       },
       {
         "a" : {
@@ -4170,7 +4170,7 @@
           "x" : 57,
           "y" : -4
         },
-        "id" : "67CBADFB-009E-4CA8-8925-EC8C39B8909D"
+        "id" : "D28B9AC9-AAF6-4E4D-8712-BF77267E1473"
       }
     ]
   },
@@ -4180,7 +4180,7 @@
     "parts" : [
       {
         "flipped" : false,
-        "id" : "EA180D8C-E138-40A4-9E8B-A6B5EDB204DE",
+        "id" : "A018226A-2EDA-4CE9-8169-DE8EA282BA85",
         "kind" : "input",
         "model" : "",
         "name" : "IN",
@@ -4197,7 +4197,7 @@
       },
       {
         "flipped" : false,
-        "id" : "79823F36-1610-47AF-A85E-BB9BB605D4BE",
+        "id" : "37D0BE24-A786-4FEE-9520-747556CAE313",
         "kind" : "resistor",
         "model" : "",
         "name" : "R1",
@@ -4213,7 +4213,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2919E251-1102-415C-85DB-6424A0DD7D01",
+        "id" : "BD9262A7-7311-4896-B9C7-629DB1BEC626",
         "kind" : "resistor",
         "model" : "",
         "name" : "R2",
@@ -4229,7 +4229,7 @@
       },
       {
         "flipped" : false,
-        "id" : "9C6F6381-5454-4E1A-8D39-3969D971A313",
+        "id" : "FCEF63F3-7A1D-46C7-8080-FBF835B5904C",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V1",
@@ -4245,7 +4245,7 @@
       },
       {
         "flipped" : false,
-        "id" : "23B5FB4E-B63C-4C49-BAE1-860B41B124C8",
+        "id" : "C3B8664D-BA33-4BC9-AD7A-2D2CFA38BB81",
         "kind" : "resistor",
         "model" : "",
         "name" : "R3",
@@ -4261,7 +4261,7 @@
       },
       {
         "flipped" : false,
-        "id" : "BF64452A-0077-4D8D-8FF5-C1F68DD1CC33",
+        "id" : "256FE45B-9AA7-44A5-8026-5F33572A4BE9",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C1",
@@ -4277,7 +4277,7 @@
       },
       {
         "flipped" : false,
-        "id" : "954406AA-5056-4892-9022-EDEF3F1FA46E",
+        "id" : "A41B8143-E075-4F06-B9B5-B17C3E578505",
         "kind" : "resistor",
         "model" : "",
         "name" : "R4",
@@ -4293,7 +4293,7 @@
       },
       {
         "flipped" : false,
-        "id" : "715D3C16-6445-48FD-85AB-35497B813731",
+        "id" : "354E2293-067D-439A-A1BF-BAD22E264633",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C2",
@@ -4309,7 +4309,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E6EEAFBC-69CE-4F57-A6F6-155E30931B1F",
+        "id" : "E8927740-C087-4878-BC1F-14A0EF9BE63B",
         "kind" : "ground",
         "model" : "",
         "name" : "GND1",
@@ -4325,7 +4325,7 @@
       },
       {
         "flipped" : false,
-        "id" : "787153A1-DA43-426C-A29B-9EA304E22941",
+        "id" : "1E3D3602-1697-439D-B0D7-8D714694F486",
         "kind" : "ground",
         "model" : "",
         "name" : "GND2",
@@ -4341,7 +4341,7 @@
       },
       {
         "flipped" : false,
-        "id" : "43E4A9E6-1903-497A-BBBE-9EAB81A5EFE9",
+        "id" : "F5A11CEB-C76A-4EDE-9574-F1E3B151D21F",
         "kind" : "ground",
         "model" : "",
         "name" : "GND3",
@@ -4357,7 +4357,7 @@
       },
       {
         "flipped" : false,
-        "id" : "CD3EF0B9-62B7-404D-842A-B2E953EB0AE2",
+        "id" : "3299A0DE-6B3D-44C2-B28A-BB06871D3987",
         "kind" : "supply",
         "model" : "",
         "name" : "VS4",
@@ -4374,7 +4374,7 @@
       },
       {
         "flipped" : true,
-        "id" : "BC3CE331-3F1B-46E4-8836-95CD2BB6ECCB",
+        "id" : "B5390A08-DC16-49F6-8132-FCECB730A726",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR1",
@@ -4391,7 +4391,7 @@
       },
       {
         "flipped" : false,
-        "id" : "23CE75A5-2648-4B95-9D47-7C0EC6DE7B43",
+        "id" : "10382E53-9563-428E-AF38-74DD11AE4472",
         "kind" : "resistor",
         "model" : "",
         "name" : "R5",
@@ -4407,7 +4407,7 @@
       },
       {
         "flipped" : false,
-        "id" : "FEE63CD9-D5A0-4691-A1FD-A5DE29585892",
+        "id" : "099DF306-1822-4DE4-8792-BD913AB7A74F",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V2",
@@ -4423,7 +4423,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E226FE4A-4B5E-4904-BE0E-5F75361F8292",
+        "id" : "18944558-E133-4A85-A323-FAAD8747F9DD",
         "kind" : "resistor",
         "model" : "",
         "name" : "R6",
@@ -4439,7 +4439,7 @@
       },
       {
         "flipped" : false,
-        "id" : "02DFA0C6-5189-45D1-923F-1960F06FE969",
+        "id" : "E9343170-3E2F-4EC8-949A-739EB6FE3DE9",
         "kind" : "resistor",
         "model" : "",
         "name" : "R7",
@@ -4455,7 +4455,7 @@
       },
       {
         "flipped" : false,
-        "id" : "4DB40148-C4AC-4821-AE1B-9E28FCC50A4B",
+        "id" : "E91508F6-3AA9-4A9D-87B4-CE5D9810929B",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V3",
@@ -4471,7 +4471,7 @@
       },
       {
         "flipped" : false,
-        "id" : "36716102-68BF-4C71-81D4-80E886DEA477",
+        "id" : "530A80C3-F033-45B3-B40B-6174A179F005",
         "kind" : "resistor",
         "model" : "",
         "name" : "R8",
@@ -4487,7 +4487,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D5A1DC80-4A5C-49F6-B4CB-51EFF121D5B2",
+        "id" : "E6F6DE92-CD0D-497A-9A57-79D3C6E2EB51",
         "kind" : "ground",
         "model" : "",
         "name" : "GND5",
@@ -4503,7 +4503,7 @@
       },
       {
         "flipped" : false,
-        "id" : "93FB5D68-5290-4C13-A5E8-0D7D24FDA376",
+        "id" : "6E908DC8-FAC9-4555-83F8-56F1DA262DBD",
         "kind" : "ground",
         "model" : "",
         "name" : "GND6",
@@ -4519,7 +4519,7 @@
       },
       {
         "flipped" : false,
-        "id" : "57902715-D9CB-4E14-9A3A-C3CB0F1B624F",
+        "id" : "B9EC369F-F9E2-472A-BFF0-F53897F837E9",
         "kind" : "supply",
         "model" : "",
         "name" : "VS7",
@@ -4536,7 +4536,7 @@
       },
       {
         "flipped" : false,
-        "id" : "CF97A8A8-1BD4-4468-B21D-8118D407B186",
+        "id" : "BC66A1E9-F620-46D9-8916-F1231DDAB44E",
         "kind" : "supply",
         "model" : "",
         "name" : "VS8",
@@ -4553,7 +4553,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E8B2B5A9-0AFE-4766-A5BA-60AA1A619686",
+        "id" : "16CA6580-AA1B-4317-AC13-DCD4B27703C8",
         "kind" : "ground",
         "model" : "",
         "name" : "GND9",
@@ -4569,7 +4569,7 @@
       },
       {
         "flipped" : false,
-        "id" : "51DD01BD-6ADE-43A3-8471-F1D1D56E5A02",
+        "id" : "B51714DE-BDFF-4560-AA59-9F7F9806B1C9",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C3",
@@ -4585,7 +4585,7 @@
       },
       {
         "flipped" : true,
-        "id" : "BB10A533-3346-43FC-9962-E8D961D6E741",
+        "id" : "7CA37042-0EDD-4756-BFD8-3377CFD0B439",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR2",
@@ -4602,7 +4602,7 @@
       },
       {
         "flipped" : false,
-        "id" : "23D9C7CC-6F26-4E3B-82FB-922F0D6AA22D",
+        "id" : "B606BB3B-E650-472D-9066-007B52EB786B",
         "kind" : "resistor",
         "model" : "",
         "name" : "R9",
@@ -4618,7 +4618,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E57480A3-9415-426E-A2FA-6D5F78AA7B7A",
+        "id" : "7AD52B9D-2639-41D5-8312-76946E2BDEC4",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C4",
@@ -4634,7 +4634,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B199B5BD-14BE-4CBF-A4E6-6130C8748FBB",
+        "id" : "92E30310-7FDB-4963-AF57-EB9007948A29",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C5",
@@ -4650,7 +4650,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D498ACFB-13E2-4EBF-BD4B-EAEB586B1957",
+        "id" : "18B80FCD-D33C-48F7-A4C6-F20D64AAF83F",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR3",
@@ -4667,7 +4667,7 @@
       },
       {
         "flipped" : false,
-        "id" : "04B023F4-5916-44FD-AA93-E50DDCE70465",
+        "id" : "8C06098B-4A89-47BF-A4EF-DCD0242BEB23",
         "kind" : "pot",
         "model" : "B",
         "name" : "VR4",
@@ -4684,7 +4684,7 @@
       },
       {
         "flipped" : true,
-        "id" : "65BD6803-B18F-4610-AEBC-A679D0627838",
+        "id" : "046451EA-B01D-46B3-ACFD-7707C73B33B8",
         "kind" : "pot",
         "model" : "A",
         "name" : "VR5",
@@ -4701,7 +4701,7 @@
       },
       {
         "flipped" : false,
-        "id" : "C36EB248-0E58-43CB-9B82-37520F98E761",
+        "id" : "E762F412-CA01-4680-A46E-3600AE37BFEA",
         "kind" : "ground",
         "model" : "",
         "name" : "GND10",
@@ -4717,7 +4717,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E9ACFECE-2F9D-4CC6-9EFA-40F6728A9F70",
+        "id" : "2C50AEDB-4E65-4DCE-9CA4-5DF7D090F919",
         "kind" : "ground",
         "model" : "",
         "name" : "GND11",
@@ -4733,7 +4733,7 @@
       },
       {
         "flipped" : false,
-        "id" : "41D69F62-EE29-4F51-B679-2624C5C863AF",
+        "id" : "14785407-97BE-44CF-B6DF-542909573D8E",
         "kind" : "label",
         "model" : "",
         "name" : "NET12",
@@ -4749,7 +4749,7 @@
       },
       {
         "flipped" : false,
-        "id" : "94FF3A4B-E710-4C64-98DC-7D55A5802506",
+        "id" : "FF7C18CF-D7A1-4D6F-82B4-4B0203A3CBAF",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C30",
@@ -4765,7 +4765,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2DF83FF9-7325-4472-942A-418968FDBB4A",
+        "id" : "DBE0B964-25CB-41EF-9B92-5D5DA6379AF1",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V7",
@@ -4781,7 +4781,7 @@
       },
       {
         "flipped" : true,
-        "id" : "17C08DCE-5A63-4C5A-890B-A0A073FB0772",
+        "id" : "4ED4F1AA-86EF-47AF-BAF6-4D0F671425DD",
         "kind" : "triode",
         "model" : "12AX7",
         "name" : "V8",
@@ -4797,7 +4797,7 @@
       },
       {
         "flipped" : false,
-        "id" : "ED07385B-54A6-47BB-9C56-E8FDED257270",
+        "id" : "CD604E1E-F3AD-4CFF-B5A1-BF34F10B7560",
         "kind" : "resistor",
         "model" : "",
         "name" : "R30",
@@ -4813,7 +4813,7 @@
       },
       {
         "flipped" : false,
-        "id" : "8D0C6D68-B5C5-4817-8443-F07C4AF94405",
+        "id" : "BF211205-F895-43C9-8EB3-1BB2C756E892",
         "kind" : "resistor",
         "model" : "",
         "name" : "R31",
@@ -4829,7 +4829,7 @@
       },
       {
         "flipped" : false,
-        "id" : "06742840-0A3B-49E2-9CE2-01C03C2E7F4C",
+        "id" : "9C716F23-516A-4FFF-B7F0-056029DCD89D",
         "kind" : "resistor",
         "model" : "",
         "name" : "R32",
@@ -4845,7 +4845,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5CF6572C-B5FB-4F07-9482-605D74914634",
+        "id" : "DBFC29BB-5868-46F2-9203-DDCA56B4AAF7",
         "kind" : "resistor",
         "model" : "",
         "name" : "R33",
@@ -4861,7 +4861,7 @@
       },
       {
         "flipped" : false,
-        "id" : "31DB6449-A028-4017-96E3-FCF426EA900A",
+        "id" : "E2BAD4C2-E42D-4E7F-8B33-3B154CB6446A",
         "kind" : "resistor",
         "model" : "",
         "name" : "R34",
@@ -4877,7 +4877,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B8677ACB-CC9A-46EB-95EA-9195B3B99A0B",
+        "id" : "5E56CA9A-B7EE-4D88-BAA8-91847BB9EAF7",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C31",
@@ -4893,7 +4893,7 @@
       },
       {
         "flipped" : false,
-        "id" : "674A9E22-C0AD-4236-9EA8-D85B7B320248",
+        "id" : "F22C18EE-5189-4B06-9BCB-3BD24385F64B",
         "kind" : "resistor",
         "model" : "",
         "name" : "R35",
@@ -4909,7 +4909,7 @@
       },
       {
         "flipped" : false,
-        "id" : "84B7BE00-194A-4D2C-A36D-06F53DCC2328",
+        "id" : "A435870C-66D3-4DF6-AF20-D23BA0471332",
         "kind" : "resistor",
         "model" : "",
         "name" : "R36",
@@ -4925,7 +4925,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B3CE191C-2D3A-47F6-8DD4-EC8CDF9753A7",
+        "id" : "259B4FB2-0AD5-4DBE-9E2D-904D2C880D34",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C32",
@@ -4941,7 +4941,7 @@
       },
       {
         "flipped" : false,
-        "id" : "FBF44296-900B-4ACD-9940-9D6DD3A0FE9A",
+        "id" : "CD4C4F45-F8DE-450F-ACFB-259B5BD74CC0",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C33",
@@ -4957,7 +4957,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3AF9E9CB-2428-4361-857D-1B1FBDD71400",
+        "id" : "514362B1-4A1D-4D6E-94E1-26B249B9D715",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C34",
@@ -4973,7 +4973,7 @@
       },
       {
         "flipped" : true,
-        "id" : "0B2131D5-6981-411F-B397-765D63D19C0B",
+        "id" : "72371BAE-1E11-47C5-BEAD-8380BC79197F",
         "kind" : "pot",
         "model" : "B",
         "name" : "VR9",
@@ -4990,7 +4990,7 @@
       },
       {
         "flipped" : false,
-        "id" : "26E5EE7E-99DF-447D-93A1-CD231DEE0A93",
+        "id" : "890F3A79-BA5A-41BC-A9B7-5398927B88EE",
         "kind" : "resistor",
         "model" : "",
         "name" : "R37",
@@ -5006,7 +5006,7 @@
       },
       {
         "flipped" : false,
-        "id" : "03331579-2296-4A80-8928-3B4A4BC71059",
+        "id" : "9B5E2003-5858-4CAB-B80D-71A4A77E77F3",
         "kind" : "label",
         "model" : "",
         "name" : "NET13",
@@ -5022,7 +5022,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A965CA00-210B-4556-B084-D866AD0D26E0",
+        "id" : "5C88E473-269A-4982-819E-26BB850C1C80",
         "kind" : "ground",
         "model" : "",
         "name" : "GND14",
@@ -5038,7 +5038,7 @@
       },
       {
         "flipped" : false,
-        "id" : "99065900-B5D0-4C06-8383-D642053767F9",
+        "id" : "5F7F1379-4E24-4EDE-BE2F-7BE6BEE2E1D2",
         "kind" : "ground",
         "model" : "",
         "name" : "GND15",
@@ -5054,7 +5054,7 @@
       },
       {
         "flipped" : false,
-        "id" : "BEF7FD21-9596-4877-9AD1-E580C7E38757",
+        "id" : "5F19DED6-7B21-47A8-8FC5-842859F9A478",
         "kind" : "label",
         "model" : "",
         "name" : "NET16",
@@ -5070,7 +5070,7 @@
       },
       {
         "flipped" : false,
-        "id" : "1DB43FFA-AE48-4442-B1B9-83A803146421",
+        "id" : "ED759FA4-3F65-4088-A0C2-AC90036A6117",
         "kind" : "supply",
         "model" : "",
         "name" : "VS17",
@@ -5087,7 +5087,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F54DC08B-2C02-4AA5-9A1F-C7CB7F4117C0",
+        "id" : "9BB6A2B8-DF07-4AEE-AB84-33BE8002DA03",
         "kind" : "supply",
         "model" : "",
         "name" : "VS18",
@@ -5104,7 +5104,7 @@
       },
       {
         "flipped" : false,
-        "id" : "4FB4D9E6-B8D0-4065-A558-26FFFF475A52",
+        "id" : "4AF7B030-4F3B-4302-B24C-09E9D2B8BD07",
         "kind" : "label",
         "model" : "",
         "name" : "NET19",
@@ -5120,7 +5120,7 @@
       },
       {
         "flipped" : false,
-        "id" : "222B65B1-7D0A-4F82-9E21-0DA0BB45B4FD",
+        "id" : "CC1EEEEB-39D7-467A-94CC-F1F5AD2947B9",
         "kind" : "label",
         "model" : "",
         "name" : "NET20",
@@ -5136,7 +5136,7 @@
       },
       {
         "flipped" : false,
-        "id" : "82889DB5-7B0A-4DEE-8CB4-5E26B780D6F3",
+        "id" : "16160101-FCD9-4EB7-8662-05601B6CB63A",
         "kind" : "pentode",
         "model" : "EL34",
         "name" : "V9",
@@ -5152,7 +5152,7 @@
       },
       {
         "flipped" : true,
-        "id" : "76B00D3A-05DF-4998-8265-68C400C58732",
+        "id" : "79710119-1562-4DEF-9427-0623A33352E5",
         "kind" : "pentode",
         "model" : "EL34",
         "name" : "V10",
@@ -5168,7 +5168,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7488B94B-C974-43AC-B660-72C87011E884",
+        "id" : "3CA4046F-15B8-48C6-8E16-80C1EA4BC8FE",
         "kind" : "resistor",
         "model" : "",
         "name" : "R40",
@@ -5184,7 +5184,7 @@
       },
       {
         "flipped" : false,
-        "id" : "939CBC23-3952-41C2-B8FB-766818E1865D",
+        "id" : "597D7C57-8295-403C-A134-57592A7718DF",
         "kind" : "resistor",
         "model" : "",
         "name" : "R41",
@@ -5200,7 +5200,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B83EB00B-7BA1-415D-A50B-071252BA3EC1",
+        "id" : "5F56A956-EFFE-4F4C-9E41-22D9C51BE94D",
         "kind" : "resistor",
         "model" : "",
         "name" : "R42",
@@ -5216,7 +5216,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E8114C4B-4871-4D4C-9248-1FA618F61F51",
+        "id" : "878478F1-3E0F-46D8-961F-76F82BFF3027",
         "kind" : "resistor",
         "model" : "",
         "name" : "R43",
@@ -5232,7 +5232,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E5C75FB6-751E-43D2-BBE6-661DB23A4D3B",
+        "id" : "A1024AD8-CF86-4692-97E0-585C55FCD175",
         "kind" : "resistor",
         "model" : "",
         "name" : "R44",
@@ -5248,7 +5248,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2B40267A-3566-4DC1-9D0F-035660D78544",
+        "id" : "D4CB048F-5FB3-43AD-880D-3E806992CC4A",
         "kind" : "resistor",
         "model" : "",
         "name" : "R45",
@@ -5264,7 +5264,7 @@
       },
       {
         "flipped" : false,
-        "id" : "02FC7657-22E2-444D-98FB-ADFD65F04D17",
+        "id" : "DEA3212A-A6AD-4F3A-A17A-5E2A4DFF7DD5",
         "kind" : "transformer",
         "model" : "",
         "name" : "T1",
@@ -5285,7 +5285,7 @@
       },
       {
         "flipped" : false,
-        "id" : "CA31E491-8257-4743-B406-E104A6ED2DA3",
+        "id" : "8F94F35C-1F99-41FF-920F-38BAD2132EFA",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C40",
@@ -5301,7 +5301,7 @@
       },
       {
         "flipped" : false,
-        "id" : "7275D67B-EBAC-4223-9FFE-654EA92DEB6E",
+        "id" : "34C30A91-11FB-4BD5-8EA4-0B6AAE2DB030",
         "kind" : "label",
         "model" : "",
         "name" : "NET21",
@@ -5317,7 +5317,7 @@
       },
       {
         "flipped" : false,
-        "id" : "179B9230-7A76-4826-9659-80A5AC046442",
+        "id" : "D33A72B6-367B-4CEB-999F-0926B8995C9B",
         "kind" : "label",
         "model" : "",
         "name" : "NET22",
@@ -5333,7 +5333,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A979CFAD-CC56-4951-8C33-537255213472",
+        "id" : "70767D65-FE44-4502-97C6-AE78BF1C714F",
         "kind" : "supply",
         "model" : "",
         "name" : "VS23",
@@ -5350,7 +5350,7 @@
       },
       {
         "flipped" : false,
-        "id" : "B7E08CDE-66F0-4BDB-80E7-7636BD91E6D7",
+        "id" : "CB98EAAC-B50B-4590-B077-B6DB44DE2886",
         "kind" : "ground",
         "model" : "",
         "name" : "GND24",
@@ -5366,7 +5366,7 @@
       },
       {
         "flipped" : false,
-        "id" : "70927266-45A6-41E5-AE4D-AF21AC6FF01D",
+        "id" : "1155B517-5233-4B14-A762-F4E4C9E6DAD6",
         "kind" : "supply",
         "model" : "",
         "name" : "VS25",
@@ -5383,7 +5383,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A8F68127-3A22-4CFB-A573-4231F7C21F05",
+        "id" : "A1CB5A7F-BCB2-43ED-9C8A-A4CB395159AE",
         "kind" : "ground",
         "model" : "",
         "name" : "GND26",
@@ -5399,7 +5399,7 @@
       },
       {
         "flipped" : false,
-        "id" : "20249696-A2CA-44EE-B215-9E36447D3090",
+        "id" : "81E47341-0089-4B4E-BA1A-B91B373899B9",
         "kind" : "resistor",
         "model" : "",
         "name" : "R50",
@@ -5415,7 +5415,7 @@
       },
       {
         "flipped" : false,
-        "id" : "510C48D7-C339-4820-BC7D-E32B130987E4",
+        "id" : "DD7C4190-65D2-4BD3-B123-A07BA84B5687",
         "kind" : "inductor",
         "model" : "",
         "name" : "L50",
@@ -5432,7 +5432,7 @@
       },
       {
         "flipped" : false,
-        "id" : "F57F62F1-0A62-4DA7-92F9-BB5BFCA3179C",
+        "id" : "03321099-613A-4779-9EF8-9ED9C2C8B5D0",
         "kind" : "inductor",
         "model" : "",
         "name" : "L51",
@@ -5449,7 +5449,7 @@
       },
       {
         "flipped" : false,
-        "id" : "D3F577B8-81EF-4A6F-8B58-5F5B6E134AFA",
+        "id" : "9831EA44-84AB-4471-B2EF-F354F23F3E25",
         "kind" : "capacitor",
         "model" : "",
         "name" : "C50",
@@ -5465,7 +5465,7 @@
       },
       {
         "flipped" : false,
-        "id" : "E936C42D-586F-4381-A69D-CCAB16AADC9A",
+        "id" : "87610E5D-BA6E-4653-86B8-E5FD936A5D24",
         "kind" : "resistor",
         "model" : "",
         "name" : "R51",
@@ -5481,7 +5481,7 @@
       },
       {
         "flipped" : false,
-        "id" : "34F36275-10FC-4727-9324-B193F0371E27",
+        "id" : "E5935A8B-53C3-492B-89FD-C060E991E385",
         "kind" : "output",
         "model" : "",
         "name" : "OUT",
@@ -5498,7 +5498,7 @@
       },
       {
         "flipped" : false,
-        "id" : "5BE24A2E-50D8-418F-95DA-75F33CA50588",
+        "id" : "445D18A0-1FB9-46EF-A483-A537C13B6C06",
         "kind" : "ground",
         "model" : "",
         "name" : "GND27",
@@ -5514,7 +5514,7 @@
       },
       {
         "flipped" : false,
-        "id" : "A6C109F7-A3DC-4071-819A-0E740CBC76E1",
+        "id" : "C15EF34D-8E94-49A6-B516-5DC568434A75",
         "kind" : "label",
         "model" : "",
         "name" : "NET28",
@@ -5539,7 +5539,7 @@
           "x" : 2,
           "y" : 0
         },
-        "id" : "5474D82B-2350-4E81-8DC9-04E68512E731"
+        "id" : "20C9A7C2-3615-41D9-99A4-05621F3FC0AC"
       },
       {
         "a" : {
@@ -5550,7 +5550,7 @@
           "x" : 3,
           "y" : 0
         },
-        "id" : "190C74B8-51B9-4AA4-92C3-C6BE4D3C2903"
+        "id" : "36C39AF0-783E-490B-93FD-7E07BB6117E2"
       },
       {
         "a" : {
@@ -5561,7 +5561,7 @@
           "x" : 8,
           "y" : 0
         },
-        "id" : "5114A736-7A3F-4B72-A50E-23E1B8E94A79"
+        "id" : "58AA2C25-1D0A-4D4D-AF51-7F353C327D33"
       },
       {
         "a" : {
@@ -5572,7 +5572,7 @@
           "x" : 13,
           "y" : 2
         },
-        "id" : "C6B5534E-AF35-42F9-BCE3-DF564979D3AC"
+        "id" : "5254108F-E58F-46CD-9551-CC9F13F6FA46"
       },
       {
         "a" : {
@@ -5583,7 +5583,7 @@
           "x" : 13,
           "y" : -2
         },
-        "id" : "D35CD1A0-EE47-4DC4-A3EB-5D7C4E3930B7"
+        "id" : "3F47C27E-3F75-43C5-A425-5CBF7DAB5E8A"
       },
       {
         "a" : {
@@ -5594,7 +5594,7 @@
           "x" : 19,
           "y" : -2
         },
-        "id" : "F3F69947-9D59-43D7-954C-8C676626BB1D"
+        "id" : "8F940637-AB8F-4484-A1E3-E392FCE6EA79"
       },
       {
         "a" : {
@@ -5605,7 +5605,7 @@
           "x" : 22,
           "y" : 0
         },
-        "id" : "C03A1AF8-5CA3-4B6A-9CEB-13D6D7C2384F"
+        "id" : "7CAB62E6-11A2-4909-B375-C0A2F93B8E93"
       },
       {
         "a" : {
@@ -5616,7 +5616,7 @@
           "x" : 27,
           "y" : 0
         },
-        "id" : "063BF80B-0330-4230-AB69-274A6B79229E"
+        "id" : "CE997011-7EBF-4D0E-8483-EA3C1DBE8A23"
       },
       {
         "a" : {
@@ -5627,7 +5627,7 @@
           "x" : 34,
           "y" : -2
         },
-        "id" : "BAC17428-AB92-4846-A313-C06F77D4CAD8"
+        "id" : "0F0076FB-FE62-460D-A9CB-63BD309B7FC1"
       },
       {
         "a" : {
@@ -5638,7 +5638,7 @@
           "x" : 37,
           "y" : -6
         },
-        "id" : "EB5269A6-C0EF-48B2-901D-F09C1235DE40"
+        "id" : "481EAB5F-DB64-4CEF-A2C1-6A0951AE2921"
       },
       {
         "a" : {
@@ -5649,7 +5649,7 @@
           "x" : 39,
           "y" : 0
         },
-        "id" : "7230EDED-92EA-4F07-9035-2A587FA94A8C"
+        "id" : "46B909B0-AD95-485A-B918-A160A795F4FF"
       },
       {
         "a" : {
@@ -5660,7 +5660,7 @@
           "x" : 39,
           "y" : -8
         },
-        "id" : "BB0F35B1-2B21-47C2-BB24-4B0C140F760F"
+        "id" : "E1277ABA-DCDB-4C6C-AE2C-530C51422E70"
       },
       {
         "a" : {
@@ -5671,7 +5671,7 @@
           "x" : 41,
           "y" : -8
         },
-        "id" : "EFA7AEF4-384A-46B0-B094-340F13DB2742"
+        "id" : "5E916852-4219-4F9D-A4EB-F87454C55F86"
       },
       {
         "a" : {
@@ -5682,7 +5682,7 @@
           "x" : 47,
           "y" : -8
         },
-        "id" : "615F5662-3CC4-4E1B-8B43-BE4A2E3AA229"
+        "id" : "A003CD73-0C15-40E5-949B-1851A8EAA184"
       },
       {
         "a" : {
@@ -5693,7 +5693,7 @@
           "x" : 43,
           "y" : -4
         },
-        "id" : "F2D0BC17-6C2D-4C85-BCA2-F2E8016A316D"
+        "id" : "DFEBEA19-33DB-451D-B223-4F64B197691C"
       },
       {
         "a" : {
@@ -5704,7 +5704,7 @@
           "x" : 49,
           "y" : 0
         },
-        "id" : "5C677A77-1A91-4B41-A684-ECEB436DFF81"
+        "id" : "C06D02C2-1EC3-47FC-80D2-BD1FE564D4A9"
       },
       {
         "a" : {
@@ -5715,7 +5715,7 @@
           "x" : 47,
           "y" : 0
         },
-        "id" : "E553A1C8-1A53-438D-B2C3-54C307DC2CDD"
+        "id" : "4C27BD86-15EB-4C53-A314-8C2AD3F73D07"
       },
       {
         "a" : {
@@ -5726,7 +5726,7 @@
           "x" : 49,
           "y" : 4
         },
-        "id" : "CD860AC7-5E3B-4683-B952-A739B9AE249A"
+        "id" : "D683E8E0-83E6-4F22-83D0-60849F7A3E83"
       },
       {
         "a" : {
@@ -5737,7 +5737,7 @@
           "x" : 47,
           "y" : 4
         },
-        "id" : "DAB7BA03-9344-47CA-84DD-DC4961E07087"
+        "id" : "B0CB709E-ABEF-4947-83F9-AEADD59867BD"
       },
       {
         "a" : {
@@ -5748,7 +5748,7 @@
           "x" : 53,
           "y" : -6
         },
-        "id" : "C636E944-FE6C-4C29-90F0-D5285C384412"
+        "id" : "CF8D5FDC-E76A-4421-80C1-473F1FADF1D4"
       },
       {
         "a" : {
@@ -5759,7 +5759,7 @@
           "x" : 58,
           "y" : -4
         },
-        "id" : "B6F65629-60AE-4AB8-991D-D607CCAF7DCB"
+        "id" : "AFADA201-FA1C-4F28-B0C4-F670C037425E"
       },
       {
         "a" : {
@@ -5770,7 +5770,7 @@
           "x" : 8,
           "y" : 28
         },
-        "id" : "485C1869-3444-4D6B-BB4E-22726DABF90D"
+        "id" : "4B3616A5-7F28-4B84-98D6-143BD382AF83"
       },
       {
         "a" : {
@@ -5781,7 +5781,7 @@
           "x" : 17,
           "y" : 30
         },
-        "id" : "7D60BFCD-A87C-4702-AED8-94609ECA354C"
+        "id" : "19075D2C-0B07-4455-BA47-255359B93EB9"
       },
       {
         "a" : {
@@ -5792,7 +5792,7 @@
           "x" : 8,
           "y" : 34
         },
-        "id" : "2B62C294-2EA5-4A2B-A80E-9D3FB104E3D2"
+        "id" : "8CE2F9C8-9740-4035-9FC7-696506CE5055"
       },
       {
         "a" : {
@@ -5803,7 +5803,7 @@
           "x" : 14,
           "y" : 34
         },
-        "id" : "0426FBE4-7A77-437D-9376-14DE3FFD75BA"
+        "id" : "FEC3C7B7-3E8A-4885-8D3D-1E0D74355781"
       },
       {
         "a" : {
@@ -5814,7 +5814,7 @@
           "x" : 20,
           "y" : 34
         },
-        "id" : "81707E5D-BB1E-4144-89EF-9D7AD3C4DC20"
+        "id" : "645FDFD2-62E5-40FD-8F82-8029672BAEF3"
       },
       {
         "a" : {
@@ -5825,7 +5825,7 @@
           "x" : 14,
           "y" : 34
         },
-        "id" : "4F72008C-5CB3-427C-866A-386C98D0C5D8"
+        "id" : "D77376EF-E15D-4D71-B65D-4F86FD617C75"
       },
       {
         "a" : {
@@ -5836,7 +5836,7 @@
           "x" : 23,
           "y" : 28
         },
-        "id" : "AF429A61-3270-459D-9FDA-6101D4F68102"
+        "id" : "E7F2A242-78C8-436A-95F8-6E8C1D29C122"
       },
       {
         "a" : {
@@ -5847,7 +5847,7 @@
           "x" : 23,
           "y" : 38
         },
-        "id" : "72742AF2-F2AF-4BAE-B8D5-BB2B1ED01959"
+        "id" : "A127B540-BD0A-4947-8534-820D4C903C90"
       },
       {
         "a" : {
@@ -5858,7 +5858,7 @@
           "x" : 14,
           "y" : 38
         },
-        "id" : "3BFEEBE0-BB19-4A7A-A3BA-83DC7500E656"
+        "id" : "2BCBB7C4-719E-455A-9024-5BF490975BCC"
       },
       {
         "a" : {
@@ -5869,7 +5869,7 @@
           "x" : 11,
           "y" : 42
         },
-        "id" : "3D896122-B9D5-4695-9A18-89FF43C16E16"
+        "id" : "5734D63F-482C-4AB8-8553-420E00754053"
       },
       {
         "a" : {
@@ -5880,7 +5880,7 @@
           "x" : 9,
           "y" : 42
         },
-        "id" : "38367BBE-2C70-498B-A25A-81E835437C46"
+        "id" : "45D1D90A-AA68-4064-A36A-10A7D21189D6"
       },
       {
         "a" : {
@@ -5891,7 +5891,7 @@
           "x" : 16,
           "y" : 38
         },
-        "id" : "18E8A3DC-3479-4A3F-97B0-321890F2137C"
+        "id" : "75B875DE-BE9B-4383-8ADD-7614447C8AB8"
       },
       {
         "a" : {
@@ -5902,7 +5902,7 @@
           "x" : 14,
           "y" : 38
         },
-        "id" : "89B45A3C-271C-4057-9133-BEDEAA71FE8D"
+        "id" : "1BC9E53D-C6D4-404B-95CC-990ADA302B43"
       },
       {
         "a" : {
@@ -5913,7 +5913,7 @@
           "x" : 16,
           "y" : 38
         },
-        "id" : "0B809141-9085-4B15-A69F-D967D2675D0B"
+        "id" : "DDFFB220-AE25-483A-88D1-E567B8C08186"
       },
       {
         "a" : {
@@ -5924,7 +5924,7 @@
           "x" : 16,
           "y" : 40
         },
-        "id" : "20273128-8ADE-412D-A00E-65755FFC7280"
+        "id" : "D3C32408-2BBE-48EE-BF6C-783E5907FABF"
       },
       {
         "a" : {
@@ -5935,7 +5935,7 @@
           "x" : 11,
           "y" : 18
         },
-        "id" : "32A578E3-8A63-47DC-9CC3-14B4FCF24144"
+        "id" : "CD22D758-6DEE-4031-A5F8-3D8976B4A47A"
       },
       {
         "a" : {
@@ -5946,7 +5946,7 @@
           "x" : 17,
           "y" : 18
         },
-        "id" : "3BCEA451-AB74-48B3-9F34-26BE869F1455"
+        "id" : "432A4381-C811-40DF-A01D-F0361E5DE387"
       },
       {
         "a" : {
@@ -5957,7 +5957,7 @@
           "x" : 11,
           "y" : 24
         },
-        "id" : "D586D0EE-E9CB-4D36-B254-63BA1A3221D1"
+        "id" : "EA5F5E07-C740-4711-A77E-025C9FE95B38"
       },
       {
         "a" : {
@@ -5968,7 +5968,7 @@
           "x" : 11,
           "y" : 23
         },
-        "id" : "C59DC595-CB6E-4A72-A74F-B7069CE75D76"
+        "id" : "49CE3334-70D3-4AF3-95B8-404E64B591EF"
       },
       {
         "a" : {
@@ -5979,7 +5979,7 @@
           "x" : 11,
           "y" : 24
         },
-        "id" : "B41ADD0C-302B-418F-A765-62CB9EFC2213"
+        "id" : "266A571D-0047-4D82-8848-F38271BA9DC2"
       },
       {
         "a" : {
@@ -5990,7 +5990,7 @@
           "x" : 17,
           "y" : 24
         },
-        "id" : "33956819-00FA-47D5-9E86-3A6F4388555D"
+        "id" : "A424BC69-937C-4EAD-9E8E-4A9EBF840B42"
       },
       {
         "a" : {
@@ -6001,7 +6001,7 @@
           "x" : 17,
           "y" : 23
         },
-        "id" : "8FEE1B0D-D5F0-4E42-B8AD-2CCD4EA473D9"
+        "id" : "A799B690-A301-431F-88FF-C19169C06C88"
       },
       {
         "a" : {
@@ -6012,7 +6012,7 @@
           "x" : 17,
           "y" : 24
         },
-        "id" : "DDED2BB8-CFFF-4043-82E1-2FE100F6CB09"
+        "id" : "7A520B36-B952-4600-BDB9-95D2AE0D23D6"
       },
       {
         "a" : {
@@ -6023,7 +6023,7 @@
           "x" : 40,
           "y" : 22
         },
-        "id" : "4CD3869B-4D80-4E32-875B-1A571054223D"
+        "id" : "B2611A61-B289-41D0-BF7D-E509C919F37F"
       },
       {
         "a" : {
@@ -6034,7 +6034,7 @@
           "x" : 40,
           "y" : 34
         },
-        "id" : "0C1EC9E4-2117-47EF-B9D7-3479C4B24BA0"
+        "id" : "CB2EC8FE-A734-4AA3-9118-BAFA6AE9A178"
       },
       {
         "a" : {
@@ -6045,7 +6045,7 @@
           "x" : 35,
           "y" : 28
         },
-        "id" : "BEB17207-F59C-41D8-8BFD-F0A16A2472C8"
+        "id" : "87092050-C28F-44F8-A0B7-B5D3BE40C817"
       },
       {
         "a" : {
@@ -6056,7 +6056,7 @@
           "x" : 35,
           "y" : 30
         },
-        "id" : "B15EAF04-3027-4AB0-B99B-8E7A427D1B6E"
+        "id" : "2112E628-9D2A-4A32-B258-9F73766DB2AD"
       },
       {
         "a" : {
@@ -6067,7 +6067,7 @@
           "x" : 32,
           "y" : 28
         },
-        "id" : "3D91A085-4CCF-4163-ABD6-A1006FE55AB2"
+        "id" : "F801A608-4D91-4790-A1CD-2CDA70ADCECD"
       },
       {
         "a" : {
@@ -6078,7 +6078,7 @@
           "x" : 43,
           "y" : 28
         },
-        "id" : "95266810-95B7-4098-B8E1-F7A91996A347"
+        "id" : "C76DD3DA-6161-4293-A3B5-60A5D424E8A2"
       },
       {
         "a" : {
@@ -6089,7 +6089,7 @@
           "x" : 43,
           "y" : 32
         },
-        "id" : "67F2D51D-5FE3-45A1-AEA9-89E70B3A2E04"
+        "id" : "914CA4BD-E7D0-461A-AC2C-A95B011976FF"
       },
       {
         "a" : {
@@ -6100,7 +6100,7 @@
           "x" : 41,
           "y" : 28
         },
-        "id" : "6E04AF49-D885-4DA2-A56E-992B165D4B2B"
+        "id" : "53110AB9-8E38-44B9-BFDB-1E8B9E9A58F1"
       },
       {
         "a" : {
@@ -6111,7 +6111,7 @@
           "x" : 45,
           "y" : 28
         },
-        "id" : "0E92E048-CC48-41B3-8EE5-20A605E6841B"
+        "id" : "A64E4AD1-5FC3-4E03-A7A6-A80879A2E02A"
       },
       {
         "a" : {
@@ -6122,7 +6122,7 @@
           "x" : 45,
           "y" : 30
         },
-        "id" : "8C578E51-F3C4-4B55-A0C8-DDA332217E32"
+        "id" : "2322AD31-82F6-4A4A-8462-C5116B5F6360"
       },
       {
         "a" : {
@@ -6133,7 +6133,7 @@
           "x" : 48,
           "y" : 28
         },
-        "id" : "7904D5AD-5F45-4052-9438-F46FC136FFE7"
+        "id" : "4445D9D8-B2FF-444C-912C-3B92C9B4B0C9"
       },
       {
         "a" : {
@@ -6144,7 +6144,7 @@
           "x" : 50,
           "y" : 28
         },
-        "id" : "DCF5798B-D2FA-4A75-AC06-91EF909DEBC4"
+        "id" : "DE37F858-3044-48AD-B942-D955833C649B"
       },
       {
         "a" : {
@@ -6155,7 +6155,7 @@
           "x" : 48,
           "y" : 25
         },
-        "id" : "A81F3DD8-6FA6-4237-83E3-3C4B066F8E5C"
+        "id" : "226C975B-360C-4D94-9117-520B63B61601"
       },
       {
         "a" : {
@@ -6166,7 +6166,7 @@
           "x" : 48,
           "y" : 28
         },
-        "id" : "3DA964A4-AC73-4AB6-984F-2D98FD6CD064"
+        "id" : "B818FFA5-37F4-45D0-AF86-71F81B5B6D44"
       },
       {
         "a" : {
@@ -6177,7 +6177,7 @@
           "x" : 50,
           "y" : 20
         },
-        "id" : "BF59856E-1FAE-4212-8C3E-D35AFC7B16F9"
+        "id" : "F307F722-DF93-4D37-AF0B-2627ADC2D1AC"
       },
       {
         "a" : {
@@ -6188,7 +6188,7 @@
           "x" : 50,
           "y" : 26
         },
-        "id" : "5872FEB4-B250-4A3B-BCA6-7B7AA770BB00"
+        "id" : "386CCBBB-5B3E-4F98-AF25-986EA8DFA54B"
       },
       {
         "a" : {
@@ -6199,7 +6199,7 @@
           "x" : 50,
           "y" : 36
         },
-        "id" : "C40D9CBC-93BC-4118-BE06-F2B7E3F28859"
+        "id" : "AA3F1FF4-CD91-474D-B796-7FD6BC2C0E66"
       },
       {
         "a" : {
@@ -6210,7 +6210,7 @@
           "x" : 50,
           "y" : 30
         },
-        "id" : "A696DD81-5B2D-45A2-8B08-8D54D4C9A666"
+        "id" : "050EBFC1-6D52-49D1-A602-6B61E06067C0"
       },
       {
         "a" : {
@@ -6221,7 +6221,7 @@
           "x" : 61,
           "y" : 26
         },
-        "id" : "7F5FB063-C49E-4523-8F7A-5A5E0CCF690F"
+        "id" : "0B52DE4E-2918-47A4-B7DC-709C195EF6DB"
       },
       {
         "a" : {
@@ -6232,7 +6232,7 @@
           "x" : 68,
           "y" : 26
         },
-        "id" : "D15B2BA1-9EAB-470F-9E96-68072D121190"
+        "id" : "5CD141B2-0B21-436C-A4D3-C3FCA8F976A2"
       },
       {
         "a" : {
@@ -6243,7 +6243,7 @@
           "x" : 71,
           "y" : 26
         },
-        "id" : "F60A8649-03EC-4BE3-9DC5-73813986AEE1"
+        "id" : "7E1EA8F8-5B86-4B47-AA3C-4FC1B8AADBAD"
       },
       {
         "a" : {
@@ -6254,7 +6254,7 @@
           "x" : 65,
           "y" : 30
         },
-        "id" : "5669AD06-EAF5-414C-B412-4A77C6E76A37"
+        "id" : "E7768058-B979-4A93-BB15-90CA941BAA78"
       },
       {
         "a" : {
@@ -6265,7 +6265,7 @@
           "x" : 68,
           "y" : 30
         },
-        "id" : "ECDF47B5-8B69-48FC-9B12-E8FCBE3F2E80"
+        "id" : "713EB381-97B6-4947-A468-680CA6C69365"
       },
       {
         "a" : {
@@ -6276,7 +6276,7 @@
           "x" : 71,
           "y" : 30
         },
-        "id" : "D875F5F8-AE62-42FD-A8DF-EF70EE5FF024"
+        "id" : "3415D20A-423F-43AF-B89B-83521354CFEC"
       },
       {
         "a" : {
@@ -6287,7 +6287,7 @@
           "x" : 55,
           "y" : 26
         },
-        "id" : "A928CF14-097B-4951-8AFA-A813137A0BC5"
+        "id" : "93584C4B-64E1-4928-BC99-FD78517107A4"
       },
       {
         "a" : {
@@ -6298,7 +6298,7 @@
           "x" : 56,
           "y" : 26
         },
-        "id" : "2605C88C-2F70-4E12-BC0B-97D60069811E"
+        "id" : "5BCA4097-84B9-40A4-921A-8EB95EA02A59"
       },
       {
         "a" : {
@@ -6309,7 +6309,7 @@
           "x" : 55,
           "y" : 23
         },
-        "id" : "9F5D30A7-4EA4-48FB-AED1-B1210B794FFF"
+        "id" : "1BC34814-598A-4786-84F8-6ABC3C573509"
       },
       {
         "a" : {
@@ -6320,7 +6320,7 @@
           "x" : 58,
           "y" : 23
         },
-        "id" : "5FA00F9C-E4BD-46DB-8F20-A7910A682B66"
+        "id" : "FA0E7454-49B8-412A-8B2A-7A6CAE2A49D0"
       },
       {
         "a" : {
@@ -6331,7 +6331,7 @@
           "x" : 55,
           "y" : 20
         },
-        "id" : "600B6B99-246C-451F-AE01-1829A7A4328F"
+        "id" : "13806D84-A22C-4ADA-BC09-60E99E2DA400"
       }
     ]
   },
@@ -6341,7 +6341,7 @@
     "parts" : [
       {
         "flipped" : false,
-        "id" : "34DD3858-E41D-4F99-BFA7-FD3A425C02AD",
+        "id" : "8D09B01A-73BE-46D0-AD19-E7FAAC120AD9",
         "kind" : "input",
         "model" : "",
         "name" : "IN",
@@ -6358,7 +6358,7 @@
       },
       {
         "flipped" : false,
-        "id" : "3B6C701C-DA3E-4A42-ADE9-4350A6E1C1E9",
+        "id" : "B6247686-37FC-4160-A40D-55712F8B6583",
         "kind" : "output",
         "model" : "",
         "name" : "OUT",
@@ -6375,7 +6375,7 @@
       },
       {
         "flipped" : false,
-        "id" : "2C296ECF-22AC-4CBD-98BF-8055CD49653E",
+        "id" : "4B1D1FE0-64AE-4DE6-9819-4B62E35C92F5",
         "kind" : "ground",
         "model" : "",
         "name" : "GND1",

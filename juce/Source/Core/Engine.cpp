@@ -5,6 +5,7 @@
 #include <cmath>
 #include <map>
 #include <set>
+#include <cstdlib>
 
 namespace lutherie
 {
@@ -14,6 +15,12 @@ namespace
 {
 constexpr double kPi = 3.14159265358979323846;
 constexpr double vtTherm = 0.025852;
+/// Output transformers are integrated by the θ-method a little past the trapezoidal rule (θ = ½). The leakage
+/// inductance with the tubes' few picofarads makes a resonance far above the sample rate; the trapezoidal rule leaves
+/// such a mode ringing at half the sample rate forever (driving the power-tube plates hundreds of volts each step
+/// when they cut off), where θ slightly above ½ lets it die away. In the audio band the difference is a fraction of
+/// a percent. ngspice's trapezoidal rule rings the same way on these circuits; its Gear method doesn't.
+constexpr double kTheta = 0.55;
 
 inline std::pair<double, double> softplusPair (double u)
 {
@@ -65,7 +72,7 @@ double CircuitEngine::LFOEl::value() const
 // MARK: Build
 
 CircuitEngine::CircuitEngine (const Circuit& c, double sr)
-    : circuit (c), sampleRate (sr), dt (1 / sr), netlist (Netlist::build (c))
+    : circuit (c), sampleRate (sr), dt (1 / sr), h (1 / sr), netlist (Netlist::build (c))
 {
     for (auto& p : netlist.problems)
         if (p.rfind ("Add", 0) == 0) throw CircuitError (p);
@@ -363,6 +370,8 @@ CircuitEngine::CircuitEngine (const Circuit& c, double sr)
     zL.assign ((size_t) std::max (nl, 1), 0); LLw.assign ((size_t) std::max (nl * nl, 1), 0);
     permS.assign ((size_t) std::max (ns, 1), 0); permL.assign ((size_t) std::max (nl, 1), 0);
     xPrev.assign ((size_t) std::max (ns, 1), 0);
+    xSave.assign ((size_t) n, 0);
+    xPrevSave.assign ((size_t) std::max (ns, 1), 0);
     targetFull();
     warnings = warn;
     for (auto& p : netlist.problems) if (p.rfind ("Add", 0) != 0) warnings.push_back (p);
@@ -392,13 +401,13 @@ void CircuitEngine::stampLinear()
         conductance (G0, p.a, p.w, 1 / std::max (p.r * t, 0.5));
         conductance (G0, p.w, p.b, 1 / std::max (p.r * (1 - t), 0.5));
     }
-    for (auto& c : caps) { c.geq = dcMode ? 0 : 2 * c.c / dt; conductance (G0, c.a, c.b, c.geq); }
-    for (auto& l : inds) { l.geq = dcMode ? 1e3 : dt / (2 * l.l); conductance (G0, l.m, l.b, l.geq); }
+    for (auto& c : caps) { c.geq = dcMode ? 0 : 2 * c.c / h; conductance (G0, c.a, c.b, c.geq); }
+    for (auto& l : inds) { l.geq = dcMode ? 1e3 : h / (2 * l.l); conductance (G0, l.m, l.b, l.geq); }
     for (auto& t : xfmrs)
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 3; ++j)
             {
-                const double g = dcMode ? (i == j ? 1e3 : 0) : 0.5 * dt * t.gm (i, j);
+                const double g = dcMode ? (i == j ? 1e3 : 0) : kTheta * h * t.gm (i, j);
                 if (g == 0) continue;
                 addG (G0, t.a[i], t.a[j], g); addG (G0, t.b[i], t.b[j], g);
                 addG (G0, t.a[i], t.b[j], -g); addG (G0, t.b[i], t.a[j], -g);
@@ -475,7 +484,7 @@ void CircuitEngine::buildRHS (double u)
         for (auto& t : xfmrs)
             for (int i = 0; i < 3; ++i)
             {
-                const double ieq = t.iPrev[i] + 0.5 * dt * (t.gm (i, 0) * t.vPrev[0] + t.gm (i, 1) * t.vPrev[1] + t.gm (i, 2) * t.vPrev[2]);
+                const double ieq = t.iPrev[i] + (1 - kTheta) * h * (t.gm (i, 0) * t.vPrev[0] + t.gm (i, 1) * t.vPrev[1] + t.gm (i, 2) * t.vPrev[2]);
                 if (t.a[i] >= 0) rhs0[(size_t) t.a[i]] -= ieq;
                 if (t.b[i] >= 0) rhs0[(size_t) t.b[i]] += ieq;
             }
@@ -857,6 +866,7 @@ bool CircuitEngine::iterateReduced (int maxIter, double tol)
             const double a = std::abs (d) / (1 + std::abs (xs[i]));
             if (! (a <= delta)) delta = a;   // also catches NaN
         }
+        if (traceNewton) std::printf ("    it %2d  delta %.3g\n", it, delta);
         if (delta < tol) return true;
         if (! std::isfinite (delta)) return false;
         if (earlyExit && prevDelta < 1e-3 && delta * delta < tol * prevDelta) return true;
@@ -901,8 +911,8 @@ void CircuitEngine::acceptStep()
     for (auto& t : xfmrs)
     {
         double vn[3], s[3];
-        for (int i = 0; i < 3; ++i) { vn[i] = v (t.a[i]) - v (t.b[i]); s[i] = vn[i] + t.vPrev[i]; }
-        for (int i = 0; i < 3; ++i) t.iPrev[i] += 0.5 * dt * (t.gamma[i * 3] * s[0] + t.gamma[i * 3 + 1] * s[1] + t.gamma[i * 3 + 2] * s[2]);
+        for (int i = 0; i < 3; ++i) { vn[i] = v (t.a[i]) - v (t.b[i]); s[i] = kTheta * vn[i] + (1 - kTheta) * t.vPrev[i]; }
+        for (int i = 0; i < 3; ++i) t.iPrev[i] += h * (t.gamma[i * 3] * s[0] + t.gamma[i * 3 + 1] * s[1] + t.gamma[i * 3 + 2] * s[2]);
         for (int i = 0; i < 3; ++i) t.vPrev[i] = vn[i];
     }
     for (auto& c : vactrols) stepVactrol (c);
@@ -910,7 +920,7 @@ void CircuitEngine::acceptStep()
     for (auto& o : lfos)
     {
         const double u = clampD (v (o.cv) / o.vref, 0, 1);
-        double ph = o.phase + o.fmin * std::pow (o.fmax / o.fmin, u) * dt;
+        double ph = o.phase + o.fmin * std::pow (o.fmax / o.fmin, u) * h;
         if (ph >= 1) ph -= 1;
         o.phase = ph;
     }
@@ -926,7 +936,9 @@ double CircuitEngine::diodeCurrent (int i) const
 void CircuitEngine::stepVactrol (VactrolEl& c)
 {
     const double target = std::max (diodeCurrent (c.di), 0.0);
-    c.light += (target - c.light) * (target > c.light ? c.kOn : c.kOff);
+    double k = target > c.light ? c.kOn : c.kOff;
+    if (h != dt) k = 1 - std::pow (1 - k, h / dt);   // a sub-step: the same time constant over a shorter step
+    c.light += (target - c.light) * k;
     c.g = c.gDark + c.g10 * std::pow (c.light * 100, c.gamma);
 }
 
@@ -935,7 +947,7 @@ void CircuitEngine::stepBBD (BBDEl& b)
     const double vin = v (b.inp);
     const double u = clampD (v (b.cv) / b.vref, 0, 1);
     const double clock = b.fmax * std::pow (b.fmin / b.fmax, u);
-    const double step = clock * dt;
+    const double step = clock * h;
     b.phase += step;
     b.bias += (vin - b.bias) * b.biasCoef;
     while (b.phase >= 1)
@@ -1002,8 +1014,43 @@ void CircuitEngine::solveOperatingPoint()
 double CircuitEngine::tick (double u)
 {
     buildRHS (u);
-    if (! newton (maxIterations, tolerance)) ++nonConverged;
-    acceptStep();
+    std::copy (x.begin(), x.end(), xSave.begin());
+    std::copy (xPrev.begin(), xPrev.end(), xPrevSave.begin());
+    if (newton (maxIterations, tolerance)) acceptStep();
+    else if (! cutBackEnabled) { ++nonConverged; acceptStep(); }
+    else
+    {
+        // Time-step cutback, as SPICE does: when a sample won't converge (a power tube cutting off into the output
+        // transformer flies its plate up hundreds of volts in one step), go back to the start of the sample and
+        // cross it in shorter steps, the input rising along a straight line. Samples that converge never come here.
+        // the state that sub-steps move on, kept in case the first cut isn't fine enough (copies into storage of
+        // the same size, so nothing is allocated)
+        capsSave = caps; indsSave = inds; xfmrsSave = xfmrs; vactrolsSave = vactrols; bbdsSave = bbds; lfosSave = lfos;
+        bool ok = false;
+        for (int parts : { 8, 64 })
+        {
+            if (parts != 8) { caps = capsSave; inds = indsSave; xfmrs = xfmrsSave; vactrols = vactrolsSave; bbds = bbdsSave; lfos = lfosSave; }
+            std::copy (xSave.begin(), xSave.end(), x.begin());
+            resetLimiters();
+            h = dt / parts;
+            stampLinear();
+            ok = true;
+            for (int j = 1; j <= parts; ++j)
+            {
+                buildRHS (uPrev + (u - uPrev) * j / parts);
+                ok = newton (maxIterations, tolerance) && ok;
+                acceptStep();
+            }
+            if (ok) break;
+        }
+        h = dt;
+        stampLinear();
+        // the predictor's history is whole samples: the one before this, then this one
+        std::copy (xSave.begin() + nl, xSave.begin() + nl + ns, xPrev.begin());
+        if (! ok) ++nonConverged;
+        ++cutbacks;
+    }
+    uPrev = u;
     return v (outputNode) * outputScale;
 }
 
@@ -1049,6 +1096,12 @@ void CircuitEngine::process (const float* input, float* output, int frames)
 }
 
 // MARK: Analysis
+
+std::string CircuitEngine::nameOfIndex (int idx) const
+{
+    for (int node = 1; node < netlist.nodeCount; ++node) if (nodeMap[(size_t) (node - 1)] == idx) return netlist.nameOf (node);
+    return "internal#" + std::to_string (idx);
+}
 
 std::vector<std::pair<std::string, double>> CircuitEngine::operatingPoint() const
 {

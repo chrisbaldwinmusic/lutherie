@@ -25,7 +25,7 @@ add_library(LutherieCore STATIC
     Source/Core/Cabinets.cpp
     Source/Core/Rig.cpp)
 target_include_directories(LutherieCore PUBLIC Source)
-target_compile_options(LutherieCore PRIVATE -O3 -ffp-contract=off)
+target_compile_options(LutherieCore PRIVATE -O3 -ffp-contract=fast -fno-math-errno)
 
 juce_add_console_app(LutherieTests PRODUCT_NAME "LutherieTests")
 target_sources(LutherieTests PRIVATE Tests/Main.cpp Source/Core/CircuitJSON.cpp)
