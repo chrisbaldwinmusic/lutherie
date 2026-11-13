@@ -1,3 +1,5 @@
+> **This repository has moved.** Lutherie is now developed in the Channel Audio monorepo, [chrisbaldwinmusic/channelaudio](https://github.com/chrisbaldwinmusic/channelaudio), in the `Lutherie/` folder, with its full history. This repository is archived and kept for reference only.
+
 # Lutherie (Mac)
 
 Circuit-level guitar pedal and amp simulator: a standalone app, an Audio Unit (inside the app) and a VST3.
